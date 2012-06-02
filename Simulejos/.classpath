@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Bridge"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Framework"/>
+	<classpathentry kind="lib" path="C:/jogamp-all-platforms/jar/gluegen.jar"/>
+	<classpathentry kind="lib" path="C:/jogamp-all-platforms/jar/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="C:/jogamp-all-platforms/jar/jogl.all.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

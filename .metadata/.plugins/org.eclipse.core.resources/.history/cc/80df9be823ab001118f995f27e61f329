@@ -1,0 +1,40 @@
+package it.uniroma1.di.simulejos;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+public final class Simulejos extends JFrame {
+	private static final long serialVersionUID = 1344391485057572344L;
+
+	private final class Actions {
+		public static final Action newSimulation = new AbstractAction(
+				"New Simulation") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		};
+	}
+
+	private Simulejos() {
+		super("Simulejos");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		pack();
+		setLocationByPlatform(true);
+		setVisible(true);
+	}
+
+	public static void main(String[] arguments) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new Simulejos();
+			}
+		});
+	}
+}

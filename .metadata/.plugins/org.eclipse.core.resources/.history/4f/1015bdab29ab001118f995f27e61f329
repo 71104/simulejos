@@ -1,0 +1,12 @@
+package it.uniroma1.di.simulejos;
+
+final class Document {
+	void reset() {
+	}
+
+	void load() {
+	}
+
+	void store() {
+	}
+}

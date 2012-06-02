@@ -1,0 +1,17 @@
+package it.uniroma1.di.simulejos;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+
+final class Simulation {
+	private volatile boolean dirty = false;
+
+	void reset() {
+	}
+
+	void load(InputStream is) {
+	}
+
+	void store(OutputStream os) {
+	}
+}
