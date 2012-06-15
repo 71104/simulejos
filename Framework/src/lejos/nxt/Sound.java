@@ -259,7 +259,7 @@ public class Sound
             vol = (vol*masterVolume)/100;
         else
             vol = -vol;
-        playSample(file.getPage(), offset, dataLen, sampleRate, vol);
+        // FIXME playSample(file.getPage(), offset, dataLen, sampleRate, vol);
         return getTime();
     }
 

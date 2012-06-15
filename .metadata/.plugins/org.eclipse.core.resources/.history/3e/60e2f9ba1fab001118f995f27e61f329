@@ -1,5 +1,0 @@
-package lejos.util;
-
-public class EmptyQueueException extends Exception {
-
-}

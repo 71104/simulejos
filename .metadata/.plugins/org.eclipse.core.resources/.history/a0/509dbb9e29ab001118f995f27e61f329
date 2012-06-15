@@ -1,6 +1,0 @@
-package it.uniroma1.di.simulejos;
-
-final class Document {
-	void reset() {
-	}
-}
