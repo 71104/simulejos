@@ -1,0 +1,22 @@
+package it.uniroma1.di.simulejos;
+
+import java.io.Serializable;
+
+final class Robot implements Serializable {
+	private static final long serialVersionUID = 1961674308786529328L;
+
+	Robot(File classPath) {
+	}
+
+	void play() {
+	}
+
+	void pause() {
+	}
+
+	void resume() {
+	}
+
+	void stop() {
+	}
+}

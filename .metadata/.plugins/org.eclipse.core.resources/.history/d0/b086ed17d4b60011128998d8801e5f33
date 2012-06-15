@@ -1,0 +1,45 @@
+package it.uniroma1.di.simulejos;
+
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+
+final class Simulation implements Serializable {
+	private static final long serialVersionUID = -290517947218502549L;
+
+	private final List<Robot> robots = new LinkedList<>();
+
+	private transient volatile boolean dirty = false;
+
+	boolean isDirty() {
+		return dirty;
+	}
+
+	void clearDirty() {
+		dirty = false;
+	}
+
+	void play() {
+		for (Robot robot : robots) {
+			robot.play();
+		}
+	}
+
+	void pause() {
+		for (Robot robot : robots) {
+			robot.play();
+		}
+	}
+
+	void resume() {
+		for (Robot robot : robots) {
+			robot.play();
+		}
+	}
+
+	void stop() {
+		for (Robot robot : robots) {
+			robot.play();
+		}
+	}
+}

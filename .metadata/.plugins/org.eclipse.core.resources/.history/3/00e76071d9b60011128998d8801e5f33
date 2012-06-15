@@ -1,0 +1,72 @@
+package it.uniroma1.di.simulejos;
+
+import java.io.File;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+final class Robot implements Serializable {
+	private static final long serialVersionUID = 1961674308786529328L;
+
+	private static volatile int nextIndex = 1;
+
+	private final int index;
+	private final File classPath;
+	private final String mainClassName;
+	private transient volatile Thread thread;
+
+	Robot(File classPath, String mainClassName) {
+		this.index = nextIndex++;
+		this.classPath = classPath;
+		this.mainClassName = mainClassName;
+	}
+
+	void play() {
+		thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				final URL url;
+				try {
+					url = classPath.toURI().toURL();
+				} catch (MalformedURLException e) {
+					throw new RuntimeException(e);
+				}
+				final URL[] urls = { Robot.class.getResource("Framework.jar"),
+						url };
+				final VirtualClassLoader classLoader = new VirtualClassLoader(
+						urls);
+				final Class<?> mainClass;
+				try {
+					mainClass = classLoader.loadClass(mainClassName);
+				} catch (ClassNotFoundException e) {
+					// TODO
+					e.printStackTrace();
+					return;
+				}
+				try {
+					final String[] arguments = {};
+					mainClass.getMethod("main", String[].class).invoke(null,
+							(Object[]) arguments);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}, "NXT" + index);
+		thread.start();
+	}
+
+	@SuppressWarnings("deprecation")
+	void suspend() {
+		thread.suspend();
+	}
+
+	@SuppressWarnings("deprecation")
+	void resume() {
+		thread.resume();
+	}
+
+	@SuppressWarnings("deprecation")
+	void stop() {
+		thread.stop();
+	}
+}

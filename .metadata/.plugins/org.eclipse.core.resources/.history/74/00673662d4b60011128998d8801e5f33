@@ -1,0 +1,33 @@
+package it.uniroma1.di.simulejos;
+
+import java.io.File;
+import java.io.Serializable;
+
+final class Robot implements Serializable {
+	private static final long serialVersionUID = 1961674308786529328L;
+
+	private final String name;
+
+	private volatile Thread thread = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			// TODO
+		}
+	}, name);
+
+	Robot(String name, File classPath) {
+		this.name = name;
+	}
+
+	void play() {
+	}
+
+	void pause() {
+	}
+
+	void resume() {
+	}
+
+	void stop() {
+	}
+}

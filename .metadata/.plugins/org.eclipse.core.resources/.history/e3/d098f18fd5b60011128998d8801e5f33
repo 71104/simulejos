@@ -1,0 +1,52 @@
+package it.uniroma1.di.simulejos;
+
+import java.io.File;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+final class Robot implements Serializable {
+	private static final long serialVersionUID = 1961674308786529328L;
+
+	private final String name;
+	private final File classPath;
+	private volatile Thread thread;
+
+	Robot(String name, File classPath) {
+		this.name = name;
+		this.classPath = classPath;
+	}
+
+	void play() {
+		thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				final URL url;
+				try {
+					url = classPath.toURI().toURL();
+				} catch (MalformedURLException e) {
+					throw new RuntimeException(e);
+				}
+				final URL[] urls = { url };
+				final VirtualClassLoader classLoader = new VirtualClassLoader(
+						urls);
+			}
+		}, name);
+		thread.start();
+	}
+
+	@SuppressWarnings("deprecation")
+	void suspend() {
+		thread.suspend();
+	}
+
+	@SuppressWarnings("deprecation")
+	void resume() {
+		thread.resume();
+	}
+
+	@SuppressWarnings("deprecation")
+	void stop() {
+		thread.stop();
+	}
+}
