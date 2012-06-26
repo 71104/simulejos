@@ -1,7 +1,0 @@
-package it.uniroma1.di.simulejos;
-
-import java.io.Serializable;
-
-final class Robot implements Serializable{
-
-}

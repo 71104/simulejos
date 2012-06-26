@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="18" version="2.0">
+<workbench progressCount="20" version="2.0">
 <workbenchAdvisor/>
 <window height="728" maximized="true" width="1024" x="77" y="-17">
 <fastViewData fastViewLocation="1024"/>
@@ -31,23 +31,26 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Bluetooth.java" partName="Bluetooth.java" path="C:/Users/Alberto/Documents/Simulejos/Framework/src/lejos/nxt/comm/Bluetooth.java" title="Bluetooth.java" tooltip="Framework/src/lejos/nxt/comm/Bluetooth.java" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Bluetooth.java" partName="Bluetooth.java" path="C:/Users/Alberto/Documents/Simulejos/Framework/src/lejos/nxt/comm/Bluetooth.java" title="Bluetooth.java" tooltip="Framework/src/lejos/nxt/comm/Bluetooth.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Framework/src/lejos/nxt/comm/Bluetooth.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="928" selectionTopPixel="75"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="411" selectionTopPixel="0"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXTNavigationModel.java" partName="NXTNavigationModel.java" path="C:/Users/Alberto/Documents/Simulejos/Framework/src/lejos/robotics/mapping/NXTNavigationModel.java" title="NXTNavigationModel.java" tooltip="Framework/src/lejos/robotics/mapping/NXTNavigationModel.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Framework/src/lejos/robotics/mapping/NXTNavigationModel.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5472" selectionTopPixel="2595"/>
 </editor>
 </editors>
 <views>
-<view id="org.eclipse.search.ui.views.SearchView" partName="Search">
-<viewState isPinned="false">
-<view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
-</viewState>
-</view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
+<expanded>
+<category IMemento.internal.id="Errors"/>
+</expanded>
 <columnWidths org.eclipse.ui.ide.locationField="90" org.eclipse.ui.ide.markerType="90" org.eclipse.ui.ide.pathField="120" org.eclipse.ui.ide.resourceField="90" org.eclipse.ui.ide.severityAndDescriptionField="300"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
@@ -241,7 +244,6 @@
 <view id="org.eclipse.jdt.ui.JavadocView"/>
 <view id="org.eclipse.jdt.ui.SourceView"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
-<view id="org.eclipse.search.ui.views.SearchView"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
 <fastViewBars/>
 <layout>
@@ -268,12 +270,12 @@
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.25" ratioLeft="250" ratioRight="750" relationship="2" relative="left"/>
 <info folder="true" part="bottom" ratio="0.74958813" ratioLeft="455" ratioRight="152" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.search.ui.views.SearchView" appearance="2" expanded="2">
+<folder activePageID="org.eclipse.jdt.ui.JavadocView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.jdt.ui.JavadocView" label="Javadoc"/>
 <page content="org.eclipse.jdt.ui.SourceView" label="Declaration"/>
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
-<page content="org.eclipse.search.ui.views.SearchView" label="Search"/>
+<page content="org.eclipse.search.ui.views.SearchView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
@@ -281,7 +283,6 @@
 <part id="1"/>
 <part id="2"/>
 <part id="3"/>
-<part id="4"/>
 </presentation>
 </folder>
 </info>
@@ -302,75 +303,175 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Simulejos/src/it/uniroma1/di/simulejos/Simulejos.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Bridge/src/it/uniroma1/di/simulejos/bridge/SimulatorInterface.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Simulejos/src/it/uniroma1/di/simulejos/Simulation.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/internal/xml/stream/NXJXMLInputFactory.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/internal/io/LejosOutputStreamWriter.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/nxt/Sound.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Simulejos/src/it/uniroma1/di/simulejos/Robot.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Bridge/src/it/uniroma1/di/simulejos/bridge/SimulatorInterface.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/it/uniroma1/di/simulejos/bridge/Bridge.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Simulejos/src/it/uniroma1/di/simulejos/ui/LogWindow.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/util/Assertion.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/util/ButtonCounter.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/it/uniroma1/di/simulejos/bridge/NXTWindow.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/nxt/addon/TouchPanel.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/nxt/remote/NXTComm.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Simulejos/src/it/uniroma1/di/simulejos/Simulation.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/nxt/comm/USBConnection.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/nxt/comm/USB.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/robotics/mapping/NXTNavigationModel.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/nxt/remote/NXTComm.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/util/Logger.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/util/NXTDataLogger.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/util/Datalogger.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/nxt/comm/Bluetooth.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Framework/src/lejos/nxt/comm/NXTConnection.java"/>
 </editors>
-<item historyLabel="Simulejos.java" index="0">
-<position info="not_deleted" x="596" y="0"/>
+<item historyLabel="Simulation.java" index="0">
+<position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="SimulatorInterface.java" index="1">
-<position info="not_deleted" x="138" y="0"/>
-</item>
-<item historyLabel="Simulation.java" index="2">
-<position info="not_deleted" x="166" y="0"/>
-</item>
-<item historyLabel="NXJXMLInputFactory.java" index="3">
-<position info="not_deleted" x="418" y="0"/>
-</item>
-<item historyLabel="Simulation.java" index="2">
-<position info="not_deleted" x="166" y="0"/>
-</item>
-<item historyLabel="LejosOutputStreamWriter.java" index="4">
-<position info="not_deleted" x="534" y="0"/>
-</item>
-<item historyLabel="Sound.java" index="5">
-<position info="not_deleted" x="13046" y="0"/>
-</item>
-<item historyLabel="TouchPanel.java" index="6">
+<item historyLabel="SimulatorInterface.java" index="2">
 <position/>
 </item>
-<item historyLabel="TouchPanel.java" index="6">
-<position info="not_deleted" x="3365" y="0"/>
+<item historyLabel="Bridge.java" index="3">
+<position info="not_deleted" x="305" y="0"/>
 </item>
-<item historyLabel="NXTComm.java" index="7">
-<position info="not_deleted" x="308" y="0"/>
-</item>
-<item historyLabel="NXTNavigationModel.java" index="8">
+<item historyLabel="SimulatorInterface.java" index="2">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="Datalogger.java" index="9">
+<item historyLabel="LogWindow.java" index="4">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="NXTNavigationModel.java" index="8">
+<item historyLabel="SimulatorInterface.java" index="2">
+<position info="not_deleted" x="338" y="0"/>
+</item>
+<item historyLabel="Assertion.java" index="5">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="NXTComm.java" index="7">
-<position info="not_deleted" x="308" y="0"/>
+<item historyLabel="SimulatorInterface.java" index="2">
+<position info="not_deleted" x="338" y="0"/>
 </item>
-<item historyLabel="Bluetooth.java" index="10">
+<item historyLabel="ButtonCounter.java" index="6">
+<position info="not_deleted" x="3906" y="0"/>
+</item>
+<item historyLabel="SimulatorInterface.java" index="2">
+<position info="not_deleted" x="163" y="0"/>
+</item>
+<item historyLabel="NXTWindow.java" index="7">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="NXTConnection.java" index="11">
+<item historyLabel="SimulatorInterface.java" index="2">
+<position info="not_deleted" x="163" y="0"/>
+</item>
+<item historyLabel="Bridge.java" index="3">
+<position info="not_deleted" x="305" y="0"/>
+</item>
+<item historyLabel="Robot.java" index="1">
 <position/>
 </item>
-<item historyLabel="Bluetooth.java" index="10">
+<item historyLabel="Bridge.java" index="3">
+<position info="not_deleted" x="466" y="0"/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position info="not_deleted" x="620" y="0"/>
+</item>
+<item historyLabel="Simulation.java" index="0">
+<position info="not_deleted" x="543" y="0"/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position info="not_deleted" x="730" y="0"/>
+</item>
+<item historyLabel="NewRobotDialog.java" index="8">
+<position info="not_deleted" x="197" y="0"/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position info="not_deleted" x="730" y="0"/>
+</item>
+<item historyLabel="Simulation.java" index="0">
+<position info="not_deleted" x="543" y="0"/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position info="not_deleted" x="2064" y="0"/>
+</item>
+<item historyLabel="Simulation.java" index="0">
+<position info="not_deleted" x="543" y="0"/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position info="not_deleted" x="1153" y="0"/>
+</item>
+<item historyLabel="TouchPanel.java" index="9">
+<position/>
+</item>
+<item historyLabel="Robot.java" index="1">
+<position info="not_deleted" x="1153" y="0"/>
+</item>
+<item historyLabel="Simulation.java" index="10">
+<position info="not_deleted" x="543" y="0"/>
+</item>
+<item historyLabel="USBConnection.java" index="11">
+<position info="not_deleted" x="859" y="0"/>
+</item>
+<item historyLabel="USB.java" index="12">
+<position info="not_deleted" x="382" y="0"/>
+</item>
+<item historyLabel="NXTNavigationModel.java" index="13">
+<position/>
+</item>
+<item historyLabel="NXTComm.java" index="14">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="NXTConnection.java" index="11">
+<item historyLabel="TouchPanel.java" index="9">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item active="true" historyLabel="Bluetooth.java" index="10">
+<item historyLabel="NXTNavigationModel.java" index="13">
+<position/>
+</item>
+<item historyLabel="Logger.java" index="15">
+<position info="not_deleted" x="2150" y="0"/>
+</item>
+<item historyLabel="NXTNavigationModel.java" index="13">
+<position/>
+</item>
+<item historyLabel="TouchPanel.java" index="9">
 <position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="NXTDataLogger.java" index="16">
+<position info="not_deleted" x="235" y="0"/>
+</item>
+<item historyLabel="Datalogger.java" index="17">
+<position/>
+</item>
+<item historyLabel="Bluetooth.java" index="18">
+<position info="not_deleted" x="411" y="0"/>
+</item>
+<item historyLabel="NXTNavigationModel.java" index="13">
+<position info="not_deleted" x="5677" y="9"/>
+</item>
+<item historyLabel="Datalogger.java" index="17">
+<position info="not_deleted" x="1577" y="8"/>
+</item>
+<item historyLabel="Datalogger.java" index="17">
+<position info="not_deleted" x="2029" y="9"/>
+</item>
+<item historyLabel="NXTNavigationModel.java" index="13">
+<position info="not_deleted" x="2071" y="0"/>
+</item>
+<item historyLabel="NXTNavigationModel.java" index="13">
+<position info="not_deleted" x="5636" y="3"/>
+</item>
+<item active="true" historyLabel="NXTNavigationModel.java" index="13">
+<position info="not_deleted" x="5677" y="9"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -389,8 +490,8 @@
 </trimLayout>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXTConnection.java" tooltip="Framework/src/lejos/nxt/comm/NXTConnection.java">
-<persistable path="/Framework/src/lejos/nxt/comm/NXTConnection.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXTNavigationModel.java" tooltip="Framework/src/lejos/robotics/mapping/NXTNavigationModel.java">
+<persistable path="/Framework/src/lejos/robotics/mapping/NXTNavigationModel.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Bluetooth.java" tooltip="Framework/src/lejos/nxt/comm/Bluetooth.java">
 <persistable path="/Framework/src/lejos/nxt/comm/Bluetooth.java"/>
@@ -398,41 +499,38 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Datalogger.java" tooltip="Framework/src/lejos/util/Datalogger.java">
 <persistable path="/Framework/src/lejos/util/Datalogger.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXTNavigationModel.java" tooltip="Framework/src/lejos/robotics/mapping/NXTNavigationModel.java">
-<persistable path="/Framework/src/lejos/robotics/mapping/NXTNavigationModel.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXTDataLogger.java" tooltip="Framework/src/lejos/util/NXTDataLogger.java">
+<persistable path="/Framework/src/lejos/util/NXTDataLogger.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXTComm.java" tooltip="Framework/src/lejos/nxt/remote/NXTComm.java">
-<persistable path="/Framework/src/lejos/nxt/remote/NXTComm.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Logger.java" tooltip="Framework/src/lejos/util/Logger.java">
+<persistable path="/Framework/src/lejos/util/Logger.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TouchPanel.java" tooltip="Framework/src/lejos/nxt/addon/TouchPanel.java">
 <persistable path="/Framework/src/lejos/nxt/addon/TouchPanel.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Sound.java" tooltip="Framework/src/lejos/nxt/Sound.java">
-<persistable path="/Framework/src/lejos/nxt/Sound.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.browser.editorSupport" name="package.html" tooltip="Framework/src/lejos/nxt/remote/package.html">
+<persistable path="/Framework/src/lejos/nxt/remote/package.html"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LejosOutputStreamWriter.java" tooltip="Framework/src/lejos/internal/io/LejosOutputStreamWriter.java">
-<persistable path="/Framework/src/lejos/internal/io/LejosOutputStreamWriter.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXTComm.java" tooltip="Framework/src/lejos/nxt/remote/NXTComm.java">
+<persistable path="/Framework/src/lejos/nxt/remote/NXTComm.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXJXMLInputFactory.java" tooltip="Framework/src/lejos/internal/xml/stream/NXJXMLInputFactory.java">
-<persistable path="/Framework/src/lejos/internal/xml/stream/NXJXMLInputFactory.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="USB.java" tooltip="Framework/src/lejos/nxt/comm/USB.java">
+<persistable path="/Framework/src/lejos/nxt/comm/USB.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="USBConnection.java" tooltip="Framework/src/lejos/nxt/comm/USBConnection.java">
+<persistable path="/Framework/src/lejos/nxt/comm/USBConnection.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NewRobotDialog.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulation.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Simulation.java">
 <persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Simulation.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SimulatorInterface.java" tooltip="Bridge/src/it/uniroma1/di/simulejos/bridge/SimulatorInterface.java">
-<persistable path="/Bridge/src/it/uniroma1/di/simulejos/bridge/SimulatorInterface.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Robot.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Robot.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Robot.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulejos.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Simulejos.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Simulejos.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Document.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Document.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Document.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LCP.java" tooltip="Framework/src/lejos/nxt/comm/LCP.java">
-<persistable path="/Framework/src/lejos/nxt/comm/LCP.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="BTConnection.java" tooltip="Framework/src/lejos/nxt/comm/BTConnection.java">
-<persistable path="/Framework/src/lejos/nxt/comm/BTConnection.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NXTWindow.java" tooltip="Framework/src/it/uniroma1/di/simulejos/bridge/NXTWindow.java">
+<persistable path="/Framework/src/it/uniroma1/di/simulejos/bridge/NXTWindow.java"/>
 </file>
 </mruList>
 </workbench>

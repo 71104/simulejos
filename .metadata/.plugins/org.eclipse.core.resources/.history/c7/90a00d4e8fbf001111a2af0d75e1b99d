@@ -1,0 +1,5 @@
+package lejos.nxt.comm;
+
+public interface StreamConnection {
+
+}

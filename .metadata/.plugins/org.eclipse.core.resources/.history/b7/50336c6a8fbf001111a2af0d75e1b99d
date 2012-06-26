@@ -1,0 +1,16 @@
+package lejos.nxt.comm;
+
+import java.io.DataInputStream;
+import java.io.InputStream;
+
+public interface StreamConnection {
+	DataInputStream operDataInputStream();
+
+	InputStream openInputStream();
+
+	void close();
+
+	void openDataOutputStream();
+
+	void openOutputStream();
+}
