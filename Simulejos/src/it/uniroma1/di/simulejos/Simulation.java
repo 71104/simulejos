@@ -37,33 +37,96 @@ public final class Simulation implements Serializable {
 				logWriter));
 	}
 
-	// TODO state machine
+	interface State {
+		State play();
+
+		State suspend();
+
+		State stop();
+	};
+
+	private final State runningState = new State() {
+		@Override
+		public State play() {
+			return this;
+		}
+
+		@Override
+		public State suspend() {
+			for (Robot robot : robots) {
+				robot.suspend();
+			}
+			logWriter.println("suspended");
+			return suspendedState;
+		}
+
+		@Override
+		public State stop() {
+			for (Robot robot : robots) {
+				robot.stop();
+			}
+			logWriter.println("stopped");
+			return stoppedState;
+		}
+	};
+
+	private final State suspendedState = new State() {
+		@Override
+		public State play() {
+			logWriter.println("resumed");
+			for (Robot robot : robots) {
+				robot.resume();
+			}
+			return runningState;
+		}
+
+		@Override
+		public State suspend() {
+			return this;
+		}
+
+		@Override
+		public State stop() {
+			for (Robot robot : robots) {
+				robot.stop();
+			}
+			logWriter.println("stopped");
+			return stoppedState;
+		}
+	};
+
+	private final State stoppedState = new State() {
+		@Override
+		public State play() {
+			logWriter.println("started");
+			for (Robot robot : robots) {
+				robot.play();
+			}
+			return runningState;
+		}
+
+		@Override
+		public State suspend() {
+			return this;
+		}
+
+		@Override
+		public State stop() {
+			return this;
+		}
+	};
+
+	private State state = stoppedState;
 
 	public void play() {
-		logWriter.println("started");
-		for (Robot robot : robots) {
-			robot.play();
-		}
+		state = state.play();
 	}
 
 	public void suspend() {
-		for (Robot robot : robots) {
-			robot.suspend();
-		}
-		logWriter.println("suspended");
-	}
-
-	public void resume() {
-		logWriter.println("resumed");
-		for (Robot robot : robots) {
-			robot.resume();
-		}
+		state = state.suspend();
 	}
 
 	public void stop() {
-		for (Robot robot : robots) {
-			robot.stop();
-		}
-		logWriter.println("stopped");
+		state = state.stop();
 	}
 }

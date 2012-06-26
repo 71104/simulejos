@@ -8,13 +8,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import javax.media.opengl.awt.GLJPanel;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 
@@ -98,6 +98,14 @@ public final class Simulejos extends JFrame {
 			}
 		}
 	};
+	public final Action ADD_ROBOT_ACTION = new AbstractAction("Add robot...") {
+		private static final long serialVersionUID = 5318430767695567625L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			new NewRobotDialog(Simulejos.this, simulation);
+		}
+	};
 	public final Action PLAY_ACTION = new AbstractAction("Play") {
 		private static final long serialVersionUID = 5318430767695567625L;
 
@@ -107,7 +115,7 @@ public final class Simulejos extends JFrame {
 		}
 	};
 	public final Action SUSPEND_ACTION = new AbstractAction("Suspend") {
-		private static final long serialVersionUID = 5318430767695567625L;
+		private static final long serialVersionUID = 2050007264701571826L;
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -115,7 +123,7 @@ public final class Simulejos extends JFrame {
 		}
 	};
 	public final Action STOP_ACTION = new AbstractAction("Stop") {
-		private static final long serialVersionUID = 5318430767695567625L;
+		private static final long serialVersionUID = 6375156354908574128L;
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
@@ -137,11 +145,13 @@ public final class Simulejos extends JFrame {
 		fileMenu.add(EXIT_ACTION);
 		menuBar.add(fileMenu);
 		final JMenu simulationMenu = new JMenu("Simulation");
+		simulationMenu.add(ADD_ROBOT_ACTION);
+		simulationMenu.addSeparator();
 		simulationMenu.add(PLAY_ACTION);
 		simulationMenu.add(SUSPEND_ACTION);
 		simulationMenu.add(STOP_ACTION);
 		menuBar.add(simulationMenu);
-		add(new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JPanel(), logWindow));
+		add(new JSplitPane(JSplitPane.VERTICAL_SPLIT, new GLJPanel(), logWindow));
 		pack();
 		setLocationByPlatform(true);
 		setVisible(true);
