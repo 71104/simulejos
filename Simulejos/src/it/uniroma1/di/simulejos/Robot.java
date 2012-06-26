@@ -7,6 +7,7 @@ import java.awt.Frame;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -18,12 +19,21 @@ final class Robot implements Serializable {
 	private final int index;
 	private final File classPath;
 	private final String mainClassName;
+	private final String script;
+
+	private transient volatile Frame parentWindow;
+	private transient volatile PrintWriter logWriter;
 	private transient volatile Thread thread;
 
-	Robot(File classPath, String mainClassName) {
+	Robot(File classPath, String mainClassName, String script,
+			Frame parentWindow, Writer logWriter) {
 		this.index = nextIndex++;
 		this.classPath = classPath;
 		this.mainClassName = mainClassName;
+		this.script = script;
+		this.parentWindow = parentWindow;
+		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
+				logWriter));
 	}
 
 	private class Simulator implements SimulatorInterface {
@@ -34,14 +44,12 @@ final class Robot implements Serializable {
 
 		@Override
 		public Frame getParentWindow() {
-			// TODO Auto-generated method stub
-			return null;
+			return parentWindow;
 		}
 
 		@Override
 		public PrintWriter getLogWriter() {
-			// TODO Auto-generated method stub
-			return null;
+			return logWriter;
 		}
 
 		@Override
@@ -85,6 +93,14 @@ final class Robot implements Serializable {
 			// TODO Auto-generated method stub
 			return null;
 		}
+	}
+
+	void setParentWindow(Frame parentWindow) {
+		this.parentWindow = parentWindow;
+	}
+
+	void setLogWriter(PrintWriter logWriter) {
+		this.logWriter = logWriter;
 	}
 
 	void play() {

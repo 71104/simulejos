@@ -1,0 +1,7 @@
+package it.uniroma1.di.simulejos;
+
+import java.io.PrintWriter;
+
+public class PartialWriter extends PrintWriter {
+
+}

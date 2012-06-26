@@ -1,7 +1,6 @@
 package it.uniroma1.di.simulejos.ui;
 
 import java.awt.Font;
-import java.io.IOException;
 import java.io.Writer;
 
 import javax.swing.JTextArea;
@@ -28,11 +27,11 @@ final class LogWindow extends JTextArea {
 			}
 
 			@Override
-			public synchronized void flush() throws IOException {
+			public synchronized void flush() {
 			}
 
 			@Override
-			public synchronized void close() throws IOException {
+			public synchronized void close() {
 				closed = true;
 			}
 		};

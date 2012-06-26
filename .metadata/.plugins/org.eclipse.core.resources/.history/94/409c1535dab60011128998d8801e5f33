@@ -1,7 +1,0 @@
-package it.uniroma1.di.simulejos.ui;
-
-import javax.swing.JDialog;
-
-public final class NewRobotDialog extends JDialog {
-
-}
