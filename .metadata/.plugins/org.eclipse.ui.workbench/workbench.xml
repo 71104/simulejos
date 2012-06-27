@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="17" version="2.0">
+<workbench progressCount="14" version="2.0">
 <workbenchAdvisor/>
 <window height="728" maximized="true" width="1024" x="77" y="-17">
 <fastViewData fastViewLocation="1024"/>
@@ -37,15 +37,13 @@
 <views>
 <view id="org.eclipse.search.ui.views.SearchView" partName="Search">
 <viewState isPinned="false">
+<view IMemento.internal.id="org.eclipse.search.text.FileSearchResultPage" org.eclipse.search.lastActivation="1" org.eclipse.search.resultpage.layout="2" org.eclipse.search.resultpage.limit="1000" org.eclipse.search.resultpage.sorting="2"/>
 <view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
-<view IMemento.internal.id="org.eclipse.jdt.ui.JavaSearchResultPage" org.eclipse.jdt.search.resultpage.grouping="3" org.eclipse.jdt.search.resultpage.limit="1000" org.eclipse.jdt.search.resultpage.limit_enabled="TRUE" org.eclipse.jdt.search.resultpage.sorting="1" org.eclipse.search.lastActivation="1" org.eclipse.search.resultpage.layout="2"/>
 </viewState>
 </view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
 <expanded>
-<category IMemento.internal.id="Errors"/>
-<category IMemento.internal.id="Warnings"/>
 <category IMemento.internal.id="Warnings (100 of 138 items)"/>
 </expanded>
 <columnWidths org.eclipse.ui.ide.locationField="90" org.eclipse.ui.ide.markerType="90" org.eclipse.ui.ide.pathField="120" org.eclipse.ui.ide.resourceField="90" org.eclipse.ui.ide.severityAndDescriptionField="300"/>
@@ -317,17 +315,29 @@
 </trimLayout>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulejos.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/Simulejos.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/Simulejos.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MotorPort.java" tooltip="Framework/src/lejos/nxt/MotorPort.java">
+<persistable path="/Framework/src/lejos/nxt/MotorPort.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NewRobotDialog.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="DebugInterface.java" tooltip="Framework/src/lejos/nxt/debug/DebugInterface.java">
+<persistable path="/Framework/src/lejos/nxt/debug/DebugInterface.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Timer.java" tooltip="Framework/src/lejos/util/Timer.java">
+<persistable path="/Framework/src/lejos/util/Timer.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LogWindow.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/LogWindow.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/LogWindow.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PartialWriter.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/PartialWriter.java">
 <persistable path="/Simulejos/src/it/uniroma1/di/simulejos/PartialWriter.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulation.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Simulation.java">
 <persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Simulation.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulejos.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/Simulejos.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/Simulejos.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NewRobotDialog.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Robot.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Robot.java">
 <persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Robot.java"/>
@@ -337,9 +347,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="VirtualClassLoader.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/VirtualClassLoader.java">
 <persistable path="/Simulejos/src/it/uniroma1/di/simulejos/VirtualClassLoader.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LogWindow.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/LogWindow.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/LogWindow.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulejos.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Simulejos.java">
 <persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Simulejos.java"/>
@@ -352,15 +359,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LCPBTResponder.java" tooltip="Framework/src/lejos/nxt/comm/LCPBTResponder.java">
 <persistable path="/Framework/src/lejos/nxt/comm/LCPBTResponder.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LCPMessageListener.java" tooltip="Framework/src/lejos/nxt/comm/LCPMessageListener.java">
-<persistable path="/Framework/src/lejos/nxt/comm/LCPMessageListener.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LCPResponder.java" tooltip="Framework/src/lejos/nxt/comm/LCPResponder.java">
-<persistable path="/Framework/src/lejos/nxt/comm/LCPResponder.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LCP.java" tooltip="Framework/src/lejos/nxt/comm/LCP.java">
-<persistable path="/Framework/src/lejos/nxt/comm/LCP.java"/>
 </file>
 </mruList>
 </workbench>

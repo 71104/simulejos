@@ -2,7 +2,6 @@ package it.uniroma1.di.simulejos.ui;
 
 import it.uniroma1.di.simulejos.Simulation;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -136,7 +135,6 @@ public final class Simulejos extends JFrame {
 	private Simulejos() {
 		super("Simulejos");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLayout(new BorderLayout());
 		final JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		final JMenu fileMenu = new JMenu("File");
@@ -156,10 +154,7 @@ public final class Simulejos extends JFrame {
 		menuBar.add(simulationMenu);
 		final GLJPanel canvas = new GLJPanel();
 		canvas.setPreferredSize(new Dimension(800, 600));
-		final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				canvas, logWindow);
-		splitPane.setResizeWeight(1);
-		add(splitPane, BorderLayout.CENTER);
+		add(new JSplitPane(JSplitPane.VERTICAL_SPLIT, canvas, logWindow));
 		pack();
 		setLocationByPlatform(true);
 		setVisible(true);

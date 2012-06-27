@@ -3,7 +3,6 @@
 <fullyQualifiedTypeName name="javax.swing.SwingUtilities"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.Simulejos"/>
 <fullyQualifiedTypeName name="java.awt.Frame"/>
-<fullyQualifiedTypeName name="java.awt.Dimension"/>
 <fullyQualifiedTypeName name="java.awt.Desktop.Action"/>
 <fullyQualifiedTypeName name="javax.swing.JFileChooser"/>
 <fullyQualifiedTypeName name="javax.swing.JMenuBar"/>
@@ -33,7 +32,6 @@
 <fullyQualifiedTypeName name="java.io.Reader"/>
 <fullyQualifiedTypeName name="java.lang.CharSequence"/>
 <fullyQualifiedTypeName name="java.lang.StringBuffer"/>
-<fullyQualifiedTypeName name="javax.swing.JSplitPane"/>
 <fullyQualifiedTypeName name="javax.swing.JMenu"/>
 <fullyQualifiedTypeName name="java.io.Writer"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.PartialWriter"/>
@@ -43,7 +41,6 @@
 <fullyQualifiedTypeName name="javax.swing.JFrame"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.ui.Simulejos"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.Simulation"/>
-<fullyQualifiedTypeName name="java.awt.BorderLayout"/>
 <fullyQualifiedTypeName name="javax.swing.JPanel"/>
 <fullyQualifiedTypeName name="javax.swing.JButton"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.Simulation.State"/>
@@ -51,4 +48,7 @@
 <fullyQualifiedTypeName name="javax.swing.AbstractAction"/>
 <fullyQualifiedTypeName name="java.awt.FlowLayout"/>
 <fullyQualifiedTypeName name="javax.media.opengl.awt.GLJPanel"/>
+<fullyQualifiedTypeName name="java.awt.Dimension"/>
+<fullyQualifiedTypeName name="javax.swing.JSplitPane"/>
+<fullyQualifiedTypeName name="java.awt.BorderLayout"/>
 </qualifiedTypeNameHistroy>

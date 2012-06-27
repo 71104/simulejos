@@ -158,7 +158,6 @@ public final class Simulejos extends JFrame {
 		canvas.setPreferredSize(new Dimension(800, 600));
 		final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 				canvas, logWindow);
-		splitPane.setResizeWeight(1);
 		add(splitPane, BorderLayout.CENTER);
 		pack();
 		setLocationByPlatform(true);
