@@ -17,17 +17,28 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 
 public final class Simulejos extends JFrame {
 	private static final long serialVersionUID = 1344391485057572344L;
 
+	private final GLJPanel canvas = new GLJPanel();
+	{
+		canvas.setPreferredSize(new Dimension(800, 600));
+	}
+
 	private final LogWindow logWindow = new LogWindow();
+
 	private volatile Simulation simulation = new Simulation(this,
 			logWindow.getWriter());
-	private volatile File file = null;
+	{
+		simulation.setCanvas(canvas);
+	}
 
+	private volatile File file = null;
 	private final JFileChooser fileChooser = new JFileChooser();
 
 	private boolean reset() {
@@ -44,7 +55,8 @@ public final class Simulejos extends JFrame {
 			new ObjectOutputStream(new FileOutputStream(file))
 					.writeObject(simulation);
 		} catch (IOException e) {
-			// TODO show error message
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Simulejos",
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		simulation.clearDirty();
@@ -154,10 +166,8 @@ public final class Simulejos extends JFrame {
 		simulationMenu.add(SUSPEND_ACTION);
 		simulationMenu.add(STOP_ACTION);
 		menuBar.add(simulationMenu);
-		final GLJPanel canvas = new GLJPanel();
-		canvas.setPreferredSize(new Dimension(800, 600));
 		final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				canvas, logWindow);
+				canvas, new JScrollPane(logWindow));
 		splitPane.setResizeWeight(1);
 		add(splitPane, BorderLayout.CENTER);
 		pack();

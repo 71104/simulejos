@@ -14,8 +14,14 @@ public class PartialWriter extends Writer {
 	}
 
 	@Override
-	public void write(char[] cbuf, int off, int len) {
-		buffer.append(cbuf, off, len);
+	public void write(char[] cbuf, int off, int len) throws IOException {
+		for (int i = off; i < off + len; i++) {
+			buffer.append(cbuf[i]);
+			if (cbuf[i] == '\n') {
+				sink.append(name + "> " + buffer);
+				buffer.delete(0, buffer.length());
+			}
+		}
 	}
 
 	@Override

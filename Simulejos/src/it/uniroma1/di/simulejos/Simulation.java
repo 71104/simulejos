@@ -8,6 +8,10 @@ import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.media.opengl.GL2GL3;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+
 public final class Simulation implements Serializable {
 	private static final long serialVersionUID = -290517947218502549L;
 
@@ -16,6 +20,35 @@ public final class Simulation implements Serializable {
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
 	private transient volatile boolean dirty = false;
+
+	private transient volatile GLAutoDrawable canvas;
+	private transient final GLEventListener glEventListener = new GLEventListener() {
+		@Override
+		public void init(GLAutoDrawable drawable) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void reshape(GLAutoDrawable drawable, int x, int y, int width,
+				int height) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void display(GLAutoDrawable drawable) {
+			final GL2GL3 gl = drawable.getGL().getGL2GL3();
+			gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT | GL2GL3.GL_DEPTH_BUFFER_BIT);
+			for (Robot robot : robots) {
+				// TODO
+			}
+			gl.glFlush();
+		}
+
+		@Override
+		public void dispose(GLAutoDrawable drawable) {
+			// TODO Auto-generated method stub
+		}
+	};
 
 	public Simulation(Frame parentWindow, Writer logWriter) {
 		this.parentWindow = parentWindow;
@@ -29,6 +62,17 @@ public final class Simulation implements Serializable {
 
 	public void clearDirty() {
 		dirty = false;
+	}
+
+	public void setCanvas(GLAutoDrawable canvas) {
+		canvas.addGLEventListener(glEventListener);
+	}
+
+	public void discard() {
+		if (canvas != null) {
+			canvas.removeGLEventListener(glEventListener);
+			canvas = null;
+		}
 	}
 
 	public void addRobot(File classPath, String mainClassName, String script) {

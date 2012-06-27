@@ -17,7 +17,6 @@
 <fullyQualifiedTypeName name="java.net.URL"/>
 <fullyQualifiedTypeName name="java.lang.Class"/>
 <fullyQualifiedTypeName name="java.io.File"/>
-<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.Robot"/>
 <fullyQualifiedTypeName name="java.lang.reflect.Method"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.bridge.Bridge"/>
 <fullyQualifiedTypeName name="java.lang.RuntimeException"/>
@@ -47,8 +46,14 @@
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.ui.NewRobotDialog"/>
 <fullyQualifiedTypeName name="javax.swing.AbstractAction"/>
 <fullyQualifiedTypeName name="java.awt.FlowLayout"/>
-<fullyQualifiedTypeName name="javax.media.opengl.awt.GLJPanel"/>
 <fullyQualifiedTypeName name="java.awt.Dimension"/>
 <fullyQualifiedTypeName name="javax.swing.JSplitPane"/>
 <fullyQualifiedTypeName name="java.awt.BorderLayout"/>
+<fullyQualifiedTypeName name="javax.swing.JScrollPane"/>
+<fullyQualifiedTypeName name="javax.media.opengl.GLEventListener"/>
+<fullyQualifiedTypeName name="javax.media.opengl.GLAutoDrawable"/>
+<fullyQualifiedTypeName name="javax.media.opengl.awt.GLJPanel"/>
+<fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+<fullyQualifiedTypeName name="javax.media.opengl.GL2GL3"/>
+<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.Robot"/>
 </qualifiedTypeNameHistroy>

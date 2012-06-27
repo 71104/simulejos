@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="14" version="2.0">
+<workbench progressCount="17" version="2.0">
 <workbenchAdvisor/>
 <window height="728" maximized="true" width="1024" x="77" y="-17">
 <fastViewData fastViewLocation="1024"/>
@@ -315,6 +315,18 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Robot.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Robot.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Robot.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulation.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Simulation.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Simulation.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulejos.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/Simulejos.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/Simulejos.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PartialWriter.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/PartialWriter.java">
+<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/PartialWriter.java"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MotorPort.java" tooltip="Framework/src/lejos/nxt/MotorPort.java">
 <persistable path="/Framework/src/lejos/nxt/MotorPort.java"/>
 </file>
@@ -327,20 +339,8 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LogWindow.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/LogWindow.java">
 <persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/LogWindow.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PartialWriter.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/PartialWriter.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/PartialWriter.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulation.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Simulation.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Simulation.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Simulejos.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/Simulejos.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/Simulejos.java"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NewRobotDialog.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java">
 <persistable path="/Simulejos/src/it/uniroma1/di/simulejos/ui/NewRobotDialog.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Robot.java" tooltip="Simulejos/src/it/uniroma1/di/simulejos/Robot.java">
-<persistable path="/Simulejos/src/it/uniroma1/di/simulejos/Robot.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SimulatorInterface.java" tooltip="Bridge/src/it/uniroma1/di/simulejos/bridge/SimulatorInterface.java">
 <persistable path="/Bridge/src/it/uniroma1/di/simulejos/bridge/SimulatorInterface.java"/>
