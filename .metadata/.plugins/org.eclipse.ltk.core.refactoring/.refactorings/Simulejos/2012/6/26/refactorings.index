@@ -3,3 +3,7 @@
 1340841221986	Rename type 'Program'
 1340842436900	Delete element
 1340843681128	Rename field 'shaders'
+1340885155830	Rename local variable 'log'
+1340885162491	Rename field 'log'
+1340885171758	Rename field 'log'
+1340885176110	Rename local variable 'log'

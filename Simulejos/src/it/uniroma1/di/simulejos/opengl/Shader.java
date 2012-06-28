@@ -1,5 +1,10 @@
 package it.uniroma1.di.simulejos.opengl;
 
+import it.uniroma1.di.simulejos.util.FullReader;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -31,10 +36,11 @@ public class Shader extends GLObject {
 	public static class CompileException extends RuntimeException {
 		private static final long serialVersionUID = 7160429065453776008L;
 
-		public final String log;
+		public final String infoLog;
 
-		CompileException(String log) {
-			this.log = log;
+		CompileException(String infoLog) {
+			super(infoLog);
+			this.infoLog = infoLog;
 		}
 	}
 
@@ -45,6 +51,20 @@ public class Shader extends GLObject {
 		if (!isCompiled()) {
 			throw new CompileException(getInfoLog());
 		}
+	}
+
+	public Shader(GL2GL3 gl, Type type, Reader source) throws IOException {
+		super(gl, gl.glCreateShader(type.getGLType()));
+		source(source);
+		compile();
+		if (!isCompiled()) {
+			throw new CompileException(getInfoLog());
+		}
+	}
+
+	public Shader(GL2GL3 gl, Type type, Class<?> c, String name)
+			throws IOException {
+		this(gl, type, new InputStreamReader(c.getResourceAsStream(name)));
 	}
 
 	private Shader(GL2GL3 gl, int id) {
@@ -66,6 +86,10 @@ public class Shader extends GLObject {
 		gl.glShaderSource(id, 1, sources, null, 0);
 	}
 
+	public void source(Reader source) throws IOException {
+		source(new FullReader(source).readAll());
+	}
+
 	public String getSource() {
 		final int length = get(GL2GL3.GL_SHADER_SOURCE_LENGTH);
 		final byte[] source = new byte[length];
@@ -78,7 +102,7 @@ public class Shader extends GLObject {
 	}
 
 	public boolean isCompiled() {
-		return get(GL2GL3.GL_COMPILE_STATUS) != 0;
+		return get(GL2GL3.GL_COMPILE_STATUS) != GL2GL3.GL_FALSE;
 	}
 
 	public String getInfoLog() {
@@ -93,6 +117,6 @@ public class Shader extends GLObject {
 	}
 
 	public boolean isDeleted() {
-		return get(GL2GL3.GL_DELETE_STATUS) != 0;
+		return get(GL2GL3.GL_DELETE_STATUS) != GL2GL3.GL_FALSE;
 	}
 }

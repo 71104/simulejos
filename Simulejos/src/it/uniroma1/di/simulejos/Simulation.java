@@ -15,6 +15,7 @@ import javax.media.opengl.GLEventListener;
 public final class Simulation implements Serializable {
 	private static final long serialVersionUID = -290517947218502549L;
 
+	private final Floor floor = new Floor();
 	private final List<Robot> robots = new LinkedList<>();
 
 	private transient volatile Frame parentWindow;
@@ -26,7 +27,7 @@ public final class Simulation implements Serializable {
 		@Override
 		public void init(GLAutoDrawable drawable) {
 			final GL2GL3 gl = drawable.getGL().getGL2GL3();
-			// TODO
+			floor.setGL(gl);
 		}
 
 		@Override
@@ -39,6 +40,7 @@ public final class Simulation implements Serializable {
 		public void display(GLAutoDrawable drawable) {
 			final GL2GL3 gl = drawable.getGL().getGL2GL3();
 			gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT | GL2GL3.GL_DEPTH_BUFFER_BIT);
+			floor.draw(gl);
 			for (Robot robot : robots) {
 				// TODO
 			}

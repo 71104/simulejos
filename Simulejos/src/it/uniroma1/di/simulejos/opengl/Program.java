@@ -1,5 +1,7 @@
 package it.uniroma1.di.simulejos.opengl;
 
+import java.io.IOException;
+
 import javax.media.opengl.GL2GL3;
 
 public class Program extends GLObject {
@@ -10,10 +12,10 @@ public class Program extends GLObject {
 	public static class LinkException extends RuntimeException {
 		private static final long serialVersionUID = -7104743047447892268L;
 
-		public final String log;
+		public final String infoLog;
 
-		LinkException(String log) {
-			this.log = log;
+		LinkException(String infoLog) {
+			this.infoLog = infoLog;
 		}
 	}
 
@@ -26,6 +28,10 @@ public class Program extends GLObject {
 		if (!isLinked()) {
 			throw new LinkException(getInfoLog());
 		}
+	}
+
+	public Program(GL2GL3 gl, Class<?> c, String name) throws IOException {
+		this(gl, new VertexShader(gl, c, name), new FragmentShader(gl, c, name));
 	}
 
 	private int get(int name) {
@@ -62,7 +68,7 @@ public class Program extends GLObject {
 	}
 
 	public boolean isLinked() {
-		return get(GL2GL3.GL_LINK_STATUS) != 0;
+		return get(GL2GL3.GL_LINK_STATUS) != GL2GL3.GL_FALSE;
 	}
 
 	public String getInfoLog() {
@@ -74,7 +80,7 @@ public class Program extends GLObject {
 
 	public boolean validate() {
 		gl.glValidateProgram(id);
-		return get(GL2GL3.GL_VALIDATE_STATUS) != 0;
+		return get(GL2GL3.GL_VALIDATE_STATUS) != GL2GL3.GL_FALSE;
 	}
 
 	public void delete() {
@@ -82,6 +88,6 @@ public class Program extends GLObject {
 	}
 
 	public boolean isDeleted() {
-		return get(GL2GL3.GL_DELETE_STATUS) != 0;
+		return get(GL2GL3.GL_DELETE_STATUS) != GL2GL3.GL_FALSE;
 	}
 }

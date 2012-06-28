@@ -1,0 +1,28 @@
+package it.uniroma1.di.simulejos.util;
+
+import java.io.IOException;
+import java.io.Reader;
+
+public class FullReader extends BufferedReader {
+	public FullReader() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public FullReader(Object arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void close() throws IOException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int read(char[] arg0, int arg1, int arg2) throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

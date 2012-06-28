@@ -1,0 +1,21 @@
+package it.uniroma1.di.simulejos.util;
+
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.nio.CharBuffer;
+
+public class FullReader extends BufferedReader {
+	public FullReader(Reader in) {
+		super(in);
+		// TODO Auto-generated constructor stub
+	}
+
+	public FullReader(Reader in, int sz) {
+		super(in, sz);
+		// TODO Auto-generated constructor stub
+	}
+
+	public String readAll() {
+		CharBuffer buffer = "";
+	}
+}
