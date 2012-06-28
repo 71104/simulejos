@@ -1,0 +1,63 @@
+package it.uniroma1.di.simulejos.opengl;
+
+import javax.media.opengl.GL2GL3;
+
+public class Program extends GLObject {
+	final int id;
+
+	public Program(GL2GL3 gl) {
+		super(gl);
+		this.id = gl.glCreateProgram();
+	}
+
+	private int get(int name) {
+		final int[] result = new int[1];
+		gl.glGetProgramiv(id, name, result, 0);
+		return result[0];
+	}
+
+	public void use() {
+		gl.glUseProgram(id);
+	}
+
+	public void attachShader(Shader shader) {
+		gl.glAttachShader(id, shader.id);
+	}
+
+	public void detachShader(Shader shader) {
+		gl.glDetachShader(id, shader.id);
+	}
+
+	public void link() {
+		gl.glLinkProgram(id);
+	}
+
+	public boolean isLinked() {
+		return get(GL2GL3.GL_LINK_STATUS) != 0;
+	}
+
+	public String getInfoLog() {
+		final int[] lengths = new int[1];
+		gl.glGetProgramiv(id, GL2GL3.GL_INFO_LOG_LENGTH, lengths, 0);
+		final byte[] log = new byte[lengths[0]];
+		gl.glGetProgramInfoLog(id, lengths[0], null, 0, log, 0);
+		return new String(log);
+	}
+
+	public boolean validate() {
+		gl.glValidateProgram(id);
+		final int[] result = new int[1];
+		gl.glGetProgramiv(id, GL2GL3.GL_VALIDATE_STATUS, result, 0);
+		return result[0] != 0;
+	}
+
+	public void delete() {
+		gl.glDeleteProgram(id);
+	}
+
+	public boolean isDeleted() {
+		final int[] result = new int[1];
+		gl.glGetProgramiv(id, GL2GL3.GL_DELETE_STATUS, result, 0);
+		return result[0] != 0;
+	}
+}

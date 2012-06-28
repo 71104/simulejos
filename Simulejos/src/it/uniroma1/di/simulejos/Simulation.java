@@ -25,7 +25,8 @@ public final class Simulation implements Serializable {
 	private transient final GLEventListener glEventListener = new GLEventListener() {
 		@Override
 		public void init(GLAutoDrawable drawable) {
-			// TODO Auto-generated method stub
+			final GL2GL3 gl = drawable.getGL().getGL2GL3();
+			// TODO
 		}
 
 		@Override

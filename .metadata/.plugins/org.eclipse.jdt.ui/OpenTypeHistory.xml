@@ -3,4 +3,7 @@
 <typeInfo handle="=Framework/C:\/Program Files\/Java\/jre7\/lib\/rt.jar&lt;java.lang(Exception.class[Exception" modifiers="33" timestamp="1330016298967"/>
 <typeInfo handle="=Simulejos/C:\/Program Files\/Java\/jre7\/lib\/rt.jar&lt;javax.swing(JDialog.class[JDialog" modifiers="33" timestamp="1330016298967"/>
 <typeInfo handle="=Simulejos/C:\/Program Files\/Java\/jre7\/lib\/rt.jar&lt;java.io(PrintWriter.class[PrintWriter" modifiers="33" timestamp="1330016298967"/>
+<typeInfo handle="=Simulejos/src&lt;it.uniroma1.di.simulejos.opengl{Shader.java[Shader" modifiers="1" timestamp="1340878811935"/>
+<typeInfo handle="=Simulejos/src&lt;it.uniroma1.di.simulejos.opengl{Program.java[Program" modifiers="1" timestamp="1340845328602"/>
+<typeInfo handle="=Simulejos/src&lt;it.uniroma1.di.simulejos.opengl{GLObject.java[GLObject" modifiers="1025" timestamp="1340845317448"/>
 </typeInfoHistroy>

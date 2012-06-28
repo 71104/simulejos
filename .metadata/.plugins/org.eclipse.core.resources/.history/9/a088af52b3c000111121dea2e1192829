@@ -1,0 +1,11 @@
+package it.uniroma1.di.simulejos.opengl;
+
+import javax.media.opengl.GL2GL3;
+
+public class Program {
+	private final GL2GL3 gl;
+
+	public Program(GL2GL3 gl) {
+		this.gl = gl;
+	}
+}

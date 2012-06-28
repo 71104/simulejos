@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javax.swing.SwingUtilities"/>
-<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.Simulejos"/>
-<fullyQualifiedTypeName name="java.awt.Frame"/>
-<fullyQualifiedTypeName name="java.awt.Desktop.Action"/>
-<fullyQualifiedTypeName name="javax.swing.JFileChooser"/>
-<fullyQualifiedTypeName name="javax.swing.JMenuBar"/>
-<fullyQualifiedTypeName name="java.io.Serializable"/>
-<fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="java.util.LinkedList"/>
 <fullyQualifiedTypeName name="java.io.ObjectOutputStream"/>
 <fullyQualifiedTypeName name="java.io.FileOutputStream"/>
 <fullyQualifiedTypeName name="java.lang.Thread"/>
@@ -19,7 +10,6 @@
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.lang.reflect.Method"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.bridge.Bridge"/>
-<fullyQualifiedTypeName name="java.lang.RuntimeException"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.bridge.SimulatorInterface"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.Robot.Simulator"/>
 <fullyQualifiedTypeName name="java.io.DataInputStream"/>
@@ -28,7 +18,6 @@
 <fullyQualifiedTypeName name="java.io.OutputStream"/>
 <fullyQualifiedTypeName name="java.io.IOException"/>
 <fullyQualifiedTypeName name="javax.microedition.io.StreamConnection"/>
-<fullyQualifiedTypeName name="java.io.Reader"/>
 <fullyQualifiedTypeName name="java.lang.CharSequence"/>
 <fullyQualifiedTypeName name="java.lang.StringBuffer"/>
 <fullyQualifiedTypeName name="javax.swing.JMenu"/>
@@ -54,6 +43,21 @@
 <fullyQualifiedTypeName name="javax.media.opengl.GLAutoDrawable"/>
 <fullyQualifiedTypeName name="javax.media.opengl.awt.GLJPanel"/>
 <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
-<fullyQualifiedTypeName name="javax.media.opengl.GL2GL3"/>
 <fullyQualifiedTypeName name="it.uniroma1.di.simulejos.Robot"/>
+<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.opengl.Shader.Type"/>
+<fullyQualifiedTypeName name="Class"/>
+<fullyQualifiedTypeName name="java.io.Reader"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.util.concurrent.ConcurrentHashMap"/>
+<fullyQualifiedTypeName name="java.util.concurrent.ConcurrentMap"/>
+<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.opengl.Shader"/>
+<fullyQualifiedTypeName name="java.io.Serializable"/>
+<fullyQualifiedTypeName name="java.lang.Process"/>
+<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.opengl.Shader.CompileException"/>
+<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.opengl.Program"/>
+<fullyQualifiedTypeName name="javax.media.opengl.GL2GL3"/>
+<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.opengl.VertexShader"/>
+<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.opengl.FragmentShader"/>
+<fullyQualifiedTypeName name="java.lang.RuntimeException"/>
+<fullyQualifiedTypeName name="it.uniroma1.di.simulejos.opengl.Program.LinkException"/>
 </qualifiedTypeNameHistroy>
