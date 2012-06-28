@@ -8,3 +8,4 @@
 1340885171758	Rename field 'log'
 1340885176110	Rename local variable 'log'
 1340892033452	Rename field 'debugMode'
+1340912417732	Rename local variable 'buffer'

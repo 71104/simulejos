@@ -4,8 +4,6 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.LongBuffer;
-import java.nio.ShortBuffer;
 
 import javax.media.opengl.GL2GL3;
 
@@ -59,7 +57,7 @@ public class Buffer extends GLObject {
 		gl.glBindBuffer(target, 0);
 	}
 
-	public void data(long size, java.nio.Buffer data, int usage) {
+	public void data(int size, java.nio.Buffer data, int usage) {
 		gl.glBufferData(target, size, data, usage);
 	}
 
@@ -67,16 +65,8 @@ public class Buffer extends GLObject {
 		gl.glBufferData(target, data.length, ByteBuffer.wrap(data), usage);
 	}
 
-	public void data(short[] data, int usage) {
-		gl.glBufferData(target, data.length * 2, ShortBuffer.wrap(data), usage);
-	}
-
 	public void data(int[] data, int usage) {
 		gl.glBufferData(target, data.length * 4, IntBuffer.wrap(data), usage);
-	}
-
-	public void data(long[] data, int usage) {
-		gl.glBufferData(target, data.length * 8, LongBuffer.wrap(data), usage);
 	}
 
 	public void data(float[] data, int usage) {
@@ -87,55 +77,8 @@ public class Buffer extends GLObject {
 		gl.glBufferData(target, data.length * 8, DoubleBuffer.wrap(data), usage);
 	}
 
-	public void subData(long offset, long size, java.nio.Buffer data) {
+	public void subData(int offset) {
 		gl.glBufferSubData(target, offset, size, data);
-	}
-
-	public void subData(long offset, byte[] data) {
-		gl.glBufferSubData(target, offset, data.length, ByteBuffer.wrap(data));
-	}
-
-	public void subData(long offset, short[] data) {
-		gl.glBufferSubData(target, offset, data.length * 2,
-				ShortBuffer.wrap(data));
-	}
-
-	public void subData(long offset, int[] data) {
-		gl.glBufferSubData(target, offset, data.length * 4,
-				IntBuffer.wrap(data));
-	}
-
-	public void subData(long offset, long[] data) {
-		gl.glBufferSubData(target, offset, data.length * 8,
-				LongBuffer.wrap(data));
-	}
-
-	public void subData(long offset, float[] data) {
-		gl.glBufferSubData(target, offset, data.length * 4,
-				FloatBuffer.wrap(data));
-	}
-
-	public void subData(long offset, double[] data) {
-		gl.glBufferSubData(target, offset, data.length * 8,
-				DoubleBuffer.wrap(data));
-	}
-
-	public java.nio.Buffer getSubData(long offset, int size) {
-		final ByteBuffer buffer = ByteBuffer.allocate(size);
-		gl.glGetBufferSubData(target, offset, size, buffer);
-		return buffer;
-	}
-
-	public int getSize() {
-		final int[] result = new int[1];
-		gl.glGetBufferParameteriv(target, GL2GL3.GL_BUFFER_SIZE, result, 0);
-		return result[0];
-	}
-
-	public int getUsage() {
-		final int[] result = new int[1];
-		gl.glGetBufferParameteriv(target, GL2GL3.GL_BUFFER_USAGE, result, 0);
-		return result[0];
 	}
 
 	public void delete() {

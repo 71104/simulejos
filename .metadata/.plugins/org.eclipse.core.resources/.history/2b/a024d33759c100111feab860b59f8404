@@ -105,21 +105,6 @@ public class Buffer extends GLObject {
 				IntBuffer.wrap(data));
 	}
 
-	public void subData(long offset, long[] data) {
-		gl.glBufferSubData(target, offset, data.length * 8,
-				LongBuffer.wrap(data));
-	}
-
-	public void subData(long offset, float[] data) {
-		gl.glBufferSubData(target, offset, data.length * 4,
-				FloatBuffer.wrap(data));
-	}
-
-	public void subData(long offset, double[] data) {
-		gl.glBufferSubData(target, offset, data.length * 8,
-				DoubleBuffer.wrap(data));
-	}
-
 	public java.nio.Buffer getSubData(long offset, int size) {
 		final ByteBuffer buffer = ByteBuffer.allocate(size);
 		gl.glGetBufferSubData(target, offset, size, buffer);
