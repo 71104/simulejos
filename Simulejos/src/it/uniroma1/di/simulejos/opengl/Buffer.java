@@ -44,11 +44,71 @@ public class Buffer extends GLObject {
 		abstract int getGLTarget();
 	}
 
-	private final int target;
+	public static enum Usage {
+		STREAM_DRAW {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_STREAM_DRAW;
+			}
+		},
+		STREAM_READ {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_STREAM_READ;
+			}
+		},
+		STREAM_COPY {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_STREAM_COPY;
+			}
+		},
+		STATIC_DRAW {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_STATIC_DRAW;
+			}
+		},
+		STATIC_READ {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_STATIC_READ;
+			}
+		},
+		STATIC_COPY {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_STATIC_COPY;
+			}
+		},
+		DYNAMIC_DRAW {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_DYNAMIC_DRAW;
+			}
+		},
+		DYNAMIC_READ {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_DYNAMIC_READ;
+			}
+		},
+		DYNAMIC_COPY {
+			@Override
+			int getGLUsage() {
+				return GL2GL3.GL_DYNAMIC_COPY;
+			}
+		};
+		abstract int getGLUsage();
+	}
 
-	public Buffer(GL2GL3 gl, Target target) {
+	private final int target;
+	private final int usage;
+
+	public Buffer(GL2GL3 gl, Target target, Usage usage) {
 		super(gl, createBuffer(gl));
 		this.target = target.getGLTarget();
+		this.usage = usage.getGLUsage();
 	}
 
 	public void bind() {
@@ -59,31 +119,31 @@ public class Buffer extends GLObject {
 		gl.glBindBuffer(target, 0);
 	}
 
-	public void data(long size, java.nio.Buffer data, int usage) {
+	public void data(long size, java.nio.Buffer data) {
 		gl.glBufferData(target, size, data, usage);
 	}
 
-	public void data(byte[] data, int usage) {
+	public void data(byte[] data) {
 		gl.glBufferData(target, data.length, ByteBuffer.wrap(data), usage);
 	}
 
-	public void data(short[] data, int usage) {
+	public void data(short[] data) {
 		gl.glBufferData(target, data.length * 2, ShortBuffer.wrap(data), usage);
 	}
 
-	public void data(int[] data, int usage) {
+	public void data(int[] data) {
 		gl.glBufferData(target, data.length * 4, IntBuffer.wrap(data), usage);
 	}
 
-	public void data(long[] data, int usage) {
+	public void data(long[] data) {
 		gl.glBufferData(target, data.length * 8, LongBuffer.wrap(data), usage);
 	}
 
-	public void data(float[] data, int usage) {
+	public void data(float[] data) {
 		gl.glBufferData(target, data.length * 4, FloatBuffer.wrap(data), usage);
 	}
 
-	public void data(double[] data, int usage) {
+	public void data(double[] data) {
 		gl.glBufferData(target, data.length * 8, DoubleBuffer.wrap(data), usage);
 	}
 
@@ -129,12 +189,6 @@ public class Buffer extends GLObject {
 	public int getSize() {
 		final int[] result = new int[1];
 		gl.glGetBufferParameteriv(target, GL2GL3.GL_BUFFER_SIZE, result, 0);
-		return result[0];
-	}
-
-	public int getUsage() {
-		final int[] result = new int[1];
-		gl.glGetBufferParameteriv(target, GL2GL3.GL_BUFFER_USAGE, result, 0);
 		return result[0];
 	}
 

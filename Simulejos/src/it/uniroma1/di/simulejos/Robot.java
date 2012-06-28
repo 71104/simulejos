@@ -11,10 +11,14 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-final class Robot implements Serializable {
+public final class Robot implements Serializable {
 	private static final long serialVersionUID = 1961674308786529328L;
 
 	private static volatile int nextIndex = 1;
+
+	public static String getNextName() {
+		return "NXT" + nextIndex;
+	}
 
 	private final int index;
 	private final File classPath;
@@ -103,7 +107,7 @@ final class Robot implements Serializable {
 		this.logWriter = logWriter;
 	}
 
-	void play() {
+	public void play() {
 		thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -145,17 +149,17 @@ final class Robot implements Serializable {
 	}
 
 	@SuppressWarnings("deprecation")
-	void suspend() {
+	public void suspend() {
 		thread.suspend();
 	}
 
 	@SuppressWarnings("deprecation")
-	void resume() {
+	public void resume() {
 		thread.resume();
 	}
 
 	@SuppressWarnings("deprecation")
-	void stop() {
+	public void stop() {
 		thread.stop();
 	}
 }

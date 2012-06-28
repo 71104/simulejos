@@ -1,0 +1,25 @@
+package it.uniroma1.di.simulejos.math;
+
+import java.io.Serializable;
+
+public class Vector2 implements Cloneable, Serializable {
+	private static final long serialVersionUID = 4822298356837119742L;
+
+	public final float x;
+	public final float y;
+
+	public Vector2() {
+		this.x = 0;
+		this.y = 0;
+	}
+
+	public Vector2(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public Vector2 clone() {
+		return new Vector2(x, y);
+	}
+}

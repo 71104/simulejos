@@ -9,3 +9,5 @@
 1340885176110	Rename local variable 'log'
 1340892033452	Rename field 'debugMode'
 1340912417732	Rename local variable 'buffer'
+1340913043702	Rename local variable 'a'
+1340913160843	Copy compilation unit

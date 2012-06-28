@@ -1,0 +1,54 @@
+package it.uniroma1.di.simulejos.math;
+
+import java.io.Serializable;
+
+public class Vector2 implements Cloneable, Serializable {
+	private static final long serialVersionUID = 4822298356837119742L;
+
+	public final double x;
+	public final double y;
+
+	public static final Vector2 NULL = new Vector2();
+	public static final Vector2 I = new Vector2(1, 0);
+	public static final Vector2 J = new Vector2(0, 1);
+
+	public Vector2() {
+		this.x = 0;
+		this.y = 0;
+	}
+
+	public Vector2(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public Vector2 clone() {
+		return new Vector2(x, y);
+	}
+
+	public double length() {
+		return Math.hypot(x, y);
+	}
+
+	public Vector2 normalize() {
+		final double h = Math.hypot(x, y);
+		return new Vector2(x / h, y / h);
+	}
+
+	public Vector2 invert() {
+		return new Vector2(-x, -y);
+	}
+
+	public Vector2 plus(Vector2 v) {
+		return new Vector2(x + v.x, y + v.y);
+	}
+
+	public Vector2 minus(Vector2 v) {
+		return new Vector2(x - v.x, y - v.y);
+	}
+
+	public Vector2 by(double f) {
+		return new Vector2(x * f, y * f);
+	}
+}
