@@ -49,6 +49,7 @@ public class Shader extends GLObject {
 		source(source);
 		compile();
 		if (!isCompiled()) {
+			System.out.println(gl.glGetError());
 			throw new CompileException(getInfoLog());
 		}
 	}

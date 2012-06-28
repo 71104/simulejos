@@ -35,7 +35,7 @@ public class Program extends GLObject {
 	}
 
 	private int get(int name) {
-		final int[] result = { 1234 };
+		final int[] result = new int[1];
 		gl.glGetProgramiv(id, name, result, 0);
 		return result[0];
 	}

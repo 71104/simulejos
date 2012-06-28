@@ -26,6 +26,7 @@ public class Program extends GLObject {
 		attachShader(fragmentShader);
 		link();
 		if (!isLinked()) {
+			System.out.println(gl.glGetError());
 			throw new LinkException(getInfoLog());
 		}
 	}
