@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.media.opengl.DebugGL2GL3;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -20,13 +21,28 @@ public final class Simulation implements Serializable {
 
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
-	private transient volatile boolean dirty = false;
+	private transient volatile boolean dirty;
+
+	private static volatile boolean debugMode;
+
+	public static void setDebugMode(boolean debug) {
+		Simulation.debugMode = debug;
+	}
+
+	private static GL2GL3 getGL(GLAutoDrawable drawable) {
+		final GL2GL3 gl = drawable.getGL().getGL2GL3();
+		if (debugMode) {
+			return new DebugGL2GL3(gl);
+		} else {
+			return gl;
+		}
+	}
 
 	private transient volatile GLAutoDrawable canvas;
 	private transient final GLEventListener glEventListener = new GLEventListener() {
 		@Override
 		public void init(GLAutoDrawable drawable) {
-			final GL2GL3 gl = drawable.getGL().getGL2GL3();
+			final GL2GL3 gl = getGL(drawable);
 			floor.setGL(gl);
 		}
 
@@ -38,7 +54,7 @@ public final class Simulation implements Serializable {
 
 		@Override
 		public void display(GLAutoDrawable drawable) {
-			final GL2GL3 gl = drawable.getGL().getGL2GL3();
+			final GL2GL3 gl = getGL(drawable);
 			gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT | GL2GL3.GL_DEPTH_BUFFER_BIT);
 			floor.draw(gl);
 			for (Robot robot : robots) {

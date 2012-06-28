@@ -175,7 +175,25 @@ public final class Simulejos extends JFrame {
 		setVisible(true);
 	}
 
+	public static class CommandLineException extends RuntimeException {
+		private static final long serialVersionUID = 2806285902459793394L;
+
+		private CommandLineException() {
+			super("Invalid command line");
+		}
+	}
+
 	public static void main(String[] arguments) {
+		if (arguments.length > 1) {
+			throw new CommandLineException();
+		}
+		if (arguments.length > 0) {
+			if (arguments[0].equals("--debug")) {
+				Simulation.setDebugMode(true);
+			} else {
+				throw new CommandLineException();
+			}
+		}
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {

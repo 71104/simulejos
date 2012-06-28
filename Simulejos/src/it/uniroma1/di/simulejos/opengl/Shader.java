@@ -77,7 +77,7 @@ public class Shader extends GLObject {
 
 	private int get(int name) {
 		final int[] result = { 1234 };
-		gl.glGetProgramiv(id, name, result, 0);
+		gl.glGetShaderiv(id, name, result, 0);
 		return result[0];
 	}
 
