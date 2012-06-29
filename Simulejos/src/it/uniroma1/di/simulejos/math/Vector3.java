@@ -64,4 +64,9 @@ public class Vector3 implements Cloneable, Serializable {
 	public double dot(Vector3 v) {
 		return x * v.x + y * v.y + z * v.z;
 	}
+
+	public Vector3 cross(Vector3 v) {
+		return new Vector3(y * v.z - z * v.y, x * v.z - z * v.x, x * v.y - y
+				* v.x);
+	}
 }
