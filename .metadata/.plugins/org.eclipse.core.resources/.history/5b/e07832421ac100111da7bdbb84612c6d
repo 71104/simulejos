@@ -1,8 +1,0 @@
-package it.uniroma1.di.simulejos.util;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-
-public class FullReader extends BufferedReader {
-}

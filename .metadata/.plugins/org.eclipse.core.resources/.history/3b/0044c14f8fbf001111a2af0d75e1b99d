@@ -1,9 +1,0 @@
-package lejos.nxt.comm;
-
-public interface StreamConnection {
-void operDataInputStream();
-void openInputStream();
-void close();
-void openDataOutputStream();
-void openOutputStream();
-}

@@ -1,5 +1,0 @@
-package it.uniroma1.di.simulejos.opengl;
-
-public class PixelUnpackBuffer extends Buffer {
-
-}
