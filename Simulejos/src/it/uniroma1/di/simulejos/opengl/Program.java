@@ -16,8 +16,27 @@ public class Program extends GLObject {
 		attachShader(fragmentShader);
 	}
 
-	public Program(GL2GL3 gl, Class<?> c, String name) throws IOException {
-		this(gl, new VertexShader(gl, c, name), new FragmentShader(gl, c, name));
+	private static VertexShader createVertexShader(GL2GL3 gl, Class<?> c,
+			String name) {
+		try {
+			return new VertexShader(gl, c, name);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static FragmentShader createFragmentShader(GL2GL3 gl, Class<?> c,
+			String name) {
+		try {
+			return new FragmentShader(gl, c, name);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Program(GL2GL3 gl, Class<?> c, String name) {
+		this(gl, createVertexShader(gl, c, name), createFragmentShader(gl, c,
+				name));
 	}
 
 	private int get(int name) {
