@@ -9,25 +9,11 @@ public class Program extends GLObject {
 		super(gl, gl.glCreateProgram());
 	}
 
-	public static class LinkException extends RuntimeException {
-		private static final long serialVersionUID = -7104743047447892268L;
-
-		public final String infoLog;
-
-		LinkException(String infoLog) {
-			this.infoLog = infoLog;
-		}
-	}
-
 	public Program(GL2GL3 gl, VertexShader vertexShader,
 			FragmentShader fragmentShader) {
 		super(gl, gl.glCreateProgram());
 		attachShader(vertexShader);
 		attachShader(fragmentShader);
-		link();
-		if (!isLinked()) {
-			throw new LinkException(getInfoLog());
-		}
 	}
 
 	public Program(GL2GL3 gl, Class<?> c, String name) throws IOException {
