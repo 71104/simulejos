@@ -5,10 +5,13 @@ import it.uniroma1.di.simulejos.Simulation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.prefs.Preferences;
 
 import javax.media.opengl.awt.GLJPanel;
 import javax.swing.AbstractAction;
@@ -171,6 +174,22 @@ public final class Simulejos extends JFrame {
 		splitPane.setResizeWeight(1);
 		add(splitPane, BorderLayout.CENTER);
 		pack();
+		if (Preferences.userNodeForPackage(Simulejos.class).getBoolean(
+				"maximizedWindow", false)) {
+			setExtendedState(JFrame.MAXIMIZED_BOTH);
+		}
+		addWindowStateListener(new WindowStateListener() {
+			@Override
+			public void windowStateChanged(WindowEvent event) {
+				if (event.getNewState() != JFrame.MAXIMIZED_BOTH) {
+					Preferences.userNodeForPackage(Simulejos.class).putBoolean(
+							"maximizedWindow", false);
+				} else {
+					Preferences.userNodeForPackage(Simulejos.class).putBoolean(
+							"maximizedWindow", true);
+				}
+			}
+		});
 		setLocationByPlatform(true);
 		setVisible(true);
 	}

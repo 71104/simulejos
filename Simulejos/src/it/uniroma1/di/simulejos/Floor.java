@@ -14,12 +14,11 @@ public final class Floor implements Serializable {
 	private transient volatile Arrays arrays;
 
 	void setGL(GL2GL3 gl) {
-		final String[] variableNames = { "in_Vertex" };
-		program = new Program(gl, getClass(), "floor", variableNames);
+		program = new Program(gl, getClass(), "floor",
+				new String[] { "in_Vertex" });
 		arrays = new Arrays(gl, 6);
-		final double[] vertices = { 0, 0, 0, 1, -1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
-				-1, 0, -1, 0, -1, 0, -1, 0, 1, 0 };
-		arrays.add(4, vertices);
+		arrays.add(4, new double[] { 0, 0, 0, 1, -1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
+				-1, 0, -1, 0, -1, 0, -1, 0, 1, 0 });
 	}
 
 	void draw(GL2GL3 gl) {

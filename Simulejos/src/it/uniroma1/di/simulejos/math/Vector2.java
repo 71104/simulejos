@@ -60,8 +60,16 @@ public class Vector2 implements Cloneable, Serializable {
 		return "(" + x + ", " + y + ")";
 	}
 
+	public double[] toArray() {
+		return new double[] { x, y };
+	}
+
 	public double length() {
 		return Math.hypot(x, y);
+	}
+
+	public double distance(Vector2 v) {
+		return Math.hypot(x - v.x, y - v.y);
 	}
 
 	public Vector2 normalize() {
@@ -87,5 +95,18 @@ public class Vector2 implements Cloneable, Serializable {
 
 	public double dot(Vector2 v) {
 		return x * v.x + y * v.y;
+	}
+
+	public Vector2 reflect(Vector2 normal) {
+		return minus(normal.by(2 * dot(normal)));
+	}
+
+	public Vector2 refract(Vector2 normal, double eta) {
+		final double k = 1 - eta * eta * (1 - Math.pow(dot(normal), 2));
+		if (k < 0) {
+			return NULL;
+		} else {
+			return by(eta).minus(normal.by(eta * dot(normal) + Math.sqrt(k)));
+		}
 	}
 }

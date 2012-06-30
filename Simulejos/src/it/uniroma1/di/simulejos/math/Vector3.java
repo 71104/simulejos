@@ -36,8 +36,17 @@ public class Vector3 implements Cloneable, Serializable {
 		return "(" + x + ", " + y + ", " + z + ")";
 	}
 
+	public double[] toArray() {
+		return new double[] { x, y, z };
+	}
+
 	public double length() {
 		return Math.sqrt(x * x + y * y + z * z);
+	}
+
+	public double distance(Vector3 v) {
+		return Math.sqrt(Math.pow(x - v.x, 2) + Math.pow(y - v.y, 2)
+				+ Math.pow(z - v.z, 2));
 	}
 
 	public Vector3 normalize() {
@@ -68,5 +77,18 @@ public class Vector3 implements Cloneable, Serializable {
 	public Vector3 cross(Vector3 v) {
 		return new Vector3(y * v.z - z * v.y, x * v.z - z * v.x, x * v.y - y
 				* v.x);
+	}
+
+	public Vector3 reflect(Vector3 normal) {
+		return minus(normal.by(2 * dot(normal)));
+	}
+
+	public Vector3 refract(Vector3 normal, double eta) {
+		final double k = 1 - eta * eta * (1 - Math.pow(dot(normal), 2));
+		if (k < 0) {
+			return NULL;
+		} else {
+			return by(eta).minus(normal.by(eta * dot(normal) + Math.sqrt(k)));
+		}
 	}
 }
