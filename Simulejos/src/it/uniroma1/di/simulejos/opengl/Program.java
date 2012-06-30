@@ -9,11 +9,29 @@ public class Program extends GLObject {
 		super(gl, gl.glCreateProgram());
 	}
 
+	public static class LinkException extends RuntimeException {
+		private static final long serialVersionUID = -7104743047447892268L;
+
+		public final String infoLog;
+
+		LinkException(String infoLog) {
+			super(infoLog);
+			this.infoLog = infoLog;
+		}
+	}
+
 	public Program(GL2GL3 gl, VertexShader vertexShader,
-			FragmentShader fragmentShader) {
+			FragmentShader fragmentShader, String[] variableNames) {
 		super(gl, gl.glCreateProgram());
 		attachShader(vertexShader);
 		attachShader(fragmentShader);
+		for (int i = 0; i < variableNames.length; i++) {
+			gl.glBindAttribLocation(id, i, variableNames[i]);
+		}
+		link();
+		if (!isLinked()) {
+			throw new LinkException(getInfoLog());
+		}
 	}
 
 	private static VertexShader createVertexShader(GL2GL3 gl, Class<?> c,
@@ -34,9 +52,9 @@ public class Program extends GLObject {
 		}
 	}
 
-	public Program(GL2GL3 gl, Class<?> c, String name) {
+	public Program(GL2GL3 gl, Class<?> c, String name, String[] variableNames) {
 		this(gl, createVertexShader(gl, c, name), createFragmentShader(gl, c,
-				name));
+				name), variableNames);
 	}
 
 	private int get(int name) {

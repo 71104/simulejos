@@ -9,11 +9,18 @@ import javax.media.opengl.GL2GL3;
 public class Arrays {
 	private volatile int nextIndex;
 	private final GL2GL3 gl;
+	private final int count;
 	private final List<VertexArray> arrays = Collections
 			.synchronizedList(new LinkedList<VertexArray>());
 
 	public Arrays(GL2GL3 gl) {
 		this.gl = gl;
+		this.count = 0;
+	}
+
+	public Arrays(GL2GL3 gl, int count) {
+		this.gl = gl;
+		this.count = count;
 	}
 
 	public void add(int components, byte[] data) {
@@ -42,7 +49,18 @@ public class Arrays {
 		}
 	}
 
-	public void draw(int mode, int first, int count) {
+	public void draw(int mode) {
+		gl.glDrawArrays(mode, 0, count);
+	}
+
+	public void bindAndDraw(int mode) {
+		for (VertexArray array : arrays) {
+			array.bind();
+		}
+		gl.glDrawArrays(mode, 0, count);
+	}
+
+	public void bindAndDraw(int mode, int first, int count) {
 		for (VertexArray array : arrays) {
 			array.bind();
 		}
