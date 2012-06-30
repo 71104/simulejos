@@ -64,6 +64,46 @@ public class Vector2 implements Cloneable, Serializable {
 		return new double[] { x, y };
 	}
 
+	public Vector2 floorX(double min) {
+		return new Vector2(Math.max(x, min), y);
+	}
+
+	public Vector2 floorY(double min) {
+		return new Vector2(x, Math.max(y, min));
+	}
+
+	public Vector2 floor(Vector2 min) {
+		return new Vector2(Math.max(x, min.x), Math.max(y, min.y));
+	}
+
+	public Vector2 ceilX(double max) {
+		return new Vector2(Math.min(x, max), y);
+	}
+
+	public Vector2 ceilY(double max) {
+		return new Vector2(x, Math.min(y, max));
+	}
+
+	public Vector2 ceil(Vector2 max) {
+		return new Vector2(Math.min(x, max.x), Math.min(y, max.y));
+	}
+
+	private static double clamp(double value, double min, double max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	public Vector2 clampX(double min, double max) {
+		return new Vector2(clamp(x, min, max), y);
+	}
+
+	public Vector2 clampY(double min, double max) {
+		return new Vector2(x, clamp(y, min, max));
+	}
+
+	public Vector2 clamp(Vector2 min, Vector2 max) {
+		return new Vector2(clamp(x, min.x, max.x), clamp(y, min.y, max.y));
+	}
+
 	public double length() {
 		return Math.hypot(x, y);
 	}

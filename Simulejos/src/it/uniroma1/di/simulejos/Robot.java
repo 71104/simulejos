@@ -2,8 +2,6 @@ package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
-import it.uniroma1.di.simulejos.opengl.Arrays;
-import it.uniroma1.di.simulejos.opengl.Program;
 
 import java.awt.Frame;
 import java.io.File;
@@ -12,8 +10,6 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.media.opengl.GL2GL3;
 
 public final class Robot implements Serializable {
 	private static final long serialVersionUID = 1961674308786529328L;
@@ -28,26 +24,23 @@ public final class Robot implements Serializable {
 	private final File classPath;
 	private final String mainClassName;
 	private final String script;
+	private transient volatile Thread thread;
+
+	public final float[] vertexArray;
+	public final float[] colorArray;
 
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
-	private transient volatile Thread thread;
-
-	private static volatile Program program;
-	private static volatile Arrays arrays;
-
-	static void setGL(GL2GL3 gl) {
-		program = new Program(gl, Robot.class, "robot",
-				new String[] { "in_Vertex" });
-		arrays = new Arrays(gl);
-	}
 
 	Robot(File classPath, String mainClassName, String script,
-			Frame parentWindow, Writer logWriter) {
+			float[] vertexArray, float[] colorArray, Frame parentWindow,
+			Writer logWriter) {
 		this.index = nextIndex++;
 		this.classPath = classPath;
 		this.mainClassName = mainClassName;
 		this.script = script;
+		this.vertexArray = vertexArray;
+		this.colorArray = colorArray;
 		this.parentWindow = parentWindow;
 		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
 				logWriter));

@@ -96,8 +96,9 @@ public final class Simulation implements Serializable {
 
 	public void addRobot(File classPath, String mainClassName, String script) {
 		dirty = true;
-		robots.add(new Robot(classPath, mainClassName, script, parentWindow,
-				logWriter));
+		// FIXME load wavefront model
+		robots.add(new Robot(classPath, mainClassName, script, new float[] {},
+				new float[] {}, parentWindow, logWriter));
 	}
 
 	interface State {
