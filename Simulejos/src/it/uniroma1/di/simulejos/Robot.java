@@ -2,7 +2,7 @@ package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
-import it.uniroma1.di.simulejos.wavefront.ModelData;
+import it.uniroma1.di.simulejos.math.Vector3;
 
 import java.awt.Frame;
 import java.io.File;
@@ -25,7 +25,9 @@ public final class Robot implements Serializable {
 	private final File classPath;
 	private final String mainClassName;
 	private final String script;
-	public final ModelData modelData;
+	private final ModelData modelData;
+	private volatile Vector3 position = Vector3.NULL;
+	private volatile Vector3 heading = Vector3.NULL;
 
 	private transient volatile Thread thread;
 	private transient volatile Frame parentWindow;
