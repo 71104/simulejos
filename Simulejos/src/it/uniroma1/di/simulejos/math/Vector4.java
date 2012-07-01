@@ -10,6 +10,8 @@ public class Vector4 implements Cloneable, Serializable {
 	public final double z;
 	public final double w;
 
+	public static final Vector4 NULL = new Vector4(0, 0, 0, 1);
+
 	public Vector4(double x, double y, double z, double w) {
 		this.x = x;
 		this.y = y;

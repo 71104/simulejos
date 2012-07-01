@@ -9,16 +9,10 @@ public class Vector3 implements Cloneable, Serializable {
 	public final double y;
 	public final double z;
 
-	public static final Vector3 NULL = new Vector3();
+	public static final Vector3 NULL = new Vector3(0, 0, 0);
 	public static final Vector3 I = new Vector3(1, 0, 0);
 	public static final Vector3 J = new Vector3(0, 1, 0);
 	public static final Vector3 K = new Vector3(0, 0, 1);
-
-	public Vector3() {
-		this.x = 0;
-		this.y = 0;
-		this.z = 0;
-	}
 
 	public Vector3(double x, double y, double z) {
 		this.x = x;

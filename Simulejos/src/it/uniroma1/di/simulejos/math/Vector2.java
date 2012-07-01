@@ -8,14 +8,9 @@ public class Vector2 implements Cloneable, Serializable {
 	public final double x;
 	public final double y;
 
-	public static final Vector2 NULL = new Vector2();
+	public static final Vector2 NULL = new Vector2(0, 0);
 	public static final Vector2 I = new Vector2(1, 0);
 	public static final Vector2 J = new Vector2(0, 1);
-
-	public Vector2() {
-		this.x = 0;
-		this.y = 0;
-	}
 
 	public Vector2(double x, double y) {
 		this.x = x;
