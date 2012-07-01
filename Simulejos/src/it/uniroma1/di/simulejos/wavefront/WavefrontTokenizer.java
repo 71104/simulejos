@@ -61,6 +61,14 @@ public class WavefrontTokenizer {
 		return (float) tokenizer.nval;
 	}
 
+	public Float readOptionalFloat() throws IOException {
+		if (tokenizer.nextToken() != StreamTokenizer.TT_NUMBER) {
+			tokenizer.pushBack();
+			return null;
+		}
+		return (float) tokenizer.nval;
+	}
+
 	public short readShort() throws IOException, ParseException {
 		if (tokenizer.nextToken() != StreamTokenizer.TT_NUMBER) {
 			throw new ParseException();

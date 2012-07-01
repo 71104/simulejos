@@ -222,7 +222,7 @@ final class NewRobotDialog extends JDialog {
 							.getAbsolutePath());
 				}
 			}
-		}));
+		}), constraints);
 
 		add(mainPanel, BorderLayout.CENTER);
 

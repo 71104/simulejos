@@ -35,6 +35,12 @@ public class ModelData implements Serializable {
 				vertices.append(tokenizer.readFloat());
 				vertices.append(tokenizer.readFloat());
 				vertices.append(tokenizer.readFloat());
+				final Float w = tokenizer.readOptionalFloat();
+				if (w != null) {
+					vertices.append(w);
+				} else {
+					vertices.append(1);
+				}
 				tokenizer.skipEol();
 			} else if (keyword == "f") {
 				indices.append(tokenizer.readCorner());
