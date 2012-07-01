@@ -40,6 +40,61 @@ public class Vector3 implements Cloneable, Serializable {
 		return new double[] { x, y, z };
 	}
 
+	public Vector3 floorX(double min) {
+		return new Vector3(Math.max(x, min), y, z);
+	}
+
+	public Vector3 floorY(double min) {
+		return new Vector3(x, Math.max(y, min), z);
+	}
+
+	public Vector3 floorZ(double min) {
+		return new Vector3(x, y, Math.max(z, min));
+	}
+
+	public Vector3 floor(Vector3 min) {
+		return new Vector3(Math.max(x, min.x), Math.max(y, min.y), Math.max(z,
+				min.z));
+	}
+
+	public Vector3 ceilX(double max) {
+		return new Vector3(Math.min(x, max), y, z);
+	}
+
+	public Vector3 ceilY(double max) {
+		return new Vector3(x, Math.min(y, max), z);
+	}
+
+	public Vector3 ceilZ(double max) {
+		return new Vector3(x, y, Math.min(z, max));
+	}
+
+	public Vector3 ceil(Vector3 max) {
+		return new Vector3(Math.min(x, max.x), Math.min(y, max.y), Math.min(z,
+				max.z));
+	}
+
+	private static double clamp(double value, double min, double max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	public Vector3 clampX(double min, double max) {
+		return new Vector3(clamp(x, min, max), y, z);
+	}
+
+	public Vector3 clampY(double min, double max) {
+		return new Vector3(x, clamp(y, min, max), z);
+	}
+
+	public Vector3 clampZ(double min, double max) {
+		return new Vector3(x, y, clamp(z, min, max));
+	}
+
+	public Vector3 clamp(Vector3 min, Vector3 max) {
+		return new Vector3(clamp(x, min.x, max.x), clamp(y, min.y, max.y),
+				clamp(z, min.z, max.z));
+	}
+
 	public double length() {
 		return Math.sqrt(x * x + y * y + z * z);
 	}

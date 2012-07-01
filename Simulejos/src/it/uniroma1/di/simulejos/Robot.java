@@ -2,6 +2,7 @@ package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
+import it.uniroma1.di.simulejos.wavefront.ModelData;
 
 import java.awt.Frame;
 import java.io.File;
@@ -24,23 +25,19 @@ public final class Robot implements Serializable {
 	private final File classPath;
 	private final String mainClassName;
 	private final String script;
+	public final ModelData modelData;
+
 	private transient volatile Thread thread;
-
-	public final float[] vertexArray;
-	public final float[] colorArray;
-
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
 
 	Robot(File classPath, String mainClassName, String script,
-			float[] vertexArray, float[] colorArray, Frame parentWindow,
-			Writer logWriter) {
+			ModelData modelData, Frame parentWindow, Writer logWriter) {
 		this.index = nextIndex++;
 		this.classPath = classPath;
 		this.mainClassName = mainClassName;
 		this.script = script;
-		this.vertexArray = vertexArray;
-		this.colorArray = colorArray;
+		this.modelData = modelData;
 		this.parentWindow = parentWindow;
 		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
 				logWriter));

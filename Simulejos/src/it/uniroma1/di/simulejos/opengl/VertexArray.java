@@ -1,5 +1,11 @@
 package it.uniroma1.di.simulejos.opengl;
 
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
 import javax.media.opengl.GL2GL3;
 
 import it.uniroma1.di.simulejos.opengl.Buffer.Usage;
@@ -34,6 +40,21 @@ public class VertexArray {
 				0, 0);
 	}
 
+	protected VertexArray(GL2GL3 gl, int index, int components,
+			ByteBuffer data, boolean normalize, Usage usage) {
+		final int count = data.limit();
+		if (count % components != 0) {
+			throw new AlignmentException(count, components);
+		}
+		this.count = count / components;
+		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
+		this.buffer.bind();
+		this.buffer.data(count, data);
+		gl.glEnableVertexAttribArray(index);
+		gl.glVertexAttribPointer(index, components, GL2GL3.GL_BYTE, normalize,
+				0, 0);
+	}
+
 	protected VertexArray(GL2GL3 gl, int index, int components, short[] data,
 			boolean normalize, Usage usage) {
 		if (data.length % components != 0) {
@@ -43,6 +64,21 @@ public class VertexArray {
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
 		this.buffer.bind();
 		this.buffer.data(data);
+		gl.glEnableVertexAttribArray(index);
+		gl.glVertexAttribPointer(index, components, GL2GL3.GL_SHORT, normalize,
+				0, 0);
+	}
+
+	protected VertexArray(GL2GL3 gl, int index, int components,
+			ShortBuffer data, boolean normalize, Usage usage) {
+		final int count = data.limit() / 2;
+		if (count % components != 0) {
+			throw new AlignmentException(count, components);
+		}
+		this.count = count / components;
+		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
+		this.buffer.bind();
+		this.buffer.data(count, data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_SHORT, normalize,
 				0, 0);
@@ -62,6 +98,21 @@ public class VertexArray {
 				0, 0);
 	}
 
+	protected VertexArray(GL2GL3 gl, int index, int components, IntBuffer data,
+			boolean normalize, Usage usage) {
+		final int count = data.limit() / 4;
+		if (count % components != 0) {
+			throw new AlignmentException(count, components);
+		}
+		this.count = count / components;
+		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
+		this.buffer.bind();
+		this.buffer.data(count, data);
+		gl.glEnableVertexAttribArray(index);
+		gl.glVertexAttribPointer(index, components, GL2GL3.GL_INT, normalize,
+				0, 0);
+	}
+
 	protected VertexArray(GL2GL3 gl, int index, int components, float[] data,
 			boolean normalize, Usage usage) {
 		if (data.length % components != 0) {
@@ -76,6 +127,21 @@ public class VertexArray {
 				0, 0);
 	}
 
+	protected VertexArray(GL2GL3 gl, int index, int components,
+			FloatBuffer data, boolean normalize, Usage usage) {
+		final int count = data.limit() / 4;
+		if (count % components != 0) {
+			throw new AlignmentException(count, components);
+		}
+		this.count = count / components;
+		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
+		this.buffer.bind();
+		this.buffer.data(count, data);
+		gl.glEnableVertexAttribArray(index);
+		gl.glVertexAttribPointer(index, components, GL2GL3.GL_FLOAT, normalize,
+				0, 0);
+	}
+
 	protected VertexArray(GL2GL3 gl, int index, int components, double[] data,
 			boolean normalize, Usage usage) {
 		if (data.length % components != 0) {
@@ -85,6 +151,21 @@ public class VertexArray {
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
 		this.buffer.bind();
 		this.buffer.data(data);
+		gl.glEnableVertexAttribArray(index);
+		gl.glVertexAttribPointer(index, components, GL2GL3.GL_DOUBLE,
+				normalize, 0, 0);
+	}
+
+	protected VertexArray(GL2GL3 gl, int index, int components,
+			DoubleBuffer data, boolean normalize, Usage usage) {
+		final int count = data.limit() / 8;
+		if (count % components != 0) {
+			throw new AlignmentException(count, components);
+		}
+		this.count = count / components;
+		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
+		this.buffer.bind();
+		this.buffer.data(count, data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_DOUBLE,
 				normalize, 0, 0);

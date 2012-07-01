@@ -1,5 +1,10 @@
 package it.uniroma1.di.simulejos.opengl;
 
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +32,15 @@ public class Arrays {
 		arrays.add(new ByteArray(gl, nextIndex++, components, data));
 	}
 
+	public void add(int components, int length, ByteBuffer data) {
+		arrays.add(new ByteArray(gl, nextIndex++, components, data));
+	}
+
 	public void add(int components, short[] data) {
+		arrays.add(new ShortArray(gl, nextIndex++, components, data));
+	}
+
+	public void add(int components, int length, ShortBuffer data) {
 		arrays.add(new ShortArray(gl, nextIndex++, components, data));
 	}
 
@@ -35,11 +48,23 @@ public class Arrays {
 		arrays.add(new IntArray(gl, nextIndex++, components, data));
 	}
 
+	public void add(int components, int length, IntBuffer data) {
+		arrays.add(new IntArray(gl, nextIndex++, components, data));
+	}
+
 	public void add(int components, float[] data) {
 		arrays.add(new FloatArray(gl, nextIndex++, components, data));
 	}
 
+	public void add(int components, int length, FloatBuffer data) {
+		arrays.add(new FloatArray(gl, nextIndex++, components, data));
+	}
+
 	public void add(int components, double[] data) {
+		arrays.add(new DoubleArray(gl, nextIndex++, components, data));
+	}
+
+	public void add(int components, int length, DoubleBuffer data) {
 		arrays.add(new DoubleArray(gl, nextIndex++, components, data));
 	}
 
@@ -51,6 +76,10 @@ public class Arrays {
 
 	public void draw(int mode) {
 		gl.glDrawArrays(mode, 0, count);
+	}
+
+	public void draw(int mode, int first, int count) {
+		gl.glDrawArrays(mode, first, count);
 	}
 
 	public void bindAndDraw(int mode) {

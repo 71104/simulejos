@@ -1,10 +1,16 @@
 package it.uniroma1.di.simulejos.opengl;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.media.opengl.GL2GL3;
 
 public class Program extends GLObject {
+	private final Map<String, Integer> uniformLocationCache = Collections
+			.synchronizedMap(new HashMap<String, Integer>());
+
 	public Program(GL2GL3 gl) {
 		super(gl, gl.glCreateProgram());
 	}
@@ -87,6 +93,7 @@ public class Program extends GLObject {
 	}
 
 	public void link() {
+		uniformLocationCache.clear();
 		gl.glLinkProgram(id);
 	}
 
@@ -104,6 +111,58 @@ public class Program extends GLObject {
 	public boolean validate() {
 		gl.glValidateProgram(id);
 		return get(GL2GL3.GL_VALIDATE_STATUS) != GL2GL3.GL_FALSE;
+	}
+
+	public int getUniformLocation(String name) {
+		if (uniformLocationCache.containsKey(name)) {
+			return uniformLocationCache.get(name);
+		} else {
+			final int location = gl.glGetUniformLocation(id, name);
+			uniformLocationCache.put(name, location);
+			return location;
+		}
+	}
+
+	// TODO metodi uniform
+
+	public void getUniformfv(int location, float[] data) {
+		gl.glGetUniformfv(id, location, data, 0);
+	}
+
+	public void getUniformiv(int location, int[] data) {
+		gl.glGetUniformiv(id, location, data, 0);
+	}
+
+	public float getUniformf(int location) {
+		final float[] data = new float[1];
+		gl.glGetUniformfv(id, location, data, 0);
+		return data[0];
+	}
+
+	public int getUniformi(int location) {
+		final int[] data = new int[1];
+		gl.glGetUniformiv(id, location, data, 0);
+		return data[0];
+	}
+
+	public void getUniformfv(String name, float[] data) {
+		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+	}
+
+	public void getUniformiv(String name, int[] data) {
+		gl.glGetUniformiv(id, getUniformLocation(name), data, 0);
+	}
+
+	public float getUniformf(String name) {
+		final float[] data = new float[1];
+		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		return data[0];
+	}
+
+	public int getUniformi(String name) {
+		final int[] data = new int[1];
+		gl.glGetUniformiv(id, getUniformLocation(name), data, 0);
+		return data[0];
 	}
 
 	public void delete() {
