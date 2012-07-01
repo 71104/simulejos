@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
@@ -34,9 +33,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 final class NewRobotDialog extends JDialog {
 	private static final long serialVersionUID = -6803948702078460070L;
 
-	private static final JFileChooser modelChooser = new JFileChooser(); // TODO
-
-	private static final JFileChooser scriptChooser = new JFileChooser(); // TODO
+	private static final JFileChooser scriptChooser = new JFileChooser();
 	{
 		scriptChooser.addChoosableFileFilter(new FileNameExtensionFilter(
 				"JavaScript File", ".js"));
@@ -46,6 +43,13 @@ final class NewRobotDialog extends JDialog {
 	private static final JFileChooser classPathChooser = new JFileChooser();
 	{
 		classPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	}
+
+	private static final JFileChooser modelChooser = new JFileChooser();
+	{
+		modelChooser.addChoosableFileFilter(new FileNameExtensionFilter(
+				"Wavefront File", ".obj"));
+		modelChooser.setAcceptAllFileFilterUsed(true);
 	}
 
 	private static final class ClassListModel extends
@@ -193,6 +197,33 @@ final class NewRobotDialog extends JDialog {
 		constraints.anchor = GridBagConstraints.LINE_START;
 		mainPanel.add(mainClassField, constraints);
 
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.anchor = GridBagConstraints.LINE_END;
+		mainPanel.add(new JLabel("Wavefront file: "), constraints);
+
+		final JTextField modelFileField = new JTextField(20);
+		modelFileField.setEditable(false);
+		constraints.gridx = 1;
+		constraints.gridy = 4;
+		constraints.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(modelFileField, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 4;
+		constraints.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(new JButton(new AbstractAction("Browse...") {
+			private static final long serialVersionUID = 2320102428453353410L;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (modelChooser.showOpenDialog(owner) == JFileChooser.APPROVE_OPTION) {
+					modelFileField.setText(modelChooser.getSelectedFile()
+							.getAbsolutePath());
+				}
+			}
+		}));
+
 		add(mainPanel, BorderLayout.CENTER);
 
 		final JPanel lowerPanel = new JPanel();
@@ -202,17 +233,16 @@ final class NewRobotDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				final String script;
 				try {
-					script = new FullReader(new FileReader(scriptChooser
-							.getSelectedFile())).readAll();
-				} catch (IOException e) {
+					final String script = new FullReader(new FileReader(
+							scriptChooser.getSelectedFile())).readAll();
+					simulation.addRobot(classPathChooser.getSelectedFile(),
+							classList.getSelectedItem().toString(), script,
+							modelChooser.getSelectedFile());
+				} catch (Exception e) {
 					JOptionPane.showMessageDialog(owner, e.getMessage(),
 							"Simulejos", JOptionPane.ERROR_MESSAGE);
-					return;
 				}
-				simulation.addRobot(classPathChooser.getSelectedFile(),
-						classList.getSelectedItem().toString(), script);
 				dispose();
 			}
 		}));

@@ -1,7 +1,12 @@
 package it.uniroma1.di.simulejos;
 
+import it.uniroma1.di.simulejos.wavefront.WavefrontTokenizer.ParseException;
+
 import java.awt.Frame;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
@@ -94,9 +99,12 @@ public final class Simulation implements Serializable {
 		}
 	}
 
-	public void addRobot(File classPath, String mainClassName, String script) {
+	public void addRobot(File classPath, String mainClassName, String script,
+			File modelFile) throws IOException, ParseException {
 		dirty = true;
-		// FIXME load wavefront model, create and add robot
+		robots.add(new Robot(classPath, mainClassName, script, ModelData
+				.parseWavefront(new FileReader(modelFile)), parentWindow,
+				logWriter));
 	}
 
 	interface State {
