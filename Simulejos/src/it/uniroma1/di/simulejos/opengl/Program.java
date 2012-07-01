@@ -1,5 +1,9 @@
 package it.uniroma1.di.simulejos.opengl;
 
+import it.uniroma1.di.simulejos.math.Vector2;
+import it.uniroma1.di.simulejos.math.Vector3;
+import it.uniroma1.di.simulejos.math.Vector4;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -163,6 +167,24 @@ public class Program extends GLObject {
 		final int[] data = new int[1];
 		gl.glGetUniformiv(id, getUniformLocation(name), data, 0);
 		return data[0];
+	}
+
+	public Vector2 getUniformVector2(String name) {
+		final float[] data = new float[2];
+		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		return new Vector2(data[0], data[1]);
+	}
+
+	public Vector3 getUniformVector3(String name) {
+		final float[] data = new float[3];
+		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		return new Vector3(data[0], data[1], data[2]);
+	}
+
+	public Vector4 getUniformVector4(String name) {
+		final float[] data = new float[4];
+		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		return new Vector4(data[0], data[1], data[2], data[3]);
 	}
 
 	public void delete() {

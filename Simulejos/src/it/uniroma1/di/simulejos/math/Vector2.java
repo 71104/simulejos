@@ -64,6 +64,10 @@ public class Vector2 implements Cloneable, Serializable {
 		return new double[] { x, y };
 	}
 
+	public Vector3 toHomogeneous() {
+		return new Vector3(x, y, 1);
+	}
+
 	public Vector2 floorX(double min) {
 		return new Vector2(Math.max(x, min), y);
 	}

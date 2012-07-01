@@ -27,6 +27,38 @@ public class Vector3 implements Cloneable, Serializable {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(x);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(y);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(z);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Vector3 other = (Vector3) obj;
+		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+			return false;
+		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
+			return false;
+		if (Double.doubleToLongBits(z) != Double.doubleToLongBits(other.z))
+			return false;
+		return true;
+	}
+
+	@Override
 	public Vector3 clone() {
 		return new Vector3(x, y, z);
 	}
@@ -38,6 +70,10 @@ public class Vector3 implements Cloneable, Serializable {
 
 	public double[] toArray() {
 		return new double[] { x, y, z };
+	}
+
+	public Vector4 toHomogeneous() {
+		return new Vector4(x, y, z, 1);
 	}
 
 	public Vector3 floorX(double min) {
