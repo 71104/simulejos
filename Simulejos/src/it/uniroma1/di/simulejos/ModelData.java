@@ -15,7 +15,7 @@ public class ModelData implements Serializable {
 	protected ModelData(float[] vertices, short[] indices, float[] colors) {
 		this.count = indices.length;
 		this.vertices = FloatBuffer.wrap(vertices).asReadOnlyBuffer();
-		this.indices = ShortBuffer.wrap(indices);
+		this.indices = ShortBuffer.wrap(indices).asReadOnlyBuffer();
 		this.colors = FloatBuffer.wrap(colors).asReadOnlyBuffer();
 	}
 }
