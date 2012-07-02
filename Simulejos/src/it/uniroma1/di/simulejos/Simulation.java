@@ -72,7 +72,7 @@ public final class Simulation implements Serializable {
 			floor.draw(gl);
 			robotProgram.use();
 			for (Robot robot : robots) {
-				robot.draw(gl);
+				robot.draw(gl, robotProgram);
 			}
 			gl.glFlush();
 		}

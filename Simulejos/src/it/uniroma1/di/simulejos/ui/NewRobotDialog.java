@@ -35,7 +35,7 @@ final class NewRobotDialog extends JDialog {
 
 	private static final JFileChooser scriptChooser = new JFileChooser();
 	{
-		scriptChooser.addChoosableFileFilter(new FileNameExtensionFilter(
+		scriptChooser.setFileFilter(new FileNameExtensionFilter(
 				"JavaScript File", ".js"));
 		scriptChooser.setAcceptAllFileFilterUsed(true);
 	}
@@ -47,7 +47,7 @@ final class NewRobotDialog extends JDialog {
 
 	private static final JFileChooser modelChooser = new JFileChooser();
 	{
-		modelChooser.addChoosableFileFilter(new FileNameExtensionFilter(
+		modelChooser.setFileFilter(new FileNameExtensionFilter(
 				"Wavefront File", ".obj"));
 		modelChooser.setAcceptAllFileFilterUsed(true);
 	}

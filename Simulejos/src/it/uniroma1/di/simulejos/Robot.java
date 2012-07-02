@@ -4,6 +4,7 @@ import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Elements;
+import it.uniroma1.di.simulejos.opengl.Program;
 
 import java.awt.Frame;
 import java.io.File;
@@ -190,7 +191,7 @@ public final class Robot implements Serializable {
 		scriptEngine.eval(script);
 	}
 
-	void draw(GL2GL3 gl) {
+	void draw(GL2GL3 gl, Program program) {
 		// TODO uniforms
 		elements.bindAndDraw(GL2GL3.GL_TRIANGLES);
 	}

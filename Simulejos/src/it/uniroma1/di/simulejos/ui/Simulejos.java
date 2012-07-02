@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public final class Simulejos extends JFrame {
 	private static final long serialVersionUID = 1344391485057572344L;
@@ -47,10 +48,20 @@ public final class Simulejos extends JFrame {
 
 	private volatile File file = null;
 	private final JFileChooser fileChooser = new JFileChooser();
+	{
+		fileChooser.setFileFilter(new FileNameExtensionFilter(
+				"Simulation files", "sim"));
+		fileChooser.setAcceptAllFileFilterUsed(true);
+	}
 
 	private boolean reset() {
 		if (simulation.isDirty()) {
-			// TODO
+			JOptionPane
+					.showConfirmDialog(
+							this,
+							"The current simulation has unsaved changes. Do you want to save it first?",
+							"Simulejos", JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		simulation = new Simulation(this, logWindow.getWriter());
@@ -70,7 +81,10 @@ public final class Simulejos extends JFrame {
 	}
 
 	private void saveAs() {
-		// TODO
+		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+			file = fileChooser.getSelectedFile();
+			save();
+		}
 	}
 
 	private static abstract class MyAction extends AbstractAction {
@@ -112,9 +126,9 @@ public final class Simulejos extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (file != null) {
-				saveAs();
-			} else {
 				save();
+			} else {
+				saveAs();
 			}
 		}
 	};
