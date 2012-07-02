@@ -17,8 +17,8 @@ public final class Floor implements Serializable {
 		program = new Program(gl, getClass(), "floor",
 				new String[] { "in_Vertex" });
 		arrays = new Arrays(gl, 6);
-		arrays.add(4, new double[] { 0, 0, 0, 1, -1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
-				-1, 0, -1, 0, -1, 0, -1, 0, 1, 0 });
+		arrays.add(4, new double[] { 0, 0, 0, 1, -1, 0, 1, 0, -1, 0, -1, 0, 1,
+				0, -1, 0, 1, 0, 1, 0, -1, 0, 1, 0 });
 	}
 
 	void draw(GL2GL3 gl) {

@@ -2,11 +2,11 @@ package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.util.DynamicFloatArray;
 import it.uniroma1.di.simulejos.util.DynamicShortArray;
-import it.uniroma1.di.simulejos.wavefront.WavefrontTokenizer;
-import it.uniroma1.di.simulejos.wavefront.WavefrontTokenizer.ParseException;
+import it.uniroma1.di.simulejos.wavefront.ParseException;
+import it.uniroma1.di.simulejos.wavefront.WavefrontParser;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -24,11 +24,11 @@ public class ModelData implements Serializable {
 		this.indices = ShortBuffer.wrap(indices).asReadOnlyBuffer();
 	}
 
-	public static ModelData parseWavefront(Reader reader) throws IOException,
+	public static ModelData parseWavefront(File file) throws IOException,
 			ParseException {
 		final DynamicFloatArray vertices = new DynamicFloatArray();
 		final DynamicShortArray indices = new DynamicShortArray();
-		final WavefrontTokenizer tokenizer = new WavefrontTokenizer(reader);
+		final WavefrontParser tokenizer = new WavefrontParser(file);
 		String keyword;
 		while ((keyword = tokenizer.readKeyword()) != null) {
 			if (keyword == "v") {

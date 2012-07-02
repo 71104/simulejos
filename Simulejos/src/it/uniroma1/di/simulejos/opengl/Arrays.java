@@ -32,7 +32,7 @@ public class Arrays {
 		arrays.add(new ByteArray(gl, nextIndex++, components, data));
 	}
 
-	public void add(int components, int length, ByteBuffer data) {
+	public void add(int components, ByteBuffer data) {
 		arrays.add(new ByteArray(gl, nextIndex++, components, data));
 	}
 
@@ -40,7 +40,7 @@ public class Arrays {
 		arrays.add(new ShortArray(gl, nextIndex++, components, data));
 	}
 
-	public void add(int components, int length, ShortBuffer data) {
+	public void add(int components, ShortBuffer data) {
 		arrays.add(new ShortArray(gl, nextIndex++, components, data));
 	}
 
@@ -48,7 +48,7 @@ public class Arrays {
 		arrays.add(new IntArray(gl, nextIndex++, components, data));
 	}
 
-	public void add(int components, int length, IntBuffer data) {
+	public void add(int components, IntBuffer data) {
 		arrays.add(new IntArray(gl, nextIndex++, components, data));
 	}
 
@@ -56,7 +56,7 @@ public class Arrays {
 		arrays.add(new FloatArray(gl, nextIndex++, components, data));
 	}
 
-	public void add(int components, int length, FloatBuffer data) {
+	public void add(int components, FloatBuffer data) {
 		arrays.add(new FloatArray(gl, nextIndex++, components, data));
 	}
 
@@ -64,7 +64,7 @@ public class Arrays {
 		arrays.add(new DoubleArray(gl, nextIndex++, components, data));
 	}
 
-	public void add(int components, int length, DoubleBuffer data) {
+	public void add(int components, DoubleBuffer data) {
 		arrays.add(new DoubleArray(gl, nextIndex++, components, data));
 	}
 
