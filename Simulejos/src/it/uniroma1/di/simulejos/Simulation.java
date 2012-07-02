@@ -15,16 +15,18 @@ import javax.media.opengl.DebugGL2GL3;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.script.ScriptException;
 
 public final class Simulation implements Serializable {
 	private static final long serialVersionUID = -290517947218502549L;
 
 	private final Floor floor = new Floor();
 	private final List<Robot> robots = new LinkedList<>();
+	private transient volatile boolean dirty;
 
+	private transient volatile Thread thread;
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
-	private transient volatile boolean dirty;
 
 	private static volatile boolean debugMode;
 
@@ -87,7 +89,13 @@ public final class Simulation implements Serializable {
 	}
 
 	public void setCanvas(GLAutoDrawable canvas) {
-		canvas.addGLEventListener(glEventListener);
+		if (this.canvas != null) {
+			this.canvas.removeGLEventListener(glEventListener);
+		}
+		this.canvas = canvas;
+		if (canvas != null) {
+			canvas.addGLEventListener(glEventListener);
+		}
 	}
 
 	public void discard() {
@@ -120,6 +128,7 @@ public final class Simulation implements Serializable {
 
 		@Override
 		public State suspend() {
+			thread.suspend();
 			for (Robot robot : robots) {
 				robot.suspend();
 			}
@@ -129,6 +138,7 @@ public final class Simulation implements Serializable {
 
 		@Override
 		public State stop() {
+			thread.stop();
 			for (Robot robot : robots) {
 				robot.stop();
 			}
@@ -141,6 +151,7 @@ public final class Simulation implements Serializable {
 		@Override
 		public State play() {
 			logWriter.println("resumed");
+			thread.resume();
 			for (Robot robot : robots) {
 				robot.resume();
 			}
@@ -154,6 +165,7 @@ public final class Simulation implements Serializable {
 
 		@Override
 		public State stop() {
+			thread.stop();
 			for (Robot robot : robots) {
 				robot.stop();
 			}
@@ -166,6 +178,37 @@ public final class Simulation implements Serializable {
 		@Override
 		public State play() {
 			logWriter.println("started");
+			thread = new Thread("ticker") {
+				private final Object blocker = new Object();
+
+				private void wait(int period) {
+					synchronized (blocker) {
+						long time = System.currentTimeMillis();
+						do {
+							try {
+								blocker.wait(period);
+							} catch (InterruptedException e) {
+							}
+						} while (System.currentTimeMillis() < time + period);
+					}
+				}
+
+				@Override
+				public void run() {
+					while (true) {
+						wait(100); // FIXME deve essere configurabile
+						for (Robot robot : robots) {
+							try {
+								robot.tick();
+							} catch (ScriptException e) {
+								e.printStackTrace();
+								Simulation.this.stop();
+							}
+						}
+					}
+				}
+			};
+			thread.start();
 			for (Robot robot : robots) {
 				robot.play();
 			}

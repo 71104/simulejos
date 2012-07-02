@@ -12,6 +12,10 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 public final class Robot implements Serializable {
 	private static final long serialVersionUID = 1961674308786529328L;
 
@@ -32,6 +36,7 @@ public final class Robot implements Serializable {
 	private transient volatile Thread thread;
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
+	private transient volatile ScriptEngine scriptEngine;
 
 	Robot(File classPath, String mainClassName, String script,
 			ModelData modelData, Frame parentWindow, Writer logWriter) {
@@ -113,6 +118,10 @@ public final class Robot implements Serializable {
 	}
 
 	public void play() {
+		scriptEngine = new ScriptEngineManager()
+				.getEngineByMimeType("text/javascript");
+		// TODO setup script engine
+
 		thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -166,5 +175,9 @@ public final class Robot implements Serializable {
 	@SuppressWarnings("deprecation")
 	public void stop() {
 		thread.stop();
+	}
+
+	void tick() throws ScriptException {
+		scriptEngine.eval(script);
 	}
 }

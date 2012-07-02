@@ -13,9 +13,12 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
+import javax.imageio.ImageIO;
 import javax.media.opengl.awt.GLJPanel;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -23,6 +26,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 public final class Simulejos extends JFrame {
@@ -69,7 +73,24 @@ public final class Simulejos extends JFrame {
 		// TODO
 	}
 
-	public final Action NEW_ACTION = new AbstractAction("New") {
+	private static abstract class MyAction extends AbstractAction {
+		private static final long serialVersionUID = -2624871633451306156L;
+
+		private static Icon loadIcon(String name) {
+			try {
+				return new ImageIcon(ImageIO.read(Simulejos.class
+						.getResourceAsStream(name + ".png")));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		public MyAction(String label, String iconName) {
+			super(label, loadIcon(iconName));
+		}
+	}
+
+	public final Action NEW_ACTION = new MyAction("New", "new") {
 		private static final long serialVersionUID = -4726361137806256305L;
 
 		@Override
@@ -77,7 +98,7 @@ public final class Simulejos extends JFrame {
 			reset();
 		}
 	};
-	public final Action LOAD_ACTION = new AbstractAction("Load...") {
+	public final Action LOAD_ACTION = new MyAction("Load...", "load") {
 		private static final long serialVersionUID = 5108135153655697921L;
 
 		@Override
@@ -85,7 +106,7 @@ public final class Simulejos extends JFrame {
 			reset();
 		}
 	};
-	public final Action SAVE_ACTION = new AbstractAction("Save") {
+	public final Action SAVE_ACTION = new MyAction("Save", "save") {
 		private static final long serialVersionUID = -1829243020102401543L;
 
 		@Override
@@ -115,7 +136,7 @@ public final class Simulejos extends JFrame {
 			}
 		}
 	};
-	public final Action ADD_ROBOT_ACTION = new AbstractAction("Add robot...") {
+	public final Action ADD_ROBOT_ACTION = new MyAction("Add robot...", "add") {
 		private static final long serialVersionUID = 5318430767695567625L;
 
 		@Override
@@ -123,7 +144,7 @@ public final class Simulejos extends JFrame {
 			new NewRobotDialog(Simulejos.this, simulation);
 		}
 	};
-	public final Action PLAY_ACTION = new AbstractAction("Play") {
+	public final Action PLAY_ACTION = new MyAction("Play", "play") {
 		private static final long serialVersionUID = 5318430767695567625L;
 
 		@Override
@@ -131,7 +152,7 @@ public final class Simulejos extends JFrame {
 			simulation.play();
 		}
 	};
-	public final Action SUSPEND_ACTION = new AbstractAction("Suspend") {
+	public final Action SUSPEND_ACTION = new MyAction("Suspend", "suspend") {
 		private static final long serialVersionUID = 2050007264701571826L;
 
 		@Override
@@ -139,7 +160,7 @@ public final class Simulejos extends JFrame {
 			simulation.suspend();
 		}
 	};
-	public final Action STOP_ACTION = new AbstractAction("Stop") {
+	public final Action STOP_ACTION = new MyAction("Stop", "stop") {
 		private static final long serialVersionUID = 6375156354908574128L;
 
 		@Override
@@ -173,6 +194,15 @@ public final class Simulejos extends JFrame {
 				canvas, new JScrollPane(logWindow));
 		splitPane.setResizeWeight(1);
 		add(splitPane, BorderLayout.CENTER);
+		final JToolBar toolbar = new JToolBar("Simulejos", JToolBar.HORIZONTAL);
+		toolbar.add(NEW_ACTION);
+		toolbar.add(LOAD_ACTION);
+		toolbar.add(SAVE_ACTION);
+		toolbar.addSeparator();
+		toolbar.add(PLAY_ACTION);
+		toolbar.add(SUSPEND_ACTION);
+		toolbar.add(STOP_ACTION);
+		add(toolbar, BorderLayout.NORTH);
 		pack();
 		if (Preferences.userNodeForPackage(Simulejos.class).getBoolean(
 				"maximizedWindow", false)) {
