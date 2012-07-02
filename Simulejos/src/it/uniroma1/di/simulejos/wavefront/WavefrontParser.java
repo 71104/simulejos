@@ -48,6 +48,17 @@ public class WavefrontParser {
 				&& (token != StreamTokenizer.TT_EOF));
 	}
 
+	public boolean isEol() throws IOException {
+		final int token = tokenizer.nextToken();
+		tokenizer.pushBack();
+		if ((token != StreamTokenizer.TT_EOL)
+				&& (token != StreamTokenizer.TT_EOF)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	public void skipEol() throws IOException, ParseException {
 		final int token = tokenizer.nextToken();
 		if ((token != StreamTokenizer.TT_EOL)
@@ -123,8 +134,13 @@ public class WavefrontParser {
 				final Corner a = readCorner();
 				final Corner b = readCorner();
 				final Corner c = readCorner();
-				// TODO read further optional corners
-				handler.face(a, b, c);
+				if (isEol()) {
+					final Corner d = readCorner();
+					handler.face(a, b, c);
+					handler.face(c, d, a);
+				} else {
+					handler.face(a, b, c);
+				}
 				skipEol();
 			} else {
 				skipLine();
