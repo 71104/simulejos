@@ -3,6 +3,7 @@ package it.uniroma1.di.simulejos;
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Vector3;
+import it.uniroma1.di.simulejos.opengl.Elements;
 
 import java.awt.Frame;
 import java.io.File;
@@ -12,6 +13,7 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.media.opengl.GL2GL3;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -37,6 +39,8 @@ public final class Robot implements Serializable {
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
 	private transient volatile ScriptEngine scriptEngine;
+
+	private transient volatile Elements elements;
 
 	Robot(File classPath, String mainClassName, String script,
 			ModelData modelData, Frame parentWindow, Writer logWriter) {
@@ -117,6 +121,11 @@ public final class Robot implements Serializable {
 		this.logWriter = logWriter;
 	}
 
+	void setGL(GL2GL3 gl) {
+		elements = new Elements(gl, modelData.indices);
+		elements.add(4, modelData.vertices);
+	}
+
 	public void play() {
 		scriptEngine = new ScriptEngineManager()
 				.getEngineByMimeType("text/javascript");
@@ -179,5 +188,10 @@ public final class Robot implements Serializable {
 
 	void tick() throws ScriptException {
 		scriptEngine.eval(script);
+	}
+
+	void draw(GL2GL3 gl) {
+		// TODO uniforms
+		elements.bindAndDraw(GL2GL3.GL_TRIANGLES);
 	}
 }

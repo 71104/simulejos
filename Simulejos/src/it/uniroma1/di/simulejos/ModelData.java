@@ -3,6 +3,7 @@ package it.uniroma1.di.simulejos;
 import it.uniroma1.di.simulejos.util.DynamicFloatArray;
 import it.uniroma1.di.simulejos.util.DynamicShortArray;
 import it.uniroma1.di.simulejos.wavefront.ParseException;
+import it.uniroma1.di.simulejos.wavefront.WavefrontCommandHandler;
 import it.uniroma1.di.simulejos.wavefront.WavefrontParser;
 
 import java.io.File;
@@ -28,30 +29,27 @@ public class ModelData implements Serializable {
 			ParseException {
 		final DynamicFloatArray vertices = new DynamicFloatArray();
 		final DynamicShortArray indices = new DynamicShortArray();
-		final WavefrontParser tokenizer = new WavefrontParser(file);
-		String keyword;
-		while ((keyword = tokenizer.readKeyword()) != null) {
-			if (keyword == "v") {
-				vertices.append(tokenizer.readFloat());
-				vertices.append(tokenizer.readFloat());
-				vertices.append(tokenizer.readFloat());
-				final Float w = tokenizer.readOptionalFloat();
-				if (w != null) {
-					vertices.append(w);
-				} else {
-					vertices.append(1);
-				}
-				tokenizer.skipEol();
-			} else if (keyword == "f") {
-				indices.append(tokenizer.readCorner());
-				indices.append(tokenizer.readCorner());
-				indices.append(tokenizer.readCorner());
-				// TODO read optional fourth corner
-				tokenizer.skipEol();
-			} else {
-				tokenizer.skipLine();
+		new WavefrontParser(file, new WavefrontCommandHandler() {
+			@Override
+			public void vertex(double x, double y, double z, double w) {
+				vertices.append((float) x);
+				vertices.append((float) y);
+				vertices.append((float) z);
+				vertices.append((float) w);
 			}
-		}
+
+			@Override
+			public void normal(double x, double y, double z) {
+			}
+
+			@Override
+			public void face(Corner... corners) {
+				// FIXME va tessellato
+				for (Corner corner : corners) {
+					indices.append((short) corner.vertexIndex);
+				}
+			}
+		}).parse();
 		return new ModelData(vertices.trim(), indices.trim());
 	}
 }

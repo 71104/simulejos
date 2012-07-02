@@ -1,5 +1,6 @@
 package it.uniroma1.di.simulejos;
 
+import it.uniroma1.di.simulejos.opengl.Program;
 import it.uniroma1.di.simulejos.wavefront.ParseException;
 
 import java.awt.Frame;
@@ -28,6 +29,8 @@ public final class Simulation implements Serializable {
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
 
+	private transient volatile Program robotProgram;
+
 	private static volatile boolean debugMode;
 
 	public static void setDebugMode(boolean debug) {
@@ -49,6 +52,11 @@ public final class Simulation implements Serializable {
 		public void init(GLAutoDrawable drawable) {
 			final GL2GL3 gl = getGL(drawable);
 			floor.setGL(gl);
+			robotProgram = new Program(gl, Robot.class, "robot",
+					new String[] { "in_Vertex" });
+			for (Robot robot : robots) {
+				robot.setGL(gl);
+			}
 		}
 
 		@Override
@@ -62,8 +70,9 @@ public final class Simulation implements Serializable {
 			final GL2GL3 gl = getGL(drawable);
 			gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT | GL2GL3.GL_DEPTH_BUFFER_BIT);
 			floor.draw(gl);
+			robotProgram.use();
 			for (Robot robot : robots) {
-				// TODO
+				robot.draw(gl);
 			}
 			gl.glFlush();
 		}

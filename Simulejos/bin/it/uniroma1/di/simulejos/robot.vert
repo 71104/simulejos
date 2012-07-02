@@ -3,7 +3,7 @@
 uniform vec3 Position;
 uniform vec3 Heading;
 
-const mat4 ModelViewProjection = mat4(
+mat4 ModelViewProjection = mat4(
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 0, 1,
