@@ -1,5 +1,6 @@
 package it.uniroma1.di.simulejos;
 
+import it.uniroma1.di.simulejos.math.BoundingBox;
 import it.uniroma1.di.simulejos.opengl.Tessellation;
 import it.uniroma1.di.simulejos.opengl.Tessellation.Callback;
 import it.uniroma1.di.simulejos.util.DynamicFloatArray;
@@ -20,11 +21,13 @@ public class ModelData implements Serializable {
 	public final int count;
 	public final FloatBuffer vertices;
 	public final ShortBuffer indices;
+	public final BoundingBox boundingBox;
 
 	public ModelData(float[] vertices, short[] indices) {
 		this.count = indices.length;
 		this.vertices = FloatBuffer.wrap(vertices);
 		this.indices = ShortBuffer.wrap(indices);
+		this.boundingBox = new BoundingBox(vertices);
 	}
 
 	public static ModelData parseWavefront(File file) throws IOException,
