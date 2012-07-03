@@ -7,16 +7,20 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.prefs.Preferences;
 
 import it.uniroma1.di.simulejos.Robot;
 import it.uniroma1.di.simulejos.Simulation;
 import it.uniroma1.di.simulejos.util.FullReader;
+import it.uniroma1.di.simulejos.wavefront.ParseException;
 
+import javax.script.ScriptException;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -36,8 +40,24 @@ final class NewRobotDialog extends JDialog {
 	private static final JFileChooser scriptChooser = new JFileChooser();
 	{
 		scriptChooser.setFileFilter(new FileNameExtensionFilter(
-				"JavaScript File", ".js"));
+				"JavaScript File (*.js)", "js"));
 		scriptChooser.setAcceptAllFileFilterUsed(true);
+		loadLastScriptDirectory();
+	}
+
+	private static void loadLastScriptDirectory() {
+		final String path = Preferences
+				.userNodeForPackage(NewRobotDialog.class).get(
+						"lastScriptDirectory", null);
+		if (path != null) {
+			scriptChooser.setCurrentDirectory(new File(path));
+		}
+	}
+
+	private static void storeLastScriptDirectory() {
+		Preferences.userNodeForPackage(NewRobotDialog.class).put(
+				"lastScriptDirectory",
+				scriptChooser.getCurrentDirectory().getAbsolutePath());
 	}
 
 	private static final JFileChooser classPathChooser = new JFileChooser();
@@ -48,8 +68,24 @@ final class NewRobotDialog extends JDialog {
 	private static final JFileChooser modelChooser = new JFileChooser();
 	{
 		modelChooser.setFileFilter(new FileNameExtensionFilter(
-				"Wavefront File", ".obj"));
+				"Wavefront File (*.obj)", "obj"));
 		modelChooser.setAcceptAllFileFilterUsed(true);
+		loadLastModelDirectory();
+	}
+
+	private static void loadLastModelDirectory() {
+		final String path = Preferences
+				.userNodeForPackage(NewRobotDialog.class).get(
+						"lastModelDirectory", null);
+		if (path != null) {
+			modelChooser.setCurrentDirectory(new File(path));
+		}
+	}
+
+	private static void storeLastModelDirectory() {
+		Preferences.userNodeForPackage(NewRobotDialog.class).put(
+				"lastModelDirectory",
+				modelChooser.getCurrentDirectory().getAbsolutePath());
 	}
 
 	private static final class ClassListModel extends
@@ -148,6 +184,7 @@ final class NewRobotDialog extends JDialog {
 				if (scriptChooser.showOpenDialog(owner) == JFileChooser.APPROVE_OPTION) {
 					scriptFileField.setText(scriptChooser.getSelectedFile()
 							.getAbsolutePath());
+					storeLastScriptDirectory();
 				}
 			}
 		}), constraints);
@@ -220,6 +257,7 @@ final class NewRobotDialog extends JDialog {
 				if (modelChooser.showOpenDialog(owner) == JFileChooser.APPROVE_OPTION) {
 					modelFileField.setText(modelChooser.getSelectedFile()
 							.getAbsolutePath());
+					storeLastModelDirectory();
 				}
 			}
 		}), constraints);
@@ -239,7 +277,7 @@ final class NewRobotDialog extends JDialog {
 					simulation.addRobot(classPathChooser.getSelectedFile(),
 							classList.getSelectedItem().toString(), script,
 							modelChooser.getSelectedFile());
-				} catch (Exception e) {
+				} catch (IOException | ParseException | ScriptException e) {
 					JOptionPane.showMessageDialog(owner, e.getMessage(),
 							"Simulejos", JOptionPane.ERROR_MESSAGE);
 				}

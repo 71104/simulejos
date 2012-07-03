@@ -127,7 +127,51 @@ public class Program extends GLObject {
 		}
 	}
 
-	// TODO metodi uniform
+	public void uniform1f(String name, float x) {
+		gl.glUniform1f(getUniformLocation(name), x);
+	}
+
+	public void uniform2f(String name, float x, float y) {
+		gl.glUniform2f(getUniformLocation(name), x, y);
+	}
+
+	public void uniform3f(String name, float x, float y, float z) {
+		gl.glUniform3f(getUniformLocation(name), x, y, z);
+	}
+
+	public void uniform4f(String name, float x, float y, float z, float w) {
+		gl.glUniform4f(getUniformLocation(name), x, y, z, w);
+	}
+
+	public void uniform1i(String name, int x) {
+		gl.glUniform1i(getUniformLocation(name), x);
+	}
+
+	public void uniform2i(String name, int x, int y) {
+		gl.glUniform2i(getUniformLocation(name), x, y);
+	}
+
+	public void uniform3i(String name, int x, int y, int z) {
+		gl.glUniform3i(getUniformLocation(name), x, y, z);
+	}
+
+	public void uniform4i(String name, int x, int y, int z, int w) {
+		gl.glUniform4i(getUniformLocation(name), x, y, z, w);
+	}
+
+	public void uniform(String name, Vector2 v) {
+		uniform2f(name, (float) v.x, (float) v.y);
+	}
+
+	public void uniform(String name, Vector3 v) {
+		uniform3f(name, (float) v.x, (float) v.y, (float) v.z);
+	}
+
+	public void uniform(String name, Vector4 v) {
+		uniform4f(name, (float) v.x, (float) v.y, (float) v.z, (float) v.w);
+	}
+
+	// TODO metodi uniformXv
 
 	public void getUniformfv(int location, float[] data) {
 		gl.glGetUniformfv(id, location, data, 0);

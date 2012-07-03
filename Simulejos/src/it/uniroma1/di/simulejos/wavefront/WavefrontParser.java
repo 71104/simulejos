@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WavefrontParser {
 	private final File sourceFile;
@@ -131,16 +133,14 @@ public class WavefrontParser {
 				handler.normal(x, y, z);
 				skipEol();
 			} else if (keyword == "f") {
-				final Corner a = readCorner();
-				final Corner b = readCorner();
-				final Corner c = readCorner();
-				if (isEol()) {
-					final Corner d = readCorner();
-					handler.face(a, b, c);
-					handler.face(c, d, a);
-				} else {
-					handler.face(a, b, c);
+				final List<Corner> corners = new LinkedList<Corner>();
+				corners.add(readCorner());
+				corners.add(readCorner());
+				corners.add(readCorner());
+				while (!isEol()) {
+					corners.add(readCorner());
 				}
+				handler.face(corners.toArray((Corner[]) null));
 				skipEol();
 			} else {
 				skipLine();

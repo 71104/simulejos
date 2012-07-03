@@ -17,5 +17,5 @@ public interface WavefrontCommandHandler {
 		}
 	}
 
-	void face(Corner... corners);
+	void face(Corner[] corners);
 }

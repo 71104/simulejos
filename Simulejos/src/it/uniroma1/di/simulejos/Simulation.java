@@ -29,6 +29,7 @@ public final class Simulation implements Serializable {
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
 
+	private transient volatile GL2GL3 gl;
 	private transient volatile Program robotProgram;
 
 	private static volatile boolean debugMode;
@@ -50,7 +51,7 @@ public final class Simulation implements Serializable {
 	private transient final GLEventListener glEventListener = new GLEventListener() {
 		@Override
 		public void init(GLAutoDrawable drawable) {
-			final GL2GL3 gl = getGL(drawable);
+			gl = getGL(drawable);
 			floor.setGL(gl);
 			robotProgram = new Program(gl, Robot.class, "robot",
 					new String[] { "in_Vertex" });
@@ -115,14 +116,18 @@ public final class Simulation implements Serializable {
 	}
 
 	public void addRobot(File classPath, String mainClassName, String script,
-			File modelFile) throws IOException, ParseException {
+			File modelFile) throws IOException, ParseException, ScriptException {
 		dirty = true;
-		robots.add(new Robot(classPath, mainClassName, script, ModelData
-				.parseWavefront(modelFile), parentWindow, logWriter));
+		final Robot robot = new Robot(classPath, mainClassName, script,
+				ModelData.parseWavefront(modelFile), parentWindow, logWriter);
+		robot.setParentWindow(parentWindow);
+		robot.setLogWriter(logWriter);
+		robot.setGL(gl);
+		robots.add(robot);
 	}
 
 	interface State {
-		State play();
+		State play() throws ScriptException;
 
 		State suspend();
 
@@ -185,7 +190,7 @@ public final class Simulation implements Serializable {
 
 	private final State stoppedState = new State() {
 		@Override
-		public State play() {
+		public State play() throws ScriptException {
 			logWriter.println("started");
 			thread = new Thread("ticker") {
 				private final Object blocker = new Object();
@@ -209,7 +214,7 @@ public final class Simulation implements Serializable {
 						for (Robot robot : robots) {
 							try {
 								robot.tick();
-							} catch (ScriptException e) {
+							} catch (Exception e) {
 								e.printStackTrace();
 								Simulation.this.stop();
 							}
@@ -237,7 +242,7 @@ public final class Simulation implements Serializable {
 
 	private State state = stoppedState;
 
-	public void play() {
+	public void play() throws ScriptException {
 		state = state.play();
 	}
 

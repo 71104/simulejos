@@ -15,6 +15,7 @@ import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.awt.GLJPanel;
+import javax.script.ScriptException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -163,7 +164,12 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			simulation.play();
+			try {
+				simulation.play();
+			} catch (ScriptException e) {
+				JOptionPane.showMessageDialog(Simulejos.this, e.getMessage(),
+						"Simulejos", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	};
 	public final Action SUSPEND_ACTION = new MyAction("Suspend", "suspend") {
@@ -213,6 +219,7 @@ public final class Simulejos extends JFrame {
 		toolbar.add(LOAD_ACTION);
 		toolbar.add(SAVE_ACTION);
 		toolbar.addSeparator();
+		toolbar.add(ADD_ROBOT_ACTION);
 		toolbar.add(PLAY_ACTION);
 		toolbar.add(SUSPEND_ACTION);
 		toolbar.add(STOP_ACTION);

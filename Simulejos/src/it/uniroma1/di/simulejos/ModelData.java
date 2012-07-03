@@ -1,5 +1,7 @@
 package it.uniroma1.di.simulejos;
 
+import it.uniroma1.di.simulejos.opengl.Tessellation;
+import it.uniroma1.di.simulejos.opengl.Tessellation.Callback;
 import it.uniroma1.di.simulejos.util.DynamicFloatArray;
 import it.uniroma1.di.simulejos.util.DynamicShortArray;
 import it.uniroma1.di.simulejos.wavefront.ParseException;
@@ -43,11 +45,19 @@ public class ModelData implements Serializable {
 			}
 
 			@Override
-			public void face(Corner... corners) {
-				// FIXME va tessellato
+			public void face(Corner[] corners) {
+				final short[] polygonIndices = new short[corners.length];
+				int i = 0;
 				for (Corner corner : corners) {
-					indices.append((short) corner.vertexIndex);
+					polygonIndices[i++] = (short) corner.vertexIndex;
 				}
+				new Tessellation(vertices.trim(), polygonIndices,
+						new Callback() {
+							@Override
+							public void index(short index) {
+								indices.append(index);
+							}
+						});
 			}
 		}).parse();
 		return new ModelData(vertices.trim(), indices.trim());
