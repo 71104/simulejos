@@ -30,8 +30,8 @@ public class ModelData implements Serializable {
 		this.boundingBox = new BoundingBox(vertices);
 	}
 
-	public static ModelData parseWavefront(File file) throws IOException,
-			ParseException {
+	public static ModelData parseWavefront(File file, boolean swapYAndZ)
+			throws IOException, ParseException {
 		final DynamicFloatArray vertices = new DynamicFloatArray();
 		final DynamicShortArray indices = new DynamicShortArray();
 		new WavefrontParser(file, new WavefrontCommandHandler() {
@@ -62,7 +62,7 @@ public class ModelData implements Serializable {
 							}
 						});
 			}
-		}).parse();
+		}, swapYAndZ).parse();
 		return new ModelData(vertices.trim(), indices.trim());
 	}
 }

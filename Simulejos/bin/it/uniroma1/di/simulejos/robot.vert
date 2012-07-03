@@ -1,5 +1,10 @@
 #version 120
 
+uniform struct {
+	vec3 Position;
+	vec3 Heading;
+} Camera;
+
 uniform vec3 Position;
 uniform vec3 Heading;
 
@@ -8,6 +13,11 @@ mat4 ModelViewProjection = mat4(
 	0, 1, 0, 0,
 	0, 0, 0, 1,
 	0, 0, 1, 0
+) * mat4(
+	1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	-Camera.Position, 1
 ) * mat4(
 	1, 0, 0, 0,
 	0, 1, 0, 0,

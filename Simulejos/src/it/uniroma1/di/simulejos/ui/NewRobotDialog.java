@@ -24,6 +24,7 @@ import javax.script.ScriptException;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -262,6 +263,12 @@ final class NewRobotDialog extends JDialog {
 			}
 		}), constraints);
 
+		final JCheckBox swapYAndZField = new JCheckBox("Swap Y and Z", true);
+		constraints.gridx = 1;
+		constraints.gridy = 5;
+		constraints.anchor = GridBagConstraints.LINE_START;
+		mainPanel.add(swapYAndZField, constraints);
+
 		add(mainPanel, BorderLayout.CENTER);
 
 		final JPanel lowerPanel = new JPanel();
@@ -276,7 +283,8 @@ final class NewRobotDialog extends JDialog {
 							scriptChooser.getSelectedFile())).readAll();
 					simulation.addRobot(classPathChooser.getSelectedFile(),
 							classList.getSelectedItem().toString(), script,
-							modelChooser.getSelectedFile());
+							modelChooser.getSelectedFile(),
+							swapYAndZField.isSelected());
 				} catch (IOException | ParseException | ScriptException e) {
 					JOptionPane.showMessageDialog(owner, e.getMessage(),
 							"Simulejos", JOptionPane.ERROR_MESSAGE);

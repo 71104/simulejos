@@ -11,12 +11,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class WavefrontParser {
+	private final boolean swapYAndZ;
 	private final File sourceFile;
 	private final WavefrontCommandHandler handler;
 	private final StreamTokenizer tokenizer;
 
-	public WavefrontParser(File file, WavefrontCommandHandler handler)
-			throws FileNotFoundException {
+	public WavefrontParser(File file, WavefrontCommandHandler handler,
+			boolean swapYAndZ) throws FileNotFoundException {
+		this.swapYAndZ = swapYAndZ;
 		this.sourceFile = file;
 		this.handler = handler;
 		this.tokenizer = new StreamTokenizer(new FileReader(file));
@@ -111,7 +113,7 @@ public class WavefrontParser {
 			}
 			readShort();
 		}
-		return new Corner(index, 0, 0); // FIXME
+		return new Corner(index - 1, 0, 0); // FIXME
 	}
 
 	public void parse() throws IOException, ParseException {
@@ -121,18 +123,28 @@ public class WavefrontParser {
 				final double x = readDouble();
 				final double y = readDouble();
 				final double z = readDouble();
-				final Double w = readOptionalDouble();
-				if (w != null) {
-					handler.vertex(x, y, z, w);
+				final Double d = readOptionalDouble();
+				final double w;
+				if (d != null) {
+					w = d;
 				} else {
-					handler.vertex(x, y, z, 1);
+					w = 1;
+				}
+				if (swapYAndZ) {
+					handler.vertex(x, z, y, w);
+				} else {
+					handler.vertex(x, y, z, w);
 				}
 				skipEol();
 			} else if (keyword.equals("vn")) {
 				final double x = readDouble();
 				final double y = readDouble();
 				final double z = readDouble();
-				handler.normal(x, y, z);
+				if (swapYAndZ) {
+					handler.normal(x, z, y);
+				} else {
+					handler.normal(x, y, z);
+				}
 				skipEol();
 			} else if (keyword.equals("f")) {
 				final List<Corner> corners = new LinkedList<Corner>();

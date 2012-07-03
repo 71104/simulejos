@@ -21,6 +21,7 @@ import javax.script.ScriptException;
 public final class Simulation implements Serializable {
 	private static final long serialVersionUID = -290517947218502549L;
 
+	private final Camera camera = new Camera();
 	private final Floor floor = new Floor();
 	private final List<Robot> robots = new LinkedList<>();
 	private transient volatile boolean dirty;
@@ -70,8 +71,9 @@ public final class Simulation implements Serializable {
 		public void display(GLAutoDrawable drawable) {
 			final GL2GL3 gl = getGL(drawable);
 			gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT | GL2GL3.GL_DEPTH_BUFFER_BIT);
-			floor.draw(gl);
+			floor.draw(gl, camera);
 			robotProgram.use();
+			camera.uniform(robotProgram);
 			for (Robot robot : robots) {
 				robot.draw(gl, robotProgram);
 			}
@@ -116,10 +118,12 @@ public final class Simulation implements Serializable {
 	}
 
 	public void addRobot(File classPath, String mainClassName, String script,
-			File modelFile) throws IOException, ParseException, ScriptException {
+			File modelFile, boolean swapYAndZ) throws IOException,
+			ParseException, ScriptException {
 		dirty = true;
 		final Robot robot = new Robot(classPath, mainClassName, script,
-				ModelData.parseWavefront(modelFile), parentWindow, logWriter);
+				ModelData.parseWavefront(modelFile, swapYAndZ), parentWindow,
+				logWriter);
 		robot.setParentWindow(parentWindow);
 		robot.setLogWriter(logWriter);
 		robot.setGL(gl);

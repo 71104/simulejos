@@ -21,8 +21,9 @@ public final class Floor implements Serializable {
 				0, -1, 0, 1, 0, 1, 0, -1, 0, 1, 0 });
 	}
 
-	void draw(GL2GL3 gl) {
+	void draw(GL2GL3 gl, Camera camera) {
 		program.use();
+		camera.uniform(program);
 		arrays.bindAndDraw(GL2GL3.GL_TRIANGLE_FAN);
 	}
 }
