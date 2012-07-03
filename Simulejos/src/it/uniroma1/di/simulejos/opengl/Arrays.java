@@ -29,42 +29,52 @@ public class Arrays {
 	}
 
 	public void add(int components, byte[] data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new ByteArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, ByteBuffer data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new ByteArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, short[] data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new ShortArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, ShortBuffer data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new ShortArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, int[] data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new IntArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, IntBuffer data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new IntArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, float[] data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new FloatArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, FloatBuffer data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new FloatArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, double[] data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new DoubleArray(gl, nextIndex++, components, data));
 	}
 
 	public void add(int components, DoubleBuffer data) {
+		gl.glEnableVertexAttribArray(nextIndex);
 		arrays.add(new DoubleArray(gl, nextIndex++, components, data));
 	}
 

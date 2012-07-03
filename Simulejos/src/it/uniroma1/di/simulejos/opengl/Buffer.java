@@ -109,6 +109,7 @@ public class Buffer extends GLObject {
 		super(gl, createBuffer(gl));
 		this.target = target.getGLTarget();
 		this.usage = usage.getGLUsage();
+		bind();
 	}
 
 	public void bind() {

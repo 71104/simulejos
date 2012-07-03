@@ -12,7 +12,7 @@ public class ElementArrayBuffer extends Buffer {
 
 	public ElementArrayBuffer(GL2GL3 gl, ShortBuffer indices) {
 		super(gl, Target.ELEMENT_ARRAY, Usage.STATIC_DRAW);
-		data(indices.limit(), indices);
+		data(indices.limit() * 2, indices);
 	}
 
 	public ElementArrayBuffer(GL2GL3 gl, short[] indices, Usage usage) {
@@ -22,6 +22,6 @@ public class ElementArrayBuffer extends Buffer {
 
 	public ElementArrayBuffer(GL2GL3 gl, ShortBuffer indices, Usage usage) {
 		super(gl, Target.ELEMENT_ARRAY, usage);
-		data(indices.limit(), indices);
+		data(indices.limit() * 2, indices);
 	}
 }

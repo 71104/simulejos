@@ -23,8 +23,8 @@ public class ModelData implements Serializable {
 
 	public ModelData(float[] vertices, short[] indices) {
 		this.count = indices.length;
-		this.vertices = FloatBuffer.wrap(vertices).asReadOnlyBuffer();
-		this.indices = ShortBuffer.wrap(indices).asReadOnlyBuffer();
+		this.vertices = FloatBuffer.wrap(vertices);
+		this.indices = ShortBuffer.wrap(indices);
 	}
 
 	public static ModelData parseWavefront(File file) throws IOException,

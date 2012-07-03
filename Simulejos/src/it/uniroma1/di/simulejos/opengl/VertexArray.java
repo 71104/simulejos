@@ -71,7 +71,7 @@ public class VertexArray {
 
 	protected VertexArray(GL2GL3 gl, int index, int components,
 			ShortBuffer data, boolean normalize, Usage usage) {
-		final int count = data.limit() / 2;
+		final int count = data.limit();
 		if (count % components != 0) {
 			throw new AlignmentException(count, components);
 		}
@@ -100,7 +100,7 @@ public class VertexArray {
 
 	protected VertexArray(GL2GL3 gl, int index, int components, IntBuffer data,
 			boolean normalize, Usage usage) {
-		final int count = data.limit() / 4;
+		final int count = data.limit();
 		if (count % components != 0) {
 			throw new AlignmentException(count, components);
 		}
@@ -129,7 +129,7 @@ public class VertexArray {
 
 	protected VertexArray(GL2GL3 gl, int index, int components,
 			FloatBuffer data, boolean normalize, Usage usage) {
-		final int count = data.limit() / 4;
+		final int count = data.limit();
 		if (count % components != 0) {
 			throw new AlignmentException(count, components);
 		}
@@ -158,7 +158,7 @@ public class VertexArray {
 
 	protected VertexArray(GL2GL3 gl, int index, int components,
 			DoubleBuffer data, boolean normalize, Usage usage) {
-		final int count = data.limit() / 8;
+		final int count = data.limit();
 		if (count % components != 0) {
 			throw new AlignmentException(count, components);
 		}
