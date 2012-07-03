@@ -20,10 +20,12 @@ public class WavefrontParser {
 		this.sourceFile = file;
 		this.handler = handler;
 		this.tokenizer = new StreamTokenizer(new FileReader(file));
-		this.tokenizer.commentChar('#');
 		this.tokenizer.eolIsSignificant(true);
 		this.tokenizer.lowerCaseMode(false);
+		this.tokenizer.slashSlashComments(false);
 		this.tokenizer.slashStarComments(false);
+		this.tokenizer.ordinaryChar('/');
+		this.tokenizer.commentChar('#');
 	}
 
 	public String readKeyword() throws IOException, ParseException {
@@ -115,7 +117,7 @@ public class WavefrontParser {
 	public void parse() throws IOException, ParseException {
 		String keyword;
 		while ((keyword = readKeyword()) != null) {
-			if (keyword == "v") {
+			if (keyword.equals("v")) {
 				final double x = readDouble();
 				final double y = readDouble();
 				final double z = readDouble();
@@ -126,13 +128,13 @@ public class WavefrontParser {
 					handler.vertex(x, y, z, 1);
 				}
 				skipEol();
-			} else if (keyword == "vn") {
+			} else if (keyword.equals("vn")) {
 				final double x = readDouble();
 				final double y = readDouble();
 				final double z = readDouble();
 				handler.normal(x, y, z);
 				skipEol();
-			} else if (keyword == "f") {
+			} else if (keyword.equals("f")) {
 				final List<Corner> corners = new LinkedList<Corner>();
 				corners.add(readCorner());
 				corners.add(readCorner());
@@ -140,7 +142,7 @@ public class WavefrontParser {
 				while (!isEol()) {
 					corners.add(readCorner());
 				}
-				handler.face(corners.toArray((Corner[]) null));
+				handler.face(corners.toArray(new Corner[corners.size()]));
 				skipEol();
 			} else {
 				skipLine();
