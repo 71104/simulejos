@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.media.opengl.GL2GL3;
+import static javax.media.opengl.GL2GL3.*;
 
 public class Program extends GLObject {
 	private final Map<String, Integer> uniformLocationCache = Collections
@@ -86,7 +87,7 @@ public class Program extends GLObject {
 	}
 
 	public Shader[] getAttachedShaders() {
-		final int count = get(GL2GL3.GL_ATTACHED_SHADERS);
+		final int count = get(GL_ATTACHED_SHADERS);
 		final int[] ids = new int[count];
 		gl.glGetAttachedShaders(id, count, null, 0, ids, 0);
 		final Shader[] shaders = new Shader[count];
@@ -102,11 +103,11 @@ public class Program extends GLObject {
 	}
 
 	public boolean isLinked() {
-		return get(GL2GL3.GL_LINK_STATUS) != GL2GL3.GL_FALSE;
+		return get(GL_LINK_STATUS) != GL_FALSE;
 	}
 
 	public String getInfoLog() {
-		final int length = get(GL2GL3.GL_INFO_LOG_LENGTH);
+		final int length = get(GL_INFO_LOG_LENGTH);
 		final byte[] log = new byte[length];
 		gl.glGetProgramInfoLog(id, length, null, 0, log, 0);
 		return new String(log);
@@ -114,7 +115,7 @@ public class Program extends GLObject {
 
 	public boolean validate() {
 		gl.glValidateProgram(id);
-		return get(GL2GL3.GL_VALIDATE_STATUS) != GL2GL3.GL_FALSE;
+		return get(GL_VALIDATE_STATUS) != GL_FALSE;
 	}
 
 	public int getUniformLocation(String name) {
@@ -236,6 +237,6 @@ public class Program extends GLObject {
 	}
 
 	public boolean isDeleted() {
-		return get(GL2GL3.GL_DELETE_STATUS) != GL2GL3.GL_FALSE;
+		return get(GL_DELETE_STATUS) != GL_FALSE;
 	}
 }

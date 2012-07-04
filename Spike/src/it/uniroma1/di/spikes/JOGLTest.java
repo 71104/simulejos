@@ -13,6 +13,7 @@ import javax.media.opengl.DebugGL2GL3;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.TraceGL2GL3;
 import javax.media.opengl.awt.GLJPanel;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -40,7 +41,8 @@ public class JOGLTest extends JFrame {
 		canvas.addGLEventListener(new GLEventListener() {
 			@Override
 			public void init(GLAutoDrawable drawable) {
-				final GL2GL3 gl = new DebugGL2GL3(drawable.getGL().getGL2GL3());
+				final GL2GL3 gl = new TraceGL2GL3(drawable.getGL().getGL2GL3(),
+						System.out);
 
 				gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -88,14 +90,14 @@ public class JOGLTest extends JFrame {
 
 				gl.glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
 
-				final float[] vertices = new float[] { -1, 1, 2, 1, -1, -1, 2,
-						1, 1, -1, 2, 1 };
+				final float[] vertices = new float[] { -1, 1, 0, 1, -1, -1, 0,
+						1, 1, -1, 0, 1, 1, 1, 0, 1 };
 				gl.glBufferData(GL_ARRAY_BUFFER, vertices.length * 4,
 						FloatBuffer.wrap(vertices), GL_STATIC_DRAW);
 				gl.glEnableVertexAttribArray(0);
 				gl.glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
 
-				final short[] indices = new short[] { 0, 1, 2 };
+				final short[] indices = new short[] { 0, 1, 2, 2, 3, 0 };
 				gl.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
 				gl.glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.length * 2,
 						ShortBuffer.wrap(indices), GL_STATIC_DRAW);
@@ -108,9 +110,10 @@ public class JOGLTest extends JFrame {
 
 			@Override
 			public void display(GLAutoDrawable drawable) {
-				final GL2GL3 gl = new DebugGL2GL3(drawable.getGL().getGL2GL3());
+				final GL2GL3 gl = new TraceGL2GL3(drawable.getGL().getGL2GL3(),
+						System.out);
 				gl.glClear(GL_COLOR_BUFFER_BIT);
-				gl.glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+				gl.glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 				gl.glFlush();
 			}
 

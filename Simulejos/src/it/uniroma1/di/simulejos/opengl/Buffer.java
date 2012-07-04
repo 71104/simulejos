@@ -8,6 +8,7 @@ import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 
 import javax.media.opengl.GL2GL3;
+import static javax.media.opengl.GL2GL3.*;
 
 public class Buffer extends GLObject {
 	private static int createBuffer(GL2GL3 gl) {
@@ -20,25 +21,25 @@ public class Buffer extends GLObject {
 		ARRAY {
 			@Override
 			int getGLTarget() {
-				return GL2GL3.GL_ARRAY_BUFFER;
+				return GL_ARRAY_BUFFER;
 			}
 		},
 		ELEMENT_ARRAY {
 			@Override
 			int getGLTarget() {
-				return GL2GL3.GL_ELEMENT_ARRAY_BUFFER;
+				return GL_ELEMENT_ARRAY_BUFFER;
 			}
 		},
 		PIXEL_PACK {
 			@Override
 			int getGLTarget() {
-				return GL2GL3.GL_PIXEL_PACK_BUFFER;
+				return GL_PIXEL_PACK_BUFFER;
 			}
 		},
 		PIXEL_UNPACK {
 			@Override
 			int getGLTarget() {
-				return GL2GL3.GL_PIXEL_UNPACK_BUFFER;
+				return GL_PIXEL_UNPACK_BUFFER;
 			}
 		};
 		abstract int getGLTarget();
@@ -48,55 +49,55 @@ public class Buffer extends GLObject {
 		STREAM_DRAW {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_STREAM_DRAW;
+				return GL_STREAM_DRAW;
 			}
 		},
 		STREAM_READ {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_STREAM_READ;
+				return GL_STREAM_READ;
 			}
 		},
 		STREAM_COPY {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_STREAM_COPY;
+				return GL_STREAM_COPY;
 			}
 		},
 		STATIC_DRAW {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_STATIC_DRAW;
+				return GL_STATIC_DRAW;
 			}
 		},
 		STATIC_READ {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_STATIC_READ;
+				return GL_STATIC_READ;
 			}
 		},
 		STATIC_COPY {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_STATIC_COPY;
+				return GL_STATIC_COPY;
 			}
 		},
 		DYNAMIC_DRAW {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_DYNAMIC_DRAW;
+				return GL_DYNAMIC_DRAW;
 			}
 		},
 		DYNAMIC_READ {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_DYNAMIC_READ;
+				return GL_DYNAMIC_READ;
 			}
 		},
 		DYNAMIC_COPY {
 			@Override
 			int getGLUsage() {
-				return GL2GL3.GL_DYNAMIC_COPY;
+				return GL_DYNAMIC_COPY;
 			}
 		};
 		abstract int getGLUsage();
@@ -229,7 +230,7 @@ public class Buffer extends GLObject {
 
 	public int getSize() {
 		final int[] result = new int[1];
-		gl.glGetBufferParameteriv(target, GL2GL3.GL_BUFFER_SIZE, result, 0);
+		gl.glGetBufferParameteriv(target, GL_BUFFER_SIZE, result, 0);
 		return result[0];
 	}
 

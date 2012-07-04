@@ -9,19 +9,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.media.opengl.GL2GL3;
+import static javax.media.opengl.GL2GL3.*;
 
 public class Shader extends GLObject {
 	public enum Type {
 		VERTEX {
 			@Override
 			int getGLType() {
-				return GL2GL3.GL_VERTEX_SHADER;
+				return GL_VERTEX_SHADER;
 			}
 		},
 		FRAGMENT {
 			@Override
 			int getGLType() {
-				return GL2GL3.GL_FRAGMENT_SHADER;
+				return GL_FRAGMENT_SHADER;
 			}
 		};
 		abstract int getGLType();
@@ -91,7 +92,7 @@ public class Shader extends GLObject {
 	}
 
 	public String getSource() {
-		final int length = get(GL2GL3.GL_SHADER_SOURCE_LENGTH);
+		final int length = get(GL_SHADER_SOURCE_LENGTH);
 		final byte[] source = new byte[length];
 		gl.glGetShaderSource(id, length, null, 0, source, 0);
 		return new String(source);
@@ -102,11 +103,11 @@ public class Shader extends GLObject {
 	}
 
 	public boolean isCompiled() {
-		return get(GL2GL3.GL_COMPILE_STATUS) != GL2GL3.GL_FALSE;
+		return get(GL_COMPILE_STATUS) != GL_FALSE;
 	}
 
 	public String getInfoLog() {
-		final int length = get(GL2GL3.GL_INFO_LOG_LENGTH);
+		final int length = get(GL_INFO_LOG_LENGTH);
 		final byte[] log = new byte[length];
 		gl.glGetShaderInfoLog(id, length, null, 0, log, 0);
 		return new String(log);
@@ -117,6 +118,6 @@ public class Shader extends GLObject {
 	}
 
 	public boolean isDeleted() {
-		return get(GL2GL3.GL_DELETE_STATUS) != GL2GL3.GL_FALSE;
+		return get(GL_DELETE_STATUS) != GL_FALSE;
 	}
 }

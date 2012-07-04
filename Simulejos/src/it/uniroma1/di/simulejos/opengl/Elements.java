@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.media.opengl.GL2GL3;
+import static javax.media.opengl.GL2GL3.*;
 
 public class Elements {
 	private volatile int nextIndex;
@@ -79,7 +80,7 @@ public class Elements {
 	}
 
 	public void draw(int mode) {
-		gl.glDrawElements(mode, count, GL2GL3.GL_UNSIGNED_SHORT, 0);
+		gl.glDrawElements(mode, count, GL_UNSIGNED_SHORT, 0);
 	}
 
 	public void bindAndDraw(int mode) {
@@ -87,7 +88,7 @@ public class Elements {
 		for (VertexArray array : arrays) {
 			array.bind();
 		}
-		gl.glDrawElements(mode, count, GL2GL3.GL_UNSIGNED_SHORT, 0);
+		gl.glDrawElements(mode, count, GL_UNSIGNED_SHORT, 0);
 	}
 
 	public void delete() {

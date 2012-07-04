@@ -1,5 +1,6 @@
 package it.uniroma1.di.simulejos;
 
+
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Vector3;
@@ -15,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.opengl.GL2GL3;
+import static javax.media.opengl.GL2GL3.*;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -270,6 +272,6 @@ public final class Robot implements Serializable {
 	void draw(GL2GL3 gl, Program program) {
 		program.uniform("Position", position);
 		program.uniform("Heading", heading);
-		elements.bindAndDraw(GL2GL3.GL_TRIANGLES);
+		elements.bindAndDraw(GL_TRIANGLES);
 	}
 }
