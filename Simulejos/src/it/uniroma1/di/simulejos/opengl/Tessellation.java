@@ -109,9 +109,9 @@ public class Tessellation {
 		this.callback = callback;
 		GLU.gluBeginPolygon(tessellator);
 		for (short index : indices) {
-			GLU.gluTessVertex(tessellator, new double[] { vertices[index * 3],
-					vertices[index * 3 + 1], vertices[index * 3 + 2] }, 0,
-					index);
+			GLU.gluTessVertex(tessellator, new double[] { vertices[index * 4],
+					vertices[index * 4 + 1], vertices[index * 4 + 2],
+					vertices[index * 4 + 3] }, 0, index);
 		}
 		GLU.gluEndPolygon(tessellator);
 	}

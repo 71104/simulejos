@@ -16,6 +16,8 @@ public class WavefrontParser {
 	private final WavefrontCommandHandler handler;
 	private final StreamTokenizer tokenizer;
 
+	private int vertexCount;
+
 	public WavefrontParser(File file, WavefrontCommandHandler handler,
 			boolean swapYAndZ) throws FileNotFoundException {
 		this.swapYAndZ = swapYAndZ;
@@ -30,7 +32,7 @@ public class WavefrontParser {
 		this.tokenizer.commentChar('#');
 	}
 
-	public String readKeyword() throws IOException, ParseException {
+	private String readKeyword() throws IOException, ParseException {
 		int token;
 		do {
 			token = tokenizer.nextToken();
@@ -46,7 +48,7 @@ public class WavefrontParser {
 		}
 	}
 
-	public void skipLine() throws IOException {
+	private void skipLine() throws IOException {
 		int token;
 		do {
 			token = tokenizer.nextToken();
@@ -54,7 +56,7 @@ public class WavefrontParser {
 				&& (token != StreamTokenizer.TT_EOF));
 	}
 
-	public boolean isEol() throws IOException {
+	private boolean isEol() throws IOException {
 		final int token = tokenizer.nextToken();
 		tokenizer.pushBack();
 		if ((token != StreamTokenizer.TT_EOL)
@@ -65,7 +67,7 @@ public class WavefrontParser {
 		}
 	}
 
-	public void skipEol() throws IOException, ParseException {
+	private void skipEol() throws IOException, ParseException {
 		final int token = tokenizer.nextToken();
 		if ((token != StreamTokenizer.TT_EOL)
 				&& (token != StreamTokenizer.TT_EOF)) {
@@ -74,7 +76,7 @@ public class WavefrontParser {
 		}
 	}
 
-	public double readDouble() throws IOException, ParseException {
+	private double readDouble() throws IOException, ParseException {
 		if (tokenizer.nextToken() != StreamTokenizer.TT_NUMBER) {
 			throw new ParseException(sourceFile, tokenizer.lineno(),
 					"number expected");
@@ -82,7 +84,7 @@ public class WavefrontParser {
 		return tokenizer.nval;
 	}
 
-	public Double readOptionalDouble() throws IOException {
+	private Double readOptionalDouble() throws IOException {
 		if (tokenizer.nextToken() != StreamTokenizer.TT_NUMBER) {
 			tokenizer.pushBack();
 			return null;
@@ -90,7 +92,7 @@ public class WavefrontParser {
 		return tokenizer.nval;
 	}
 
-	public int readShort() throws IOException, ParseException {
+	private int readShort() throws IOException, ParseException {
 		if (tokenizer.nextToken() != StreamTokenizer.TT_NUMBER) {
 			throw new ParseException(sourceFile, tokenizer.lineno(),
 					"number expected");
@@ -98,8 +100,12 @@ public class WavefrontParser {
 		return (int) tokenizer.nval;
 	}
 
-	public Corner readCorner() throws IOException, ParseException {
+	private Corner readCorner() throws IOException, ParseException {
 		int index = readShort();
+		if (index > vertexCount) {
+			throw new ParseException(sourceFile, tokenizer.lineno(),
+					"invalid index");
+		}
 		if (tokenizer.nextToken() != '/') {
 			tokenizer.pushBack();
 		} else {
@@ -117,6 +123,7 @@ public class WavefrontParser {
 	}
 
 	public void parse() throws IOException, ParseException {
+		vertexCount = 0;
 		String keyword;
 		while ((keyword = readKeyword()) != null) {
 			if (keyword.equals("v")) {
@@ -135,6 +142,7 @@ public class WavefrontParser {
 				} else {
 					handler.vertex(x, y, z, w);
 				}
+				vertexCount++;
 				skipEol();
 			} else if (keyword.equals("vn")) {
 				final double x = readDouble();

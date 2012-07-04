@@ -16,13 +16,11 @@ import java.io.Serializable;
 public class ModelData implements Serializable {
 	private static final long serialVersionUID = 3141711160723266117L;
 
-	public final int count;
 	public final float[] vertices;
 	public final short[] indices;
 	public final BoundingBox boundingBox;
 
 	public ModelData(float[] vertices, short[] indices) {
-		this.count = indices.length;
 		this.vertices = vertices;
 		this.indices = indices;
 		this.boundingBox = new BoundingBox(vertices);

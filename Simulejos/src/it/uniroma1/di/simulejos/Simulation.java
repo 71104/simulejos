@@ -16,6 +16,7 @@ import javax.media.opengl.DebugGL2GL3;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.TraceGL2GL3;
 import javax.script.ScriptException;
 
 public final class Simulation implements Serializable {
@@ -42,7 +43,7 @@ public final class Simulation implements Serializable {
 	private static GL2GL3 getGL(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
 		if (debugMode) {
-			return new DebugGL2GL3(gl);
+			return new TraceGL2GL3(gl, System.out);
 		} else {
 			return gl;
 		}
@@ -59,6 +60,7 @@ public final class Simulation implements Serializable {
 			for (Robot robot : robots) {
 				robot.setGL(gl);
 			}
+			gl.glPolygonMode(GL2GL3.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
 		}
 
 		@Override
