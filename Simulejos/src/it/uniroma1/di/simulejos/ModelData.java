@@ -12,21 +12,19 @@ import it.uniroma1.di.simulejos.wavefront.WavefrontParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
 
 public class ModelData implements Serializable {
 	private static final long serialVersionUID = 3141711160723266117L;
 
 	public final int count;
-	public final FloatBuffer vertices;
-	public final ShortBuffer indices;
+	public final float[] vertices;
+	public final short[] indices;
 	public final BoundingBox boundingBox;
 
 	public ModelData(float[] vertices, short[] indices) {
 		this.count = indices.length;
-		this.vertices = FloatBuffer.wrap(vertices);
-		this.indices = ShortBuffer.wrap(indices);
+		this.vertices = vertices;
+		this.indices = indices;
 		this.boundingBox = new BoundingBox(vertices);
 	}
 

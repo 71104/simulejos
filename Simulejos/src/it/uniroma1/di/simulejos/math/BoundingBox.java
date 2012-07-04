@@ -7,6 +7,7 @@ public class BoundingBox implements Cloneable, Serializable {
 
 	public final Vector3 min;
 	public final Vector3 max;
+	public final Vector3 center;
 
 	public BoundingBox(float[] vertices) {
 		if (vertices.length < 3) {
@@ -22,5 +23,6 @@ public class BoundingBox implements Cloneable, Serializable {
 		}
 		this.min = min;
 		this.max = max;
+		this.center = min.plus(max).by(0.5);
 	}
 }

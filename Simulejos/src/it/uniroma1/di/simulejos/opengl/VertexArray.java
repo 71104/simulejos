@@ -33,7 +33,6 @@ public class VertexArray {
 		}
 		this.count = data.length / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
 		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_BYTE, normalize,
@@ -48,8 +47,7 @@ public class VertexArray {
 		}
 		this.count = count / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
-		this.buffer.data(count, data);
+		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_BYTE, normalize,
 				0, 0);
@@ -62,7 +60,6 @@ public class VertexArray {
 		}
 		this.count = data.length / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
 		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_SHORT, normalize,
@@ -77,8 +74,7 @@ public class VertexArray {
 		}
 		this.count = count / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
-		this.buffer.data(count, data);
+		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_SHORT, normalize,
 				0, 0);
@@ -91,7 +87,6 @@ public class VertexArray {
 		}
 		this.count = data.length / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
 		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_INT, normalize,
@@ -106,8 +101,7 @@ public class VertexArray {
 		}
 		this.count = count / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
-		this.buffer.data(count, data);
+		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_INT, normalize,
 				0, 0);
@@ -120,7 +114,6 @@ public class VertexArray {
 		}
 		this.count = data.length / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
 		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_FLOAT, normalize,
@@ -135,8 +128,7 @@ public class VertexArray {
 		}
 		this.count = count / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
-		this.buffer.data(count, data);
+		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_FLOAT, normalize,
 				0, 0);
@@ -149,7 +141,6 @@ public class VertexArray {
 		}
 		this.count = data.length / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
 		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_DOUBLE,
@@ -164,8 +155,7 @@ public class VertexArray {
 		}
 		this.count = count / components;
 		this.buffer = new ArrayBuffer(gl, Usage.STATIC_DRAW);
-		this.buffer.bind();
-		this.buffer.data(count, data);
+		this.buffer.data(data);
 		gl.glEnableVertexAttribArray(index);
 		gl.glVertexAttribPointer(index, components, GL2GL3.GL_DOUBLE,
 				normalize, 0, 0);

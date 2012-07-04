@@ -120,40 +120,60 @@ public class Buffer extends GLObject {
 		gl.glBindBuffer(target, 0);
 	}
 
-	public void data(long size, java.nio.Buffer data) {
-		gl.glBufferData(target, size, data, usage);
-	}
-
 	public void data(byte[] data) {
 		gl.glBufferData(target, data.length, ByteBuffer.wrap(data), usage);
+	}
+
+	public void data(ByteBuffer data) {
+		gl.glBufferData(target, data.limit(), data, usage);
 	}
 
 	public void data(short[] data) {
 		gl.glBufferData(target, data.length * 2, ShortBuffer.wrap(data), usage);
 	}
 
+	public void data(ShortBuffer data) {
+		gl.glBufferData(target, data.limit() * 2, data, usage);
+	}
+
 	public void data(int[] data) {
 		gl.glBufferData(target, data.length * 4, IntBuffer.wrap(data), usage);
+	}
+
+	public void data(IntBuffer data) {
+		gl.glBufferData(target, data.limit() * 4, data, usage);
 	}
 
 	public void data(long[] data) {
 		gl.glBufferData(target, data.length * 8, LongBuffer.wrap(data), usage);
 	}
 
+	public void data(LongBuffer data) {
+		gl.glBufferData(target, data.limit() * 8, data, usage);
+	}
+
 	public void data(float[] data) {
 		gl.glBufferData(target, data.length * 4, FloatBuffer.wrap(data), usage);
+	}
+
+	public void data(FloatBuffer data) {
+		gl.glBufferData(target, data.limit() * 4, data, usage);
 	}
 
 	public void data(double[] data) {
 		gl.glBufferData(target, data.length * 8, DoubleBuffer.wrap(data), usage);
 	}
 
-	public void subData(long offset, long size, java.nio.Buffer data) {
-		gl.glBufferSubData(target, offset, size, data);
+	public void data(DoubleBuffer data) {
+		gl.glBufferData(target, data.limit() * 8, data, usage);
 	}
 
 	public void subData(long offset, byte[] data) {
 		gl.glBufferSubData(target, offset, data.length, ByteBuffer.wrap(data));
+	}
+
+	public void subData(long offset, ByteBuffer data) {
+		gl.glBufferSubData(target, offset, data.limit(), data);
 	}
 
 	public void subData(long offset, short[] data) {
@@ -161,9 +181,17 @@ public class Buffer extends GLObject {
 				ShortBuffer.wrap(data));
 	}
 
+	public void subData(long offset, ShortBuffer data) {
+		gl.glBufferSubData(target, offset, data.limit() * 2, data);
+	}
+
 	public void subData(long offset, int[] data) {
 		gl.glBufferSubData(target, offset, data.length * 4,
 				IntBuffer.wrap(data));
+	}
+
+	public void subData(long offset, IntBuffer data) {
+		gl.glBufferSubData(target, offset, data.limit() * 4, data);
 	}
 
 	public void subData(long offset, long[] data) {
@@ -171,14 +199,26 @@ public class Buffer extends GLObject {
 				LongBuffer.wrap(data));
 	}
 
+	public void subData(long offset, LongBuffer data) {
+		gl.glBufferSubData(target, offset, data.limit() * 8, data);
+	}
+
 	public void subData(long offset, float[] data) {
 		gl.glBufferSubData(target, offset, data.length * 4,
 				FloatBuffer.wrap(data));
 	}
 
+	public void subData(long offset, FloatBuffer data) {
+		gl.glBufferSubData(target, offset, data.limit() * 4, data);
+	}
+
 	public void subData(long offset, double[] data) {
 		gl.glBufferSubData(target, offset, data.length * 8,
 				DoubleBuffer.wrap(data));
+	}
+
+	public void subData(long offset, DoubleBuffer data) {
+		gl.glBufferSubData(target, offset, data.limit() * 8, data);
 	}
 
 	public java.nio.Buffer getSubData(long offset, int size) {
