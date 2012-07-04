@@ -1,6 +1,5 @@
 package it.uniroma1.di.simulejos;
 
-
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Vector3;
@@ -44,6 +43,7 @@ public final class Robot implements Serializable {
 	private transient volatile Invocable invocable;
 	private transient volatile Thread thread;
 
+	private transient volatile GL2GL3 gl;
 	private transient volatile Elements elements;
 
 	Robot(File classPath, String mainClassName, String script,
@@ -195,14 +195,6 @@ public final class Robot implements Serializable {
 		this.logWriter = logWriter;
 	}
 
-	void setGL(GL2GL3 gl) {
-		if (gl != null) {
-			gl.getContext().makeCurrent();
-			elements = new Elements(gl, modelData.indices);
-			elements.add(4, modelData.vertices);
-		}
-	}
-
 	public void play() throws ScriptException {
 		final ScriptEngine scriptEngine = new ScriptEngineManager()
 				.getEngineByMimeType("text/javascript");
@@ -270,6 +262,10 @@ public final class Robot implements Serializable {
 	}
 
 	void draw(GL2GL3 gl, Program program) {
+		if (gl != this.gl) {
+			elements = new Elements(gl, modelData.indices);
+			elements.add(4, modelData.vertices);
+		}
 		program.uniform("Position", position);
 		program.uniform("Heading", heading);
 		elements.bindAndDraw(GL_TRIANGLES);

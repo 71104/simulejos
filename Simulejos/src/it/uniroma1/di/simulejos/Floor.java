@@ -17,15 +17,14 @@ public final class Floor implements Serializable {
 	void setGL(GL2GL3 gl) {
 		program = new Program(gl, getClass(), "floor",
 				new String[] { "in_Vertex" });
-		// arrays = new Arrays(gl, 6);
-		// arrays.add(4, new double[] { 0, 0, 0, 1, -1, 0, 1, 0, -1, 0, -1, 0,
-		// 1,
-		// 0, -1, 0, 1, 0, 1, 0, -1, 0, 1, 0 });
+		arrays = new Arrays(gl, 6);
+		arrays.add(4, new double[] { 0, 0, 0, 1, -1, 0, 1, 0, -1, 0, -1, 0, 1,
+				0, -1, 0, 1, 0, 1, 0, -1, 0, 1, 0 });
 	}
 
 	void draw(GL2GL3 gl, Camera camera) {
 		program.use();
 		camera.uniform(program);
-		//		arrays.bindAndDraw(GL_TRIANGLE_FAN);
+		arrays.bindAndDraw(GL_TRIANGLE_FAN);
 	}
 }
