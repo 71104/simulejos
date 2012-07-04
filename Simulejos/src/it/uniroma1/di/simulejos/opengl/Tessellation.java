@@ -71,6 +71,7 @@ public class Tessellation {
 				callback.index(firstIndex);
 				callback.index(lastIndex);
 				callback.index(index);
+				lastIndex = index;
 			}
 		}
 	}
