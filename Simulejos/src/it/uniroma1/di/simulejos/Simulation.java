@@ -43,7 +43,7 @@ public final class Simulation implements Serializable {
 	private static GL2GL3 getGL(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
 		if (debugMode) {
-			return new TraceGL2GL3(gl, System.out);
+			return new DebugGL2GL3(gl);
 		} else {
 			return gl;
 		}
@@ -60,7 +60,6 @@ public final class Simulation implements Serializable {
 			for (Robot robot : robots) {
 				robot.setGL(gl);
 			}
-			gl.glPolygonMode(GL2GL3.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
 		}
 
 		@Override
