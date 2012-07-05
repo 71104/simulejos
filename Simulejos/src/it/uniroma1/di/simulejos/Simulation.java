@@ -174,10 +174,10 @@ public final class Simulation implements Serializable {
 		@Override
 		public State play() {
 			logWriter.println("resumed");
-			thread.resume();
 			for (Robot robot : robots) {
 				robot.resume();
 			}
+			thread.resume();
 			return runningState;
 		}
 
@@ -232,10 +232,10 @@ public final class Simulation implements Serializable {
 					}
 				}
 			};
-			thread.start();
 			for (Robot robot : robots) {
 				robot.play();
 			}
+			thread.start();
 			return runningState;
 		}
 

@@ -206,10 +206,8 @@ public final class Robot implements Serializable {
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {
-		final double daa = motorA.tick();
-		final double dab = motorB.tick();
-		final double dac = motorC.tick();
-		invocable.invokeFunction("tick", daa, dab, dac);
+		invocable.invokeFunction("tick", motorA.tick(), motorB.tick(),
+				motorC.tick());
 	}
 
 	void draw(GL2GL3 gl, Program program) {
