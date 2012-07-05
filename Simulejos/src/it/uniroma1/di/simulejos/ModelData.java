@@ -33,10 +33,10 @@ public class ModelData implements Serializable {
 			ratio = 2 / boundingBox.size.x;
 		}
 		for (int i = 0; i < vertices.length / 4; i++) {
-			this.vertices[i * 4] = (float) (vertices[i * 4] * ratio - boundingBox.center.x);
-			this.vertices[i * 4 + 1] = (float) (vertices[i * 4 + 1] * ratio
-					- boundingBox.min.y - 1);
-			this.vertices[i * 4 + 2] = (float) (vertices[i * 4 + 2] * ratio - boundingBox.center.z);
+			this.vertices[i * 4] = (float) ((vertices[i * 4] - boundingBox.center.x) * ratio);
+			this.vertices[i * 4 + 1] = (float) ((vertices[i * 4 + 1]
+					- boundingBox.min.y - 1) * ratio);
+			this.vertices[i * 4 + 2] = (float) ((vertices[i * 4 + 2] - boundingBox.center.z) * ratio);
 			this.vertices[i * 4 + 3] = vertices[i * 4 + 3];
 		}
 	}
