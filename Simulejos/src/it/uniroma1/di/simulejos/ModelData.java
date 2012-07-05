@@ -18,12 +18,26 @@ public class ModelData implements Serializable {
 
 	public final float[] vertices;
 	public final short[] indices;
-	public final BoundingBox boundingBox;
 
 	public ModelData(float[] vertices, short[] indices) {
-		this.vertices = vertices;
+		this.vertices = new float[vertices.length];
 		this.indices = indices;
-		this.boundingBox = new BoundingBox(vertices);
+		final BoundingBox boundingBox = new BoundingBox(vertices);
+		final double ratio;
+		if ((boundingBox.size.y > boundingBox.size.x)
+				&& (boundingBox.size.y > boundingBox.size.z)) {
+			ratio = 1 / boundingBox.size.y;
+		} else if (boundingBox.size.z > boundingBox.size.x) {
+			ratio = 1 / boundingBox.size.z;
+		} else {
+			ratio = 1 / boundingBox.size.x;
+		}
+		for (int i = 0; i < vertices.length / 4; i++) {
+			vertices[i * 4] = (float) (vertices[i * 4] * ratio - boundingBox.center.x);
+			vertices[i * 4 + 1] = (float) (vertices[i * 4 + 1] * ratio
+					- boundingBox.min.y - 1);
+			vertices[i * 4 + 2] = (float) (vertices[i * 4 + 2] * ratio - boundingBox.center.z);
+		}
 	}
 
 	public static ModelData parseWavefront(File file, boolean swapYAndZ)

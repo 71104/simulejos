@@ -55,7 +55,6 @@ public final class Simulation implements Serializable {
 		public void init(GLAutoDrawable drawable) {
 			gl = getGL(drawable);
 			gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			floor.setGL(gl);
 			robotProgram = new Program(gl, Robot.class, "robot",
 					new String[] { "in_Vertex" });
 		}
