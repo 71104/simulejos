@@ -31,7 +31,6 @@ public final class Simulation implements Serializable {
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
 
-	private transient volatile GL2GL3 gl;
 	private transient volatile Program robotProgram;
 
 	private static volatile boolean debugMode;
@@ -53,8 +52,12 @@ public final class Simulation implements Serializable {
 	private transient final GLEventListener glEventListener = new GLEventListener() {
 		@Override
 		public void init(GLAutoDrawable drawable) {
-			gl = getGL(drawable);
-			gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			final GL2GL3 gl = getGL(drawable);
+			gl.glEnable(GL_DEPTH_TEST);
+			gl.glClearDepth(0);
+			gl.glDepthFunc(GL_GREATER);
+			gl.glEnable(GL_CULL_FACE);
+			// gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			robotProgram = new Program(gl, Robot.class, "robot",
 					new String[] { "in_Vertex" });
 		}
@@ -62,7 +65,12 @@ public final class Simulation implements Serializable {
 		@Override
 		public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 				int height) {
-			// TODO Auto-generated method stub
+			final GL2GL3 gl = getGL(drawable);
+			if (height > width) {
+				gl.glViewport((width - height) / 2, 0, height, height);
+			} else {
+				gl.glViewport(0, (height - width) / 2, width, width);
+			}
 		}
 
 		@Override

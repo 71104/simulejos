@@ -1,6 +1,5 @@
 package it.uniroma1.di.simulejos.ui;
 
-
 import it.uniroma1.di.simulejos.Simulation;
 
 import java.awt.BorderLayout;
@@ -58,19 +57,31 @@ public final class Simulejos extends JFrame {
 
 	private boolean reset() {
 		if (simulation.isDirty()) {
-			JOptionPane
+			switch (JOptionPane
 					.showConfirmDialog(
 							this,
 							"The current simulation has unsaved changes. Do you want to save it first?",
 							"Simulejos", JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.WARNING_MESSAGE);
-			return false;
+							JOptionPane.WARNING_MESSAGE)) {
+			case JOptionPane.YES_OPTION:
+				if (!save()) {
+					return false;
+				}
+				break;
+			case JOptionPane.NO_OPTION:
+				break;
+			default:
+				return false;
+			}
 		}
+		simulation.discard();
 		simulation = new Simulation(this, logWindow.getWriter());
+		simulation.setCanvas(canvas);
+		canvas.repaint();
 		return true;
 	}
 
-	private void save() {
+	private void doSave() {
 		try {
 			new ObjectOutputStream(new FileOutputStream(file))
 					.writeObject(simulation);
@@ -82,10 +93,22 @@ public final class Simulejos extends JFrame {
 		simulation.clearDirty();
 	}
 
-	private void saveAs() {
+	private boolean saveAs() {
 		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			file = fileChooser.getSelectedFile();
-			save();
+			doSave();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean save() {
+		if (file != null) {
+			doSave();
+			return true;
+		} else {
+			return saveAs();
 		}
 	}
 
@@ -127,11 +150,7 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (file != null) {
-				save();
-			} else {
-				saveAs();
-			}
+			save();
 		}
 	};
 	public final Action SAVE_AS_ACTION = new AbstractAction("Save as...") {
@@ -158,6 +177,7 @@ public final class Simulejos extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			new NewRobotDialog(Simulejos.this, simulation);
+			// TODO repaint canvas
 		}
 	};
 	public final Action PLAY_ACTION = new MyAction("Play", "play") {

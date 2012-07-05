@@ -187,6 +187,8 @@ public final class Robot implements Serializable {
 		}
 	}
 
+	private final Simulator simulator = new Simulator();
+
 	void setParentWindow(Frame parentWindow) {
 		this.parentWindow = parentWindow;
 	}
@@ -209,14 +211,13 @@ public final class Robot implements Serializable {
 				} catch (MalformedURLException e) {
 					throw new RuntimeException(e);
 				}
-				final URL[] urls = { Robot.class.getResource("Framework.jar"),
-						url };
 				final VirtualClassLoader classLoader = new VirtualClassLoader(
-						urls);
+						new URL[] { Robot.class.getResource("Framework.jar"),
+								url });
 				try {
 					classLoader.loadClass(Bridge.class.getName())
 							.getMethod("initialize", SimulatorInterface.class)
-							.invoke(null, new Simulator());
+							.invoke(null, simulator);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
