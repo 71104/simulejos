@@ -1,5 +1,6 @@
 package it.uniroma1.di.simulejos.opengl;
 
+import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.math.Vector4;
@@ -160,6 +161,38 @@ public class Program extends GLObject {
 		gl.glUniform4i(getUniformLocation(name), x, y, z, w);
 	}
 
+	public void uniform1f(String name, float[] values) {
+		gl.glUniform1fv(getUniformLocation(name), values.length, values, 0);
+	}
+
+	public void uniform2f(String name, float[] values) {
+		gl.glUniform2fv(getUniformLocation(name), values.length, values, 0);
+	}
+
+	public void uniform3f(String name, float[] values) {
+		gl.glUniform3fv(getUniformLocation(name), values.length, values, 0);
+	}
+
+	public void uniform4f(String name, float[] values) {
+		gl.glUniform4fv(getUniformLocation(name), values.length, values, 0);
+	}
+
+	public void uniform1i(String name, int[] values) {
+		gl.glUniform1iv(getUniformLocation(name), values.length, values, 0);
+	}
+
+	public void uniform2i(String name, int[] values) {
+		gl.glUniform2iv(getUniformLocation(name), values.length, values, 0);
+	}
+
+	public void uniform3i(String name, int[] values) {
+		gl.glUniform3iv(getUniformLocation(name), values.length, values, 0);
+	}
+
+	public void uniform4i(String name, int[] values) {
+		gl.glUniform4iv(getUniformLocation(name), values.length, values, 0);
+	}
+
 	public void uniform(String name, Vector2 v) {
 		uniform2f(name, (float) v.x, (float) v.y);
 	}
@@ -172,7 +205,14 @@ public class Program extends GLObject {
 		uniform4f(name, (float) v.x, (float) v.y, (float) v.z, (float) v.w);
 	}
 
-	// TODO metodi uniformXv
+	public void uniform(String name, Matrix3 matrix) {
+		final double[] values = matrix.toArray();
+		final float[] floatValues = new float[9];
+		for (int i = 0; i < 9; i++) {
+			floatValues[i] = (float) values[i];
+		}
+		gl.glUniformMatrix3fv(getUniformLocation(name), 1, true, floatValues, 0);
+	}
 
 	public void getUniformfv(int location, float[] data) {
 		gl.glGetUniformfv(id, location, data, 0);

@@ -2,6 +2,7 @@ package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
+import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Elements;
 import it.uniroma1.di.simulejos.opengl.Program;
@@ -36,7 +37,7 @@ public final class Robot implements Serializable {
 	private final String script;
 	private final ModelData modelData;
 	private volatile Vector3 position = Vector3.NULL;
-	private volatile Vector3 heading = Vector3.NULL;
+	private volatile Matrix3 heading = Matrix3.IDENTITY;
 
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
@@ -189,6 +190,15 @@ public final class Robot implements Serializable {
 
 	private final Simulator simulator = new Simulator();
 
+	@SuppressWarnings("unused")
+	private final class RobotInterface {
+		public void moveBy(double dx, double dy, double dz) {
+			position = position.plus(new Vector3(dx, dy, dz));
+		}
+	}
+
+	private final RobotInterface robotInterface = new RobotInterface();
+
 	void setParentWindow(Frame parentWindow) {
 		this.parentWindow = parentWindow;
 	}
@@ -200,6 +210,7 @@ public final class Robot implements Serializable {
 	public void play() throws ScriptException {
 		final ScriptEngine scriptEngine = new ScriptEngineManager()
 				.getEngineByMimeType("text/javascript");
+		scriptEngine.put("robot", robotInterface);
 		scriptEngine.eval(script);
 		invocable = (Invocable) scriptEngine;
 		thread = new Thread(new Runnable() {
