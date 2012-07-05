@@ -162,9 +162,11 @@ public final class Robot implements Serializable {
 						new URL[] { Robot.class.getResource("Framework.jar"),
 								url });
 				try {
-					classLoader.loadClass(Bridge.class.getName())
-							.getMethod("initialize", SimulatorInterface.class)
-							.invoke(null, simulator);
+					classLoader
+							.loadClass(Bridge.class.getName())
+							.getMethod("initialize", String.class,
+									SimulatorInterface.class)
+							.invoke(null, "NXT" + index, simulator);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

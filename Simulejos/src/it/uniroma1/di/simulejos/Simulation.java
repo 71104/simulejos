@@ -228,6 +228,7 @@ public final class Simulation implements Serializable {
 								Simulation.this.stop();
 							}
 						}
+						canvas.display();
 					}
 				}
 			};
