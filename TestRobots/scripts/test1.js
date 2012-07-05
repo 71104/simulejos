@@ -1,8 +1,3 @@
-function motorA(da) {
-}
-
-function motorB(da) {
-}
-
-function motorC(da) {
+function tick(daa, dab, dac) {
+	// TODO
 }

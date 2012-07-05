@@ -28,6 +28,17 @@ public class Matrix3 implements Cloneable, Serializable {
 		}
 	}
 
+	public static Matrix3 createRotationMatrix(double x, double y, double z,
+			double a) {
+		final double s = Math.sin(a);
+		final double c = Math.cos(a);
+		return new Matrix3(new double[] { c + x * x * (1 - c),
+				x * y * (1 - c) - z * s, x * z * (1 - c) + y * s,
+				y * x * (1 - c) + z * s, c + y * y * (1 - c),
+				y * z * (1 - c) - x * s, z * x * (1 - c) - y * s,
+				z * y * (1 - c) + x * s, c + z * z * (1 - c) });
+	}
+
 	@Override
 	public String toString() {
 		return "((" + values[0] + ", " + values[1] + ", " + values[2] + "), ("
@@ -88,4 +99,34 @@ public class Matrix3 implements Cloneable, Serializable {
 				values[3] * v.x + values[4] * v.y + values[5] * v.z, values[6]
 						* v.x + values[7] * v.y + values[8] * v.z);
 	}
+
+	public Matrix3 by(Matrix3 matrix) {
+		return new Matrix3(new double[] {
+				values[0] * matrix.values[0] + values[1] * matrix.values[3]
+						+ values[2] * matrix.values[6],
+				values[0] * matrix.values[1] + values[1] * matrix.values[4]
+						+ values[2] * matrix.values[7],
+				values[0] * matrix.values[2] + values[1] * matrix.values[5]
+						+ values[2] * matrix.values[8],
+				values[3] * matrix.values[0] + values[4] * matrix.values[3]
+						+ values[5] * matrix.values[6],
+				values[3] * matrix.values[1] + values[4] * matrix.values[4]
+						+ values[5] * matrix.values[7],
+				values[3] * matrix.values[2] + values[4] * matrix.values[5]
+						+ values[5] * matrix.values[8],
+				values[6] * matrix.values[0] + values[7] * matrix.values[3]
+						+ values[8] * matrix.values[6],
+				values[6] * matrix.values[1] + values[7] * matrix.values[4]
+						+ values[8] * matrix.values[7],
+				values[6] * matrix.values[2] + values[7] * matrix.values[5]
+						+ values[8] * matrix.values[8] });
+	}
+
+	public Matrix3 transpose() {
+		return new Matrix3(new double[] { values[0], values[3], values[6],
+				values[1], values[4], values[7], values[2], values[5],
+				values[8] });
+	}
+
+	// TODO invert
 }

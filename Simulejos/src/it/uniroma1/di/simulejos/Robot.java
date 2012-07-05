@@ -60,77 +60,9 @@ public final class Robot implements Serializable {
 				logWriter));
 	}
 
-	private final class Motor implements SimulatorInterface.Motor {
-		private static final int RPM = 160;
-
-		private final String name;
-
-		private volatile Mode mode = Mode.FLOAT;
-		private volatile int power;
-		private volatile double count;
-		private volatile double offset;
-		private volatile long lastUpdateTimestamp = System.currentTimeMillis();
-
-		private volatile double lastSample;
-
-		public Motor(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public Mode getMode() {
-			return mode;
-		}
-
-		@Override
-		public void setMode(Mode mode) {
-			control(this.power, mode);
-		}
-
-		@Override
-		public int getPower() {
-			return power;
-		}
-
-		@Override
-		public void setPower(int power) {
-			control(power, this.mode);
-		}
-
-		@Override
-		public void control(int power, Mode mode) {
-			final long timestamp = System.currentTimeMillis();
-			if (mode == Mode.FORWARD) {
-				count += (timestamp - lastUpdateTimestamp)
-						* (power * RPM / 100.0) / 60000.0;
-			} else if (mode == Mode.BACKWARD) {
-				count -= (timestamp - lastUpdateTimestamp)
-						* (power * RPM / 100.0) / 60000.0;
-			}
-			lastUpdateTimestamp = timestamp;
-			this.power = power;
-			this.mode = mode;
-		}
-
-		@Override
-		public int getCount() {
-			return (int) Math.round((count + offset) * 360);
-		}
-
-		@Override
-		public void resetCount() {
-			offset = -count;
-		}
-
-		public void tick() throws NoSuchMethodException, ScriptException {
-			invocable.invokeFunction("motor" + name, count - lastSample);
-			lastSample = count;
-		}
-	}
-
-	private transient final Motor motorA = new Motor("A");
-	private transient final Motor motorB = new Motor("B");
-	private transient final Motor motorC = new Motor("C");
+	private transient final Motor motorA = new Motor();
+	private transient final Motor motorB = new Motor();
+	private transient final Motor motorC = new Motor();
 
 	private class Simulator implements SimulatorInterface {
 		@Override
@@ -193,7 +125,11 @@ public final class Robot implements Serializable {
 	@SuppressWarnings("unused")
 	private final class RobotInterface {
 		public void moveBy(double dx, double dy, double dz) {
-			position = position.plus(new Vector3(dx, dy, dz));
+			position = position.plus(heading.by(new Vector3(dx, dy, dz)));
+		}
+
+		public void rotateBy(double x, double y, double z, double da) {
+			heading = Matrix3.createRotationMatrix(x, y, z, da).by(heading);
 		}
 	}
 
@@ -268,9 +204,10 @@ public final class Robot implements Serializable {
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {
-		motorA.tick();
-		motorB.tick();
-		motorC.tick();
+		final double daa = motorA.tick();
+		final double dab = motorB.tick();
+		final double dac = motorC.tick();
+		invocable.invokeFunction("tick", daa, dab, dac);
 	}
 
 	void draw(GL2GL3 gl, Program program) {
