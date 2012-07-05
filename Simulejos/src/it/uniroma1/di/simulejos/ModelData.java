@@ -26,17 +26,18 @@ public class ModelData implements Serializable {
 		final double ratio;
 		if ((boundingBox.size.y > boundingBox.size.x)
 				&& (boundingBox.size.y > boundingBox.size.z)) {
-			ratio = 1 / boundingBox.size.y;
+			ratio = 2 / boundingBox.size.y;
 		} else if (boundingBox.size.z > boundingBox.size.x) {
-			ratio = 1 / boundingBox.size.z;
+			ratio = 2 / boundingBox.size.z;
 		} else {
-			ratio = 1 / boundingBox.size.x;
+			ratio = 2 / boundingBox.size.x;
 		}
 		for (int i = 0; i < vertices.length / 4; i++) {
-			vertices[i * 4] = (float) (vertices[i * 4] * ratio - boundingBox.center.x);
-			vertices[i * 4 + 1] = (float) (vertices[i * 4 + 1] * ratio
+			this.vertices[i * 4] = (float) (vertices[i * 4] * ratio - boundingBox.center.x);
+			this.vertices[i * 4 + 1] = (float) (vertices[i * 4 + 1] * ratio
 					- boundingBox.min.y - 1);
-			vertices[i * 4 + 2] = (float) (vertices[i * 4 + 2] * ratio - boundingBox.center.z);
+			this.vertices[i * 4 + 2] = (float) (vertices[i * 4 + 2] * ratio - boundingBox.center.z);
+			this.vertices[i * 4 + 3] = vertices[i * 4 + 3];
 		}
 	}
 

@@ -11,17 +11,17 @@ public class BoundingBox implements Cloneable, Serializable {
 	public final Vector3 center;
 
 	public BoundingBox(float[] vertices) {
-		if (vertices.length < 3) {
+		if (vertices.length < 4) {
 			throw new IllegalArgumentException();
 		}
 		Vector3 min = new Vector3(vertices[0] / vertices[3], vertices[1]
 				/ vertices[3], vertices[2] / vertices[3]);
 		Vector3 max = min;
 		for (int i = 4; i < vertices.length / 4; i++) {
-			min = min.floor(new Vector3(vertices[i * 4] / vertices[i * 4 + 3],
+			min = min.ceil(new Vector3(vertices[i * 4] / vertices[i * 4 + 3],
 					vertices[i * 4 + 1] / vertices[i * 4 + 3],
 					vertices[i * 4 + 2] / vertices[i * 4 + 3]));
-			max = max.ceil(new Vector3(vertices[i * 4] / vertices[i * 4 + 3],
+			max = max.floor(new Vector3(vertices[i * 4] / vertices[i * 4 + 3],
 					vertices[i * 4 + 1] / vertices[i * 4 + 3],
 					vertices[i * 4 + 2] / vertices[i * 4 + 3]));
 		}
