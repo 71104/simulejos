@@ -21,6 +21,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.swing.JOptionPane;
 
 public final class Robot implements Serializable {
 	private static final long serialVersionUID = 1961674308786529328L;
@@ -173,8 +174,10 @@ public final class Robot implements Serializable {
 				try {
 					mainClass = classLoader.loadClass(mainClassName);
 				} catch (ClassNotFoundException e) {
-					// TODO
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(parentWindow,
+							"Unable to find the specified main class "
+									+ mainClassName, "Simulejos",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try {
@@ -182,7 +185,6 @@ public final class Robot implements Serializable {
 							(Object) new String[] {});
 				} catch (Exception e) {
 					throw new RuntimeException(e);
-				} finally {
 				}
 			}
 		}, "NXT" + index);

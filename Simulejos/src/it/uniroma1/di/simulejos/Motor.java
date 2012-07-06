@@ -35,7 +35,7 @@ final class Motor implements
 	}
 
 	@Override
-	public void control(int power, Mode mode) {
+	public synchronized void control(int power, Mode mode) {
 		final long timestamp = System.currentTimeMillis();
 		if (mode == Mode.FORWARD) {
 			count += (timestamp - lastUpdateTimestamp) * (power * RPM / 100.0)

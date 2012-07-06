@@ -12,7 +12,7 @@ public interface SimulatorInterface {
 
 	static interface Motor {
 		static enum Mode {
-			FORWARD, BACKWARD, BRAKE, FLOAT
+			FORWARD, BACKWARD, STOP, FLOAT
 		};
 
 		Mode getMode();

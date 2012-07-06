@@ -101,7 +101,9 @@ final class NXTWindow extends JDialog implements BrickInterface {
 
 	@Override
 	public void updateDisplay(boolean[] data) {
-		System.arraycopy(data, 0, display, 0, display.length);
+		synchronized (display) {
+			System.arraycopy(data, 0, display, 0, display.length);
+		}
 		canvas.repaint();
 	}
 

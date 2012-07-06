@@ -57,7 +57,6 @@ public final class Simulation implements Serializable {
 			gl.glClearDepth(0);
 			gl.glDepthFunc(GL_GREATER);
 			gl.glEnable(GL_CULL_FACE);
-			// gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			robotProgram = new Program(gl, Robot.class, "robot",
 					new String[] { "in_Vertex" });
 		}
@@ -222,7 +221,7 @@ public final class Simulation implements Serializable {
 				public void run() {
 					lastTimestamp = System.currentTimeMillis();
 					while (true) {
-						waitTo(100); // FIXME deve essere configurabile
+						waitTo(10); // FIXME deve essere configurabile
 						for (Robot robot : robots) {
 							try {
 								robot.tick();
