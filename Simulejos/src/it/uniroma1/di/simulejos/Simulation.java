@@ -203,23 +203,26 @@ public final class Simulation implements Serializable {
 			logWriter.println("started");
 			thread = new Thread("ticker") {
 				private final Object blocker = new Object();
+				private volatile long lastTimestamp;
 
-				private void wait(int period) {
+				private void waitTo(int period) {
 					synchronized (blocker) {
-						long time = System.currentTimeMillis();
 						do {
 							try {
 								blocker.wait(period);
 							} catch (InterruptedException e) {
 							}
-						} while (System.currentTimeMillis() < time + period);
+						} while (System.currentTimeMillis() < lastTimestamp
+								+ period);
+						lastTimestamp = System.currentTimeMillis();
 					}
 				}
 
 				@Override
 				public void run() {
+					lastTimestamp = System.currentTimeMillis();
 					while (true) {
-						wait(100); // FIXME deve essere configurabile
+						waitTo(100); // FIXME deve essere configurabile
 						for (Robot robot : robots) {
 							try {
 								robot.tick();

@@ -178,11 +178,11 @@ public final class Robot implements Serializable {
 					return;
 				}
 				try {
-					final String[] arguments = {};
 					mainClass.getMethod("main", String[].class).invoke(null,
-							(Object[]) arguments);
+							(Object) new String[] {});
 				} catch (Exception e) {
 					throw new RuntimeException(e);
+				} finally {
 				}
 			}
 		}, "NXT" + index);
@@ -205,8 +205,10 @@ public final class Robot implements Serializable {
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {
-		invocable.invokeFunction("tick", motorA.tick(), motorB.tick(),
-				motorC.tick());
+		if (thread.isAlive()) {
+			invocable.invokeFunction("tick", motorA.tick(), motorB.tick(),
+					motorC.tick());
+		}
 	}
 
 	void draw(GL2GL3 gl, Program program) {
