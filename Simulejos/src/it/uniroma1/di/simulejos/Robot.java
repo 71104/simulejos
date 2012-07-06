@@ -122,8 +122,7 @@ public final class Robot implements Serializable {
 
 	private final Simulator simulator = new Simulator();
 
-	@SuppressWarnings("unused")
-	private final class RobotInterface {
+	public final class RobotInterface {
 		public void moveBy(double dx, double dy, double dz) {
 			position = position.plus(heading.by(new Vector3(dx, dy, dz)));
 		}
