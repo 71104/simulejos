@@ -207,10 +207,16 @@ public final class Robot implements Serializable {
 	@SuppressWarnings("deprecation")
 	void suspend() {
 		thread.suspend();
+		motorA.timer.suspend();
+		motorB.timer.suspend();
+		motorC.timer.suspend();
 	}
 
 	@SuppressWarnings("deprecation")
 	void resume() {
+		motorA.timer.resume();
+		motorB.timer.resume();
+		motorC.timer.resume();
 		thread.resume();
 	}
 
@@ -233,6 +239,11 @@ public final class Robot implements Serializable {
 		}
 		program.uniform("Position", position);
 		program.uniform("Heading", heading);
+		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		program.uniform3f("Color", 0, 0, 0);
 		elements.bindAndDraw(GL_TRIANGLES);
+		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		program.uniform3f("Color", 1, 1, 1);
+		elements.draw(GL_TRIANGLES);
 	}
 }
