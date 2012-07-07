@@ -75,7 +75,7 @@ public class MotorPort implements TachoMotorPort {
 	 * @see BasicMotorPort#STOP
 	 */
 	public void controlMotor(int power, int mode) {
-		motor.control(power, MODES[mode]);
+		motor.control(power, MODES[mode - 1]);
 	}
 
 	/**

@@ -21,4 +21,6 @@ public interface BrickInterface {
 	Object addButtonListener(ButtonListener listener);
 
 	void removeButtonListener(Object token);
+
+	void dispose();
 }

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -129,7 +130,7 @@ public final class Robot implements Serializable {
 		}
 
 		public void rotateBy(double x, double y, double z, double da) {
-			heading = Matrix3.createRotationMatrix(x, y, z, da).by(heading);
+			heading = Matrix3.createRotation(x, y, z, da).by(heading);
 		}
 	}
 
@@ -161,13 +162,18 @@ public final class Robot implements Serializable {
 				final VirtualClassLoader classLoader = new VirtualClassLoader(
 						new URL[] { Robot.class.getResource("Framework.jar"),
 								url });
+				final Class<?> bridge;
 				try {
-					classLoader
-							.loadClass(Bridge.class.getName())
-							.getMethod("initialize", String.class,
-									SimulatorInterface.class)
-							.invoke(null, "NXT" + index, simulator);
-				} catch (Exception e) {
+					bridge = classLoader.loadClass(Bridge.class.getName());
+				} catch (ClassNotFoundException e) {
+					throw new RuntimeException(e); // FIXME è corretto?
+				}
+				try {
+					bridge.getMethod("initialize", String.class,
+							SimulatorInterface.class).invoke(null,
+							"NXT" + index, simulator);
+				} catch (IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
 					throw new RuntimeException(e);
 				}
 				final Class<?> mainClass;
@@ -185,6 +191,13 @@ public final class Robot implements Serializable {
 							(Object) new String[] {});
 				} catch (Exception e) {
 					throw new RuntimeException(e);
+				} finally {
+					try {
+						bridge.getMethod("cleanup").invoke(null);
+					} catch (IllegalAccessException | InvocationTargetException
+							| NoSuchMethodException e) {
+						throw new RuntimeException(e);
+					}
 				}
 			}
 		}, "NXT" + index);

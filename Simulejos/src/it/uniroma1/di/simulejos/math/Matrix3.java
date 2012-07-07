@@ -11,25 +11,30 @@ public class Matrix3 implements Cloneable, Serializable {
 	public static final Matrix3 IDENTITY = new Matrix3(new double[] { 1, 0, 0,
 			0, 1, 0, 0, 0, 1 });
 
-	private final double values[] = new double[9];
+	private final double values[];
 
-	public Matrix3(double[] values) {
+	private Matrix3(double[] values) {
 		if (values.length != 9) {
 			throw new IllegalArgumentException();
 		}
-		System.arraycopy(values, 0, this.values, 0, 9);
+		this.values = values;
 	}
 
-	public Matrix3(double[][] values) {
+	public static Matrix3 create(double[] values) {
+		return new Matrix3(values.clone());
+	}
+
+	public static Matrix3 create(double[][] values) {
+		final double[] array = new double[9];
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				this.values[i * 3 + j] = values[i][j];
+				array[i * 3 + j] = values[i][j];
 			}
 		}
+		return new Matrix3(array);
 	}
 
-	public static Matrix3 createRotationMatrix(double x, double y, double z,
-			double a) {
+	public static Matrix3 createRotation(double x, double y, double z, double a) {
 		final double s = Math.sin(a);
 		final double c = Math.cos(a);
 		return new Matrix3(new double[] { c + x * x * (1 - c),
@@ -70,7 +75,7 @@ public class Matrix3 implements Cloneable, Serializable {
 
 	@Override
 	public Matrix3 clone() {
-		return new Matrix3(values);
+		return new Matrix3(values.clone());
 	}
 
 	public double[] toArray() {
@@ -88,10 +93,9 @@ public class Matrix3 implements Cloneable, Serializable {
 	}
 
 	public Matrix3 by(double a) {
-		return new Matrix3(new double[][] {
-				{ values[0] * a, values[1] * a, values[2] * a },
-				{ values[3] * a, values[4] * a, values[5] * a },
-				{ values[6] * a, values[7] * a, values[8] * a } });
+		return new Matrix3(new double[] { values[0] * a, values[1] * a,
+				values[2] * a, values[3] * a, values[4] * a, values[5] * a,
+				values[6] * a, values[7] * a, values[8] * a });
 	}
 
 	public Vector3 by(Vector3 v) {
@@ -128,5 +132,17 @@ public class Matrix3 implements Cloneable, Serializable {
 				values[8] });
 	}
 
-	// TODO invert
+	public Matrix3 invert() {
+		final double determinant = determinant();
+		return new Matrix3(new double[] {
+				(values[4] * values[8] - values[7] * values[5]) / determinant,
+				(values[2] * values[7] - values[8] * values[1]) / determinant,
+				(values[1] * values[5] - values[4] * values[2]) / determinant,
+				(values[5] * values[6] - values[8] * values[3]) / determinant,
+				(values[0] * values[8] - values[6] * values[2]) / determinant,
+				(values[2] * values[3] - values[5] * values[0]) / determinant,
+				(values[3] * values[7] - values[6] * values[4]) / determinant,
+				(values[1] * values[6] - values[7] * values[0]) / determinant,
+				(values[0] * values[4] - values[3] * values[1]) / determinant });
+	}
 }

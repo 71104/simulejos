@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.media.opengl.DebugGL2GL3;
 import javax.media.opengl.GL2GL3;
@@ -219,9 +220,12 @@ public final class Simulation implements Serializable {
 
 				@Override
 				public void run() {
+					final int rate = Preferences.userNodeForPackage(
+							Simulation.class).getInt("frameRate", 60);
+					final int period = (int) Math.round(1000.0 / rate);
 					lastTimestamp = System.currentTimeMillis();
 					while (true) {
-						waitTo(10); // FIXME deve essere configurabile
+						waitTo(period);
 						for (Robot robot : robots) {
 							try {
 								robot.tick();
