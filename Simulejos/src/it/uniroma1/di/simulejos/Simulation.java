@@ -208,15 +208,12 @@ public final class Simulation implements Serializable {
 				private final Object blocker = new Object();
 				private volatile long lastTimestamp;
 
-				private void waitTo(int period) {
+				private void waitTo(int period) throws InterruptedException {
 					synchronized (blocker) {
 						long elapsed;
 						while ((elapsed = System.currentTimeMillis()
 								- lastTimestamp) < period) {
-							try {
-								blocker.wait(period - elapsed);
-							} catch (InterruptedException e) {
-							}
+							blocker.wait(period - elapsed);
 						}
 						lastTimestamp = System.currentTimeMillis();
 					}
@@ -229,14 +226,14 @@ public final class Simulation implements Serializable {
 					final int period = (int) Math.round(1000.0 / rate);
 					lastTimestamp = System.currentTimeMillis();
 					while (true) {
-						waitTo(period);
-						for (Robot robot : robots) {
-							try {
+						try {
+							waitTo(period);
+							for (Robot robot : robots) {
 								robot.tick();
-							} catch (Exception e) {
-								e.printStackTrace();
-								Simulation.this.stop();
 							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							Simulation.this.stop();
 						}
 						canvas.display();
 					}

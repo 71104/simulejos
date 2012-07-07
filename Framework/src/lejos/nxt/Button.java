@@ -1,5 +1,6 @@
 package lejos.nxt;
 
+import it.uniroma1.di.simulejos.bridge.BrickInterface;
 import it.uniroma1.di.simulejos.bridge.Bridge;
 
 /**
@@ -168,9 +169,22 @@ public class Button implements ListenerCaller {
 	 * @see #ID_ESCAPE
 	 */
 	public static int waitForAnyEvent(int timeout) {
+		final Object blocker = new Object();
+		final Object token = Bridge.BRICK
+				.addButtonListener(new BrickInterface.ButtonListener() {
+					@Override
+					public void onPress(int buttonIndex) {
+						blocker.notifyAll();
+					}
+
+					@Override
+					public void onRelease(int buttonIndex) {
+						blocker.notifyAll();
+					}
+				});
+
 		long end = (timeout == 0 ? 0x7fffffffffffffffL : System
 				.currentTimeMillis() + timeout);
-		NXTEvent event = NXTEvent.allocate(NXTEvent.BUTTONS, 0, 10);
 		try {
 			int oldDown = curButtonsE;
 			while (true) {
@@ -178,9 +192,10 @@ public class Button implements ListenerCaller {
 				if (curTime >= end)
 					return 0;
 
-				event.waitEvent((oldDown << RELEASE_EVENT_SHIFT)
-						| ((ID_ALL ^ oldDown) << PRESS_EVENT_SHIFT), end
-						- curTime);
+				synchronized (blocker) {
+					blocker.wait(end - curTime);
+				}
+
 				int newDown = curButtonsE = readButtons();
 				if (newDown != oldDown)
 					return ((oldDown & (~newDown)) << WAITFOR_RELEASE_SHIFT)
@@ -192,7 +207,7 @@ public class Button implements ListenerCaller {
 			Thread.currentThread().interrupt();
 			return 0;
 		} finally {
-			event.free();
+			Bridge.BRICK.removeButtonListener(token);
 		}
 	}
 
@@ -206,9 +221,17 @@ public class Button implements ListenerCaller {
 	 *         bitmask of button IDs, 0 if the given timeout is reached
 	 */
 	public static int waitForAnyPress(int timeout) {
+		final Object blocker = new Object();
+		final Object token = Bridge.BRICK
+				.addButtonListener(new BrickInterface.ButtonAdapter() {
+					@Override
+					public void onPress(int buttonIndex) {
+						blocker.notifyAll();
+					}
+				});
+
 		long end = (timeout == 0 ? 0x7fffffffffffffffL : System
 				.currentTimeMillis() + timeout);
-		NXTEvent event = NXTEvent.allocate(NXTEvent.BUTTONS, 0, 10);
 		try {
 			int oldDown = curButtonsE;
 			while (true) {
@@ -216,9 +239,9 @@ public class Button implements ListenerCaller {
 				if (curTime >= end)
 					return 0;
 
-				event.waitEvent((oldDown << RELEASE_EVENT_SHIFT)
-						| ((ID_ALL ^ oldDown) << PRESS_EVENT_SHIFT), end
-						- curTime);
+				synchronized (blocker) {
+					blocker.wait(end - curTime);
+				}
 				int newDown = curButtonsE = readButtons();
 				int pressed = newDown & (~oldDown);
 				if (pressed != 0)
@@ -232,7 +255,7 @@ public class Button implements ListenerCaller {
 			Thread.currentThread().interrupt();
 			return 0;
 		} finally {
-			event.free();
+			Bridge.BRICK.removeButtonListener(token);
 		}
 	}
 
@@ -257,11 +280,25 @@ public class Button implements ListenerCaller {
 	public synchronized void addButtonListener(ButtonListener aListener) {
 		if (iListeners == null) {
 			iListeners = new ButtonListener[4];
-			ListenerThread.get().addListener(
-					NXTEvent.BUTTONS,
-					iCode << (isDown() ? RELEASE_EVENT_SHIFT
-							: PRESS_EVENT_SHIFT), 10, this);
+			Bridge.BRICK.addButtonListener(new BrickInterface.ButtonListener() {
+				@Override
+				public void onPress(int buttonIndex) {
+					if (1 << buttonIndex == iCode) {
+						for (ButtonListener listener : iListeners) {
+							listener.buttonPressed(Button.this);
+						}
+					}
+				}
 
+				@Override
+				public void onRelease(int buttonIndex) {
+					if (1 << buttonIndex == iCode) {
+						for (ButtonListener listener : iListeners) {
+							listener.buttonReleased(Button.this);
+						}
+					}
+				}
+			});
 		}
 		iListeners[iNumListeners++] = aListener;
 	}
