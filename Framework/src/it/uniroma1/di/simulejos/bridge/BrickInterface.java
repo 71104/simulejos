@@ -18,6 +18,16 @@ public interface BrickInterface {
 		void onRelease(int buttonIndex);
 	};
 
+	static abstract class ButtonAdapter implements ButtonListener {
+		@Override
+		public void onPress(int buttonIndex) {
+		}
+
+		@Override
+		public void onRelease(int buttonIndex) {
+		}
+	}
+
 	Object addButtonListener(ButtonListener listener);
 
 	void removeButtonListener(Object token);

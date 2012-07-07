@@ -2,8 +2,6 @@ package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 
-import javax.script.ScriptException;
-
 final class Motor implements SimulatorInterface.Motor {
 	private static final int RPM = 160;
 
@@ -80,6 +78,10 @@ final class Motor implements SimulatorInterface.Motor {
 		}
 	}
 
+	private double delta() {
+		return delta(timer.getTimestamp());
+	}
+
 	@Override
 	public synchronized void control(int power, Mode mode) {
 		final long timestamp = timer.getTimestamp();
@@ -89,19 +91,23 @@ final class Motor implements SimulatorInterface.Motor {
 		this.mode = mode;
 	}
 
-	@Override
-	public int getCount() {
-		return (int) Math.round((count + offset) * 360);
+	private double getInternalCount() {
+		return count + delta();
 	}
 
 	@Override
-	public void resetCount() {
-		offset = -count;
+	public synchronized int getCount() {
+		return (int) Math.round((getInternalCount() + offset) * 360);
 	}
 
-	public synchronized double tick() throws NoSuchMethodException,
-			ScriptException {
-		final double result = count + delta(timer.getTimestamp()) - lastSample;
+	@Override
+	public synchronized void resetCount() {
+		offset = -getInternalCount();
+	}
+
+	public synchronized double sample() {
+		final double count = getInternalCount();
+		final double result = count - lastSample;
 		lastSample = count;
 		return result;
 	}

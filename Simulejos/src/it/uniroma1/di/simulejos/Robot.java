@@ -125,6 +125,9 @@ public final class Robot implements Serializable {
 	private final Simulator simulator = new Simulator();
 
 	public final class RobotInterface {
+		private RobotInterface() {
+		}
+
 		public void moveBy(double dx, double dy, double dz) {
 			position = position.plus(heading.by(new Vector3(dx, dy, dz)));
 		}
@@ -227,8 +230,8 @@ public final class Robot implements Serializable {
 
 	void tick() throws NoSuchMethodException, ScriptException {
 		if (thread.isAlive()) {
-			invocable.invokeFunction("tick", motorA.tick(), motorB.tick(),
-					motorC.tick());
+			invocable.invokeFunction("tick", motorA.sample(), motorB.sample(),
+					motorC.sample());
 		}
 	}
 
