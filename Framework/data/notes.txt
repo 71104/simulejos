@@ -1,1 +1,0 @@
-lejos.robotics.navigation.SegowayPilot.stop rinominato in _stop
