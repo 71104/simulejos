@@ -12,6 +12,9 @@ final class Motor implements SimulatorInterface.Motor {
 		private volatile boolean suspended;
 		private volatile long suspendTimestamp;
 
+		private Timer() {
+		}
+
 		public synchronized long getTimestamp() {
 			if (suspended) {
 				return suspendTimestamp - offset;
@@ -65,16 +68,22 @@ final class Motor implements SimulatorInterface.Motor {
 		control(power, this.mode);
 	}
 
+	private double delta(long timestamp) {
+		if (mode == Mode.FORWARD) {
+			return (timestamp - lastTimestamp) * (power * RPM / 100.0)
+					/ 60000.0;
+		} else if (mode == Mode.BACKWARD) {
+			return (lastTimestamp - timestamp) * (power * RPM / 100.0)
+					/ 60000.0;
+		} else {
+			return 0;
+		}
+	}
+
 	@Override
 	public synchronized void control(int power, Mode mode) {
 		final long timestamp = timer.getTimestamp();
-		if (mode == Mode.FORWARD) {
-			count += (timestamp - lastTimestamp) * (power * RPM / 100.0)
-					/ 60000.0;
-		} else if (mode == Mode.BACKWARD) {
-			count -= (timestamp - lastTimestamp) * (power * RPM / 100.0)
-					/ 60000.0;
-		}
+		count += delta(timestamp);
 		lastTimestamp = timestamp;
 		this.power = power;
 		this.mode = mode;
@@ -90,8 +99,9 @@ final class Motor implements SimulatorInterface.Motor {
 		offset = -count;
 	}
 
-	public double tick() throws NoSuchMethodException, ScriptException {
-		final double result = count - lastSample;
+	public synchronized double tick() throws NoSuchMethodException,
+			ScriptException {
+		final double result = count + delta(timer.getTimestamp()) - lastSample;
 		lastSample = count;
 		return result;
 	}
