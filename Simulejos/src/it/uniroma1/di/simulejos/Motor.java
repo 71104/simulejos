@@ -10,7 +10,7 @@ final class Motor implements
 	private volatile int power;
 	private volatile double count;
 	private volatile double offset;
-	private volatile long lastUpdateTimestamp = System.currentTimeMillis();
+	private volatile long lastTimestamp = System.currentTimeMillis();
 
 	private volatile double lastSample;
 
@@ -38,13 +38,13 @@ final class Motor implements
 	public synchronized void control(int power, Mode mode) {
 		final long timestamp = System.currentTimeMillis();
 		if (mode == Mode.FORWARD) {
-			count += (timestamp - lastUpdateTimestamp) * (power * RPM / 100.0)
+			count += (timestamp - lastTimestamp) * (power * RPM / 100.0)
 					/ 60000.0;
 		} else if (mode == Mode.BACKWARD) {
-			count -= (timestamp - lastUpdateTimestamp) * (power * RPM / 100.0)
+			count -= (timestamp - lastTimestamp) * (power * RPM / 100.0)
 					/ 60000.0;
 		}
-		lastUpdateTimestamp = timestamp;
+		lastTimestamp = timestamp;
 		this.power = power;
 		this.mode = mode;
 	}
