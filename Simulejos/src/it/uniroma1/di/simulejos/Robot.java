@@ -33,11 +33,11 @@ public final class Robot implements Serializable {
 		return "NXT" + nextIndex;
 	}
 
-	private final int index;
-	private final File classPath;
-	private final String mainClassName;
-	private final String script;
-	private final ModelData modelData;
+	public final int index;
+	public final File classPath;
+	public final String mainClassName;
+	public final String script;
+	public final ModelData modelData;
 	private volatile Vector3 position = Vector3.NULL;
 	private volatile Matrix3 heading = Matrix3.IDENTITY;
 
@@ -144,7 +144,7 @@ public final class Robot implements Serializable {
 		this.logWriter = logWriter;
 	}
 
-	public void play() throws ScriptException {
+	void play() throws ScriptException {
 		final ScriptEngine scriptEngine = new ScriptEngineManager()
 				.getEngineByMimeType("text/javascript");
 		scriptEngine.put("robot", robotInterface);
@@ -205,17 +205,17 @@ public final class Robot implements Serializable {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void suspend() {
+	void suspend() {
 		thread.suspend();
 	}
 
 	@SuppressWarnings("deprecation")
-	public void resume() {
+	void resume() {
 		thread.resume();
 	}
 
 	@SuppressWarnings("deprecation")
-	public void stop() {
+	void stop() {
 		thread.stop();
 	}
 

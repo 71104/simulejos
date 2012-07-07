@@ -37,6 +37,8 @@ public final class Simulejos extends JFrame {
 	private final GLJPanel canvas = new GLJPanel();
 	{
 		canvas.setPreferredSize(new Dimension(800, 600));
+		canvas.setFocusable(true);
+		canvas.requestFocusInWindow();
 	}
 
 	private final LogWindow logWindow = new LogWindow();

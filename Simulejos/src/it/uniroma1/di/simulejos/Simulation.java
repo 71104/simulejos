@@ -17,15 +17,17 @@ import javax.media.opengl.DebugGL2GL3;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.awt.GLJPanel;
 import javax.script.ScriptException;
 import static javax.media.opengl.GL2GL3.*;
 
 public final class Simulation implements Serializable {
 	private static final long serialVersionUID = -290517947218502549L;
 
-	private final Camera camera = new Camera();
-	private final Floor floor = new Floor();
-	private final List<Robot> robots = new LinkedList<>();
+	public final Camera camera = new Camera();
+	public final Floor floor = new Floor();
+	private final List<Robot> robotList = new LinkedList<>();
+	public final Iterable<Robot> robots = robotList;
 	private transient volatile boolean dirty;
 
 	private transient volatile Thread thread;
@@ -106,11 +108,12 @@ public final class Simulation implements Serializable {
 		dirty = false;
 	}
 
-	public void setCanvas(GLAutoDrawable canvas) {
+	public void setCanvas(GLJPanel canvas) {
 		if (this.canvas != null) {
 			this.canvas.removeGLEventListener(glEventListener);
 		}
 		this.canvas = canvas;
+		this.camera.setCanvas(canvas);
 		if (canvas != null) {
 			canvas.addGLEventListener(glEventListener);
 		}
@@ -132,7 +135,7 @@ public final class Simulation implements Serializable {
 				logWriter);
 		robot.setParentWindow(parentWindow);
 		robot.setLogWriter(logWriter);
-		robots.add(robot);
+		robotList.add(robot);
 	}
 
 	interface State {
@@ -207,13 +210,14 @@ public final class Simulation implements Serializable {
 
 				private void waitTo(int period) {
 					synchronized (blocker) {
-						do {
+						long elapsed;
+						while ((elapsed = System.currentTimeMillis()
+								- lastTimestamp) < period) {
 							try {
-								blocker.wait(period);
+								blocker.wait(period - elapsed);
 							} catch (InterruptedException e) {
 							}
-						} while (System.currentTimeMillis() < lastTimestamp
-								+ period);
+						}
 						lastTimestamp = System.currentTimeMillis();
 					}
 				}
