@@ -44,7 +44,8 @@ public final class Robot implements Serializable {
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
 	private transient volatile Invocable invocable;
-	private transient volatile Thread thread;
+	private transient boolean running;
+	private transient volatile ThreadGroup threads;
 
 	private transient volatile GL2GL3 gl;
 	private transient volatile Elements elements;
@@ -120,6 +121,11 @@ public final class Robot implements Serializable {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
+		@Override
+		public void shutDown() {
+			stop();
+		}
 	}
 
 	private final Simulator simulator = new Simulator();
@@ -153,7 +159,9 @@ public final class Robot implements Serializable {
 		scriptEngine.put("robot", robotInterface);
 		scriptEngine.eval(script);
 		invocable = (Invocable) scriptEngine;
-		thread = new Thread(new Runnable() {
+		threads = new ThreadGroup("NXT" + index);
+		running = true;
+		new Thread(threads, new Runnable() {
 			@Override
 			public void run() {
 				final URL url;
@@ -203,13 +211,13 @@ public final class Robot implements Serializable {
 					}
 				}
 			}
-		}, "NXT" + index);
-		thread.start();
+		}, "NXT" + index).start();
 	}
 
 	@SuppressWarnings("deprecation")
 	void suspend() {
-		thread.suspend();
+		threads.suspend();
+		running = false;
 		motorA.timer.suspend();
 		motorB.timer.suspend();
 		motorC.timer.suspend();
@@ -220,16 +228,18 @@ public final class Robot implements Serializable {
 		motorA.timer.resume();
 		motorB.timer.resume();
 		motorC.timer.resume();
-		thread.resume();
+		running = true;
+		threads.resume();
 	}
 
 	@SuppressWarnings("deprecation")
 	void stop() {
-		thread.stop();
+		threads.stop();
+		running = true;
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {
-		if (thread.isAlive()) {
+		if (running) {
 			invocable.invokeFunction("tick", motorA.sample(), motorB.sample(),
 					motorC.sample());
 		}

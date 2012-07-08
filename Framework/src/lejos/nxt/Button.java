@@ -174,12 +174,16 @@ public class Button implements ListenerCaller {
 				.addButtonListener(new BrickInterface.ButtonListener() {
 					@Override
 					public void onPress(int buttonIndex) {
-						blocker.notifyAll();
+						synchronized (blocker) {
+							blocker.notifyAll();
+						}
 					}
 
 					@Override
 					public void onRelease(int buttonIndex) {
-						blocker.notifyAll();
+						synchronized (blocker) {
+							blocker.notifyAll();
+						}
 					}
 				});
 
@@ -226,7 +230,9 @@ public class Button implements ListenerCaller {
 				.addButtonListener(new BrickInterface.ButtonAdapter() {
 					@Override
 					public void onPress(int buttonIndex) {
-						blocker.notifyAll();
+						synchronized (blocker) {
+							blocker.notifyAll();
+						}
 					}
 				});
 

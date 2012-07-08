@@ -861,7 +861,9 @@ public final class VM {
 	 *            The destination class number
 	 * @return true if the assignment is allowed.
 	 */
-	private static native boolean isAssignable(int src, int dst);
+	private static boolean isAssignable(int src, int dst) {
+		throw new NotImplementedException("VM.isAssignable");
+	}
 
 	/**
 	 * Check to see if it is allowed to assign an object of class src to an
@@ -1150,7 +1152,9 @@ public final class VM {
 	 * 
 	 * @param thread
 	 */
-	public native static final void suspendThread(Object thread);
+	public static final void suspendThread(Object thread) {
+		throw new NotImplementedException("VM.suspendThread");
+	}
 
 	/**
 	 * Resume a thread. A suspended thread will be resumed to it's previous
@@ -1158,7 +1162,9 @@ public final class VM {
 	 * 
 	 * @param thread
 	 */
-	public native static final void resumeThread(Object thread);
+	public static final void resumeThread(Object thread) {
+		throw new NotImplementedException("VM.resumeThread");
+	}
 
 	/**
 	 * leJOS allows several "programs" to be linked into a single nxj file the
@@ -1168,7 +1174,9 @@ public final class VM {
 	 * @param progNo
 	 *            program number to call
 	 */
-	public native static final void executeProgram(int progNo);
+	public static final void executeProgram(int progNo) {
+		throw new NotImplementedException("VM.executeProgram");
+	}
 
 	// Flags used to control the Virtual Machine.
 	public static final int VM_TYPECHECKS = 1;
@@ -1180,14 +1188,18 @@ public final class VM {
 	 * @param options
 	 *            Bit flags.
 	 */
-	public static final native void setVMOptions(int options);
+	public static final void setVMOptions(int options) {
+		throw new NotImplementedException("VM.setVMOptions");
+	}
 
 	/**
 	 * Return the currently operating Virtual Machine options.
 	 * 
 	 * @return the options
 	 */
-	public static final native int getVMOptions();
+	public static final int getVMOptions() {
+		throw new NotImplementedException("VM.getVMOptions");
+	}
 
 	/**
 	 * Enable/Disable strict run time type checking for some operations within
@@ -1216,7 +1228,9 @@ public final class VM {
 	 *            Ignore stack frames that have a this which matches ignore.
 	 * @return An array of stack frame details.
 	 */
-	public static native int[] createStackTrace(Thread thread, Object ignore);
+	public static int[] createStackTrace(Thread thread, Object ignore) {
+		throw new NotImplementedException("VM.createStackTrace");
+	}
 
 	/**
 	 * Native method to call the firmware exception handler. This will display
@@ -1229,6 +1243,8 @@ public final class VM {
 	 * @param pc
 	 *            PC at which the exception occurred
 	 */
-	public static native void firmwareExceptionHandler(Throwable exception,
-			int method, int pc);
+	public static void firmwareExceptionHandler(Throwable exception,
+			int method, int pc) {
+		exception.printStackTrace(System.err);
+	}
 }

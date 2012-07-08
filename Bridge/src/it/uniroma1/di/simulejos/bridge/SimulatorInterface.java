@@ -47,4 +47,6 @@ public interface SimulatorInterface {
 	Sensor getS3();
 
 	Sensor getS4();
+
+	void shutDown();
 }
