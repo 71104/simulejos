@@ -51,7 +51,7 @@ public final class Robot implements Serializable {
 	private transient volatile Elements elements;
 
 	Robot(File classPath, String mainClassName, String script,
-			ModelData modelData, Frame parentWindow, Writer logWriter)
+			ModelData modelData, Frame parentWindow)
 			throws ScriptException {
 		this.index = nextIndex++;
 		this.classPath = classPath;
@@ -59,8 +59,6 @@ public final class Robot implements Serializable {
 		this.script = script;
 		this.modelData = modelData;
 		this.parentWindow = parentWindow;
-		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
-				logWriter));
 	}
 
 	private transient final Motor motorA = new Motor();
@@ -149,8 +147,9 @@ public final class Robot implements Serializable {
 		this.parentWindow = parentWindow;
 	}
 
-	void setLogWriter(PrintWriter logWriter) {
-		this.logWriter = logWriter;
+	void setLogWriter(Writer logWriter) {
+		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
+				logWriter));
 	}
 
 	void play() throws ScriptException {
@@ -203,6 +202,7 @@ public final class Robot implements Serializable {
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				} finally {
+					running = false;
 					try {
 						bridge.getMethod("cleanup").invoke(null);
 					} catch (IllegalAccessException | InvocationTargetException
@@ -236,6 +236,9 @@ public final class Robot implements Serializable {
 	void stop() {
 		threads.stop();
 		running = true;
+		motorA.setMode(Motor.Mode.FLOAT);
+		motorB.setMode(Motor.Mode.FLOAT);
+		motorC.setMode(Motor.Mode.FLOAT);
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {

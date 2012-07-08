@@ -32,7 +32,8 @@ public final class Simulation implements Serializable {
 
 	private transient volatile Thread thread;
 	private transient volatile Frame parentWindow;
-	private transient volatile PrintWriter logWriter;
+	private transient volatile Writer logWriter;
+	private transient volatile PrintWriter simulationLogWriter;
 
 	private transient volatile Program robotProgram;
 
@@ -96,8 +97,9 @@ public final class Simulation implements Serializable {
 
 	public Simulation(Frame parentWindow, Writer logWriter) {
 		this.parentWindow = parentWindow;
-		this.logWriter = new PrintWriter(new PartialWriter("Simulation",
-				logWriter));
+		this.logWriter = logWriter;
+		this.simulationLogWriter = new PrintWriter(new PartialWriter(
+				"Simulation", logWriter));
 	}
 
 	public boolean isDirty() {
@@ -131,8 +133,7 @@ public final class Simulation implements Serializable {
 			ParseException, ScriptException {
 		dirty = true;
 		final Robot robot = new Robot(classPath, mainClassName, script,
-				ModelData.parseWavefront(modelFile, swapYAndZ), parentWindow,
-				logWriter);
+				ModelData.parseWavefront(modelFile, swapYAndZ), parentWindow);
 		robot.setParentWindow(parentWindow);
 		robot.setLogWriter(logWriter);
 		robotList.add(robot);
@@ -158,7 +159,7 @@ public final class Simulation implements Serializable {
 			for (Robot robot : robots) {
 				robot.suspend();
 			}
-			logWriter.println("suspended");
+			simulationLogWriter.println("suspended");
 			return suspendedState;
 		}
 
@@ -168,7 +169,7 @@ public final class Simulation implements Serializable {
 			for (Robot robot : robots) {
 				robot.stop();
 			}
-			logWriter.println("stopped");
+			simulationLogWriter.println("stopped");
 			return stoppedState;
 		}
 	};
@@ -176,7 +177,7 @@ public final class Simulation implements Serializable {
 	private final State suspendedState = new State() {
 		@Override
 		public State play() {
-			logWriter.println("resumed");
+			simulationLogWriter.println("resumed");
 			for (Robot robot : robots) {
 				robot.resume();
 			}
@@ -195,7 +196,7 @@ public final class Simulation implements Serializable {
 			for (Robot robot : robots) {
 				robot.stop();
 			}
-			logWriter.println("stopped");
+			simulationLogWriter.println("stopped");
 			return stoppedState;
 		}
 	};
@@ -203,7 +204,7 @@ public final class Simulation implements Serializable {
 	private final State stoppedState = new State() {
 		@Override
 		public State play() throws ScriptException {
-			logWriter.println("started");
+			simulationLogWriter.println("started");
 			thread = new Thread("ticker") {
 				private final Object blocker = new Object();
 				private volatile long lastTimestamp;

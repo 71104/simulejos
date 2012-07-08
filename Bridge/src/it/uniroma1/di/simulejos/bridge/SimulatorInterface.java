@@ -40,6 +40,14 @@ public interface SimulatorInterface {
 		// TODO
 	}
 
+	static interface LightSensor extends Sensor {
+		// TODO
+	}
+
+	static interface CompassSensor extends Sensor {
+		// TODO
+	}
+
 	Sensor getS1();
 
 	Sensor getS2();
