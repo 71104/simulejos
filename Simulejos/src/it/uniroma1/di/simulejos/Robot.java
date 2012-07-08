@@ -172,7 +172,7 @@ public final class Robot implements Serializable {
 				try {
 					bridge = classLoader.loadClass(Bridge.class.getName());
 				} catch (ClassNotFoundException e) {
-					throw new RuntimeException(e); // FIXME è corretto?
+					throw new RuntimeException(e);
 				}
 				try {
 					bridge.getMethod("initialize", String.class,

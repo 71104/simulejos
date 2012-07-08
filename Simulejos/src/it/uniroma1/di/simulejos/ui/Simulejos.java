@@ -207,7 +207,7 @@ public final class Simulejos extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			new NewRobotDialog(Simulejos.this, simulation);
-			// TODO repaint canvas
+			canvas.repaint();
 		}
 	};
 	public final Action PLAY_ACTION = new MyAction("Play", "play") {
