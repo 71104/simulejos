@@ -51,8 +51,7 @@ public final class Robot implements Serializable {
 	private transient volatile Elements elements;
 
 	Robot(File classPath, String mainClassName, String script,
-			ModelData modelData, Frame parentWindow)
-			throws ScriptException {
+			ModelData modelData, Frame parentWindow) throws ScriptException {
 		this.index = nextIndex++;
 		this.classPath = classPath;
 		this.mainClassName = mainClassName;
@@ -199,6 +198,7 @@ public final class Robot implements Serializable {
 				try {
 					mainClass.getMethod("main", String[].class).invoke(null,
 							(Object) new String[] {});
+					logWriter.println("terminated regularly");
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				} finally {
