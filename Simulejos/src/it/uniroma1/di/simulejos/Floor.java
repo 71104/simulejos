@@ -6,19 +6,17 @@ import it.uniroma1.di.simulejos.opengl.Program;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Externalizable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL2GL3;
 import static javax.media.opengl.GL2GL3.*;
 
-public final class Floor implements Serializable {
-	private static final long serialVersionUID = -6429459719709791948L;
-
+public final class Floor implements Externalizable {
 	private volatile BufferedImage texture;
 	private transient volatile boolean updateTexture;
 
@@ -26,8 +24,9 @@ public final class Floor implements Serializable {
 	private transient volatile Program program;
 	private transient volatile Arrays arrays;
 
-	private void readObject(ObjectInputStream in)
-			throws ClassNotFoundException, IOException {
+	@Override
+	public void readExternal(ObjectInput in) throws IOException,
+			ClassNotFoundException {
 		final byte[] textureBytes = (byte[]) in.readObject();
 		if (textureBytes != null) {
 			texture = ImageIO.read(new ByteArrayInputStream(textureBytes));
@@ -36,7 +35,8 @@ public final class Floor implements Serializable {
 		}
 	}
 
-	private void writeObject(ObjectOutputStream out) throws IOException {
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
 		if (texture != null) {
 			final ByteArrayOutputStream byteSink = new ByteArrayOutputStream();
 			ImageIO.write(texture, "PNG", byteSink);

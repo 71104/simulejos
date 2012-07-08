@@ -8,8 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
@@ -43,10 +45,9 @@ public final class Simulejos extends JFrame {
 
 	private final LogWindow logWindow = new LogWindow();
 
-	private volatile Simulation simulation = new Simulation(this,
-			logWindow.getWriter());
+	private volatile Simulation simulation = new Simulation();
 	{
-		simulation.setCanvas(canvas);
+		simulation.setUI(this, canvas, logWindow.getWriter());
 	}
 
 	private volatile File file = null;
@@ -57,7 +58,7 @@ public final class Simulejos extends JFrame {
 		fileChooser.setAcceptAllFileFilterUsed(true);
 	}
 
-	private boolean reset() {
+	private boolean discard() {
 		if (simulation.isDirty()) {
 			switch (JOptionPane
 					.showConfirmDialog(
@@ -77,10 +78,37 @@ public final class Simulejos extends JFrame {
 			}
 		}
 		simulation.discard();
-		simulation = new Simulation(this, logWindow.getWriter());
-		simulation.setCanvas(canvas);
-		canvas.repaint();
 		return true;
+	}
+
+	private boolean reset() {
+		if (discard()) {
+			simulation = new Simulation();
+			simulation.setUI(this, canvas, logWindow.getWriter());
+			canvas.repaint();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean load() {
+		if ((fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+				&& discard()) {
+			try {
+				simulation = (Simulation) new ObjectInputStream(
+						new FileInputStream(fileChooser.getSelectedFile()))
+						.readObject();
+			} catch (ClassNotFoundException | IOException | ClassCastException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage(),
+						"Simulejos", JOptionPane.ERROR_MESSAGE);
+			}
+			simulation.setUI(this, canvas, logWindow.getWriter());
+			canvas.repaint();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private void doSave() {
@@ -144,7 +172,7 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			reset();
+			load();
 		}
 	};
 	public final Action SAVE_ACTION = new MyAction("Save", "save") {

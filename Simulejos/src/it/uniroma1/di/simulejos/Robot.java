@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.opengl.GL2GL3;
+
 import static javax.media.opengl.GL2GL3.*;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -51,13 +52,12 @@ public final class Robot implements Serializable {
 	private transient volatile Elements elements;
 
 	Robot(File classPath, String mainClassName, String script,
-			ModelData modelData, Frame parentWindow) throws ScriptException {
+			ModelData modelData) throws ScriptException {
 		this.index = nextIndex++;
 		this.classPath = classPath;
 		this.mainClassName = mainClassName;
 		this.script = script;
 		this.modelData = modelData;
-		this.parentWindow = parentWindow;
 	}
 
 	private transient final Motor motorA = new Motor();
@@ -125,7 +125,7 @@ public final class Robot implements Serializable {
 		}
 	}
 
-	private final Simulator simulator = new Simulator();
+	private transient final Simulator simulator = new Simulator();
 
 	public final class RobotInterface {
 		private RobotInterface() {
@@ -140,13 +140,10 @@ public final class Robot implements Serializable {
 		}
 	}
 
-	private final RobotInterface robotInterface = new RobotInterface();
+	private transient final RobotInterface robotInterface = new RobotInterface();
 
-	void setParentWindow(Frame parentWindow) {
+	void setUI(Frame parentWindow, Writer logWriter) {
 		this.parentWindow = parentWindow;
-	}
-
-	void setLogWriter(Writer logWriter) {
 		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
 				logWriter));
 	}

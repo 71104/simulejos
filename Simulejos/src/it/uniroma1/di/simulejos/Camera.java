@@ -32,7 +32,7 @@ public class Camera implements Serializable {
 	private static final Matrix3 DOWN_ROTATION = Matrix3.createRotation(1, 0,
 			0, ROTATION_DELTA);
 
-	public final KeyAdapter keyListener = new KeyAdapter() {
+	public transient final KeyAdapter keyListener = new KeyAdapter() {
 		@Override
 		public void keyTyped(KeyEvent event) {
 			switch (event.getKeyCode()) {
@@ -57,7 +57,7 @@ public class Camera implements Serializable {
 		}
 	};
 
-	public final MouseAdapter mouseListener = new MouseAdapter() {
+	public transient final MouseAdapter mouseListener = new MouseAdapter() {
 		@Override
 		public void mouseDragged(MouseEvent event) {
 			// TODO

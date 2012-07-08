@@ -27,7 +27,7 @@ public final class Simulation implements Serializable {
 	public final Camera camera = new Camera();
 	public final Floor floor = new Floor();
 	private final List<Robot> robotList = new LinkedList<>();
-	public final Iterable<Robot> robots = robotList;
+	public transient final Iterable<Robot> robots = robotList;
 	private transient volatile boolean dirty;
 
 	private transient volatile Thread thread;
@@ -95,13 +95,6 @@ public final class Simulation implements Serializable {
 		}
 	};
 
-	public Simulation(Frame parentWindow, Writer logWriter) {
-		this.parentWindow = parentWindow;
-		this.logWriter = logWriter;
-		this.simulationLogWriter = new PrintWriter(new PartialWriter(
-				"Simulation", logWriter));
-	}
-
 	public boolean isDirty() {
 		return dirty;
 	}
@@ -110,14 +103,21 @@ public final class Simulation implements Serializable {
 		dirty = false;
 	}
 
-	public void setCanvas(GLJPanel canvas) {
+	public void setUI(Frame parentWindow, GLJPanel canvas, Writer logWriter) {
+		this.parentWindow = parentWindow;
+		this.logWriter = logWriter;
+		this.simulationLogWriter = new PrintWriter(new PartialWriter(
+				"Simulation", logWriter));
 		if (this.canvas != null) {
 			this.canvas.removeGLEventListener(glEventListener);
 		}
 		this.canvas = canvas;
-		this.camera.setCanvas(canvas);
 		if (canvas != null) {
 			canvas.addGLEventListener(glEventListener);
+		}
+		this.camera.setCanvas(canvas);
+		for (Robot robot : this.robots) {
+			robot.setUI(parentWindow, logWriter);
 		}
 	}
 
@@ -133,9 +133,8 @@ public final class Simulation implements Serializable {
 			ParseException, ScriptException {
 		dirty = true;
 		final Robot robot = new Robot(classPath, mainClassName, script,
-				ModelData.parseWavefront(modelFile, swapYAndZ), parentWindow);
-		robot.setParentWindow(parentWindow);
-		robot.setLogWriter(logWriter);
+				ModelData.parseWavefront(modelFile, swapYAndZ));
+		robot.setUI(parentWindow, logWriter);
 		robotList.add(robot);
 	}
 
@@ -147,7 +146,7 @@ public final class Simulation implements Serializable {
 		State stop();
 	};
 
-	private final State runningState = new State() {
+	private transient final State runningState = new State() {
 		@Override
 		public State play() {
 			return this;
@@ -174,7 +173,7 @@ public final class Simulation implements Serializable {
 		}
 	};
 
-	private final State suspendedState = new State() {
+	private transient final State suspendedState = new State() {
 		@Override
 		public State play() {
 			simulationLogWriter.println("resumed");
@@ -201,7 +200,7 @@ public final class Simulation implements Serializable {
 		}
 	};
 
-	private final State stoppedState = new State() {
+	private transient final State stoppedState = new State() {
 		@Override
 		public State play() throws ScriptException {
 			simulationLogWriter.println("started");
@@ -258,7 +257,7 @@ public final class Simulation implements Serializable {
 		}
 	};
 
-	private State state = stoppedState;
+	private transient volatile State state = stoppedState;
 
 	public void play() throws ScriptException {
 		state = state.play();
