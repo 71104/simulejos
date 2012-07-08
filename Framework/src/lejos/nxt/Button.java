@@ -31,7 +31,6 @@ public class Button implements ListenerCaller {
 	public static final int ID_LEFT = 0x2;
 	public static final int ID_RIGHT = 0x4;
 	public static final int ID_ESCAPE = 0x8;
-	private static final int ID_ALL = 0xf;
 
 	private static final int PRESS_EVENT_SHIFT = 0;
 	private static final int RELEASE_EVENT_SHIFT = 8;

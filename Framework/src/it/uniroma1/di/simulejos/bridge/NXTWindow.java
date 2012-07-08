@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -60,37 +62,45 @@ final class NXTWindow extends JDialog implements BrickInterface {
 		setLayout(new BorderLayout());
 		add(canvas, BorderLayout.CENTER);
 
+		final JToolBar buttons = new JToolBar(JToolBar.HORIZONTAL);
+
 		final class Button extends AbstractAction {
 			private static final long serialVersionUID = -8099406163811415439L;
 
-			private final int index;
-
-			public Button(int index) {
-				this.index = index;
+			private Button(final int index) {
 				putValue(
 						LARGE_ICON_KEY,
 						new ImageIcon((NXTWindow.class
 								.getResource(ICON_NAMES[index]))));
+				buttons.add(this).addMouseListener(new MouseAdapter() {
+					@Override
+					public void mousePressed(MouseEvent event) {
+						buttonState = buttonState | (1 << index);
+						for (ButtonListener listener : buttonListeners.values()) {
+							listener.onPress(index);
+						}
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent event) {
+						buttonState = buttonState & ~(1 << index);
+						for (ButtonListener listener : buttonListeners.values()) {
+							listener.onRelease(index);
+						}
+					}
+				});
 			}
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				buttonState = buttonState | (1 << index);
-				for (ButtonListener listener : buttonListeners.values()) {
-					listener.onPress(index);
-				}
-				buttonState = buttonState & ~(1 << index);
-				for (ButtonListener listener : buttonListeners.values()) {
-					listener.onRelease(index);
-				}
 			}
 		}
 
-		final JToolBar buttons = new JToolBar(JToolBar.HORIZONTAL);
-		buttons.add(new Button(LEFT_INDEX));
-		buttons.add(new Button(ENTER_INDEX));
-		buttons.add(new Button(RIGHT_INDEX));
-		buttons.add(new Button(ESCAPE_INDEX));
+		new Button(LEFT_INDEX);
+		new Button(ENTER_INDEX);
+		new Button(RIGHT_INDEX);
+		new Button(ESCAPE_INDEX);
+
 		buttons.setFloatable(false);
 		add(buttons, BorderLayout.SOUTH);
 
