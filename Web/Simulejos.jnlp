@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp version="1.0" codebase="http://www.simulejos.altervista.org/">
+	<information>
+		<title>Simulejos</title>
+		<vendor>Alberto La Rocca</vendor>
+		<homepage>http://www.simulejos.altervista.org/</homepage>
+		<offline-allowed/>
+		<shortcut>
+			<desktop/>
+			<menu/>
+		</shortcut>
+	</information>
+
+	<security>
+		<all-permissions/>
+	</security>
+
+	<resources>
+		<j2se href="http://java.sun.com/products/autodl/j2se" version="1.7+"/>
+		<jar href="Simulejos.jar" main="true"/>
+	</resource>
+
+	<resources>
+		<j2se href="http://java.sun.com/products/autodl/j2se" version="1.4+"/>
+		<extension name="jogl-all-awt" href="http://jogamp.org/deployment/jogamp-current/jogl-all-awt.jnlp" />
+	</resources>
+
+	<resources os="Windows">
+		<property name="sun.java2d.noddraw" value="true"/>
+	</resources>
+
+	<application-desc main-class="it.uniroma1.di.simulejos.ui.Simulejos"/>
+</jnlp>
