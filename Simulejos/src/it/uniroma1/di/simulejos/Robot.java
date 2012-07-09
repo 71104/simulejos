@@ -2,7 +2,9 @@ package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
+import it.uniroma1.di.simulejos.bridge.SimulatorInterface.Sensor;
 import it.uniroma1.di.simulejos.math.Matrix3;
+import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Elements;
 import it.uniroma1.di.simulejos.opengl.Program;
@@ -60,9 +62,16 @@ public final class Robot implements Serializable {
 		this.modelData = modelData;
 	}
 
+	void setUI(Frame parentWindow, Writer logWriter) {
+		this.parentWindow = parentWindow;
+		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
+				logWriter));
+	}
+
 	private transient final Motor motorA = new Motor();
 	private transient final Motor motorB = new Motor();
 	private transient final Motor motorC = new Motor();
+	private transient final Sensor[] sensors = new Sensor[4];
 
 	private class Simulator implements SimulatorInterface {
 		@Override
@@ -97,26 +106,22 @@ public final class Robot implements Serializable {
 
 		@Override
 		public Sensor getS1() {
-			// TODO Auto-generated method stub
-			return null;
+			return sensors[0];
 		}
 
 		@Override
 		public Sensor getS2() {
-			// TODO Auto-generated method stub
-			return null;
+			return sensors[1];
 		}
 
 		@Override
 		public Sensor getS3() {
-			// TODO Auto-generated method stub
-			return null;
+			return sensors[2];
 		}
 
 		@Override
 		public Sensor getS4() {
-			// TODO Auto-generated method stub
-			return null;
+			return sensors[3];
 		}
 
 		@Override
@@ -127,8 +132,48 @@ public final class Robot implements Serializable {
 
 	private transient final Simulator simulator = new Simulator();
 
+	private final class CompassSensor implements
+			SimulatorInterface.CompassSensor {
+		private final Matrix3 offset;
+		private volatile double zero;
+
+		public CompassSensor(Matrix3 offset) {
+			if (offset != null) {
+				this.offset = offset;
+			} else {
+				this.offset = Matrix3.IDENTITY;
+			}
+		}
+
+		private double getAbsoluteAngle() {
+			final Vector3 needle = offset.by(heading.by(Vector3.K));
+			final Vector2 flatNeedle = new Vector2(needle.z, -needle.x);
+			return (Math.atan2(flatNeedle.y, flatNeedle.x) + Math.PI * 2)
+					% (Math.PI * 2);
+		}
+
+		@Override
+		public double getAngle() {
+			return getAbsoluteAngle() - zero;
+		}
+
+		@Override
+		public void setZero() {
+			zero = getAbsoluteAngle();
+		}
+
+		@Override
+		public void resetZero() {
+			zero = 0;
+		}
+	}
+
 	public final class RobotInterface {
 		private RobotInterface() {
+		}
+
+		public CompassSensor createCompassSensor(Matrix3 offset) {
+			return new CompassSensor(offset);
 		}
 
 		public void moveBy(double dx, double dy, double dz) {
@@ -141,12 +186,6 @@ public final class Robot implements Serializable {
 	}
 
 	private transient final RobotInterface robotInterface = new RobotInterface();
-
-	void setUI(Frame parentWindow, Writer logWriter) {
-		this.parentWindow = parentWindow;
-		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
-				logWriter));
-	}
 
 	void play() throws ScriptException {
 		final ScriptEngine scriptEngine = new ScriptEngineManager()

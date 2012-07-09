@@ -1,7 +1,5 @@
 package it.uniroma1.di.simulejos.bridge;
 
-import it.uniroma1.di.simulejos.math.Vector3;
-
 import java.awt.Frame;
 import java.io.PrintWriter;
 
@@ -42,13 +40,15 @@ public interface SimulatorInterface {
 	}
 
 	static interface LightSensor extends Sensor {
-		Vector3 getColor();
+		int getColor();
 	}
 
 	static interface CompassSensor extends Sensor {
-		// TODO calibration stuff
+		double getAngle();
 
-		Vector3 getReferenceVector();
+		void setZero();
+
+		void resetZero();
 	}
 
 	Sensor getS1();
