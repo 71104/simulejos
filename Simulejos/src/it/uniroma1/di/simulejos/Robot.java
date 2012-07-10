@@ -47,7 +47,8 @@ public final class Robot implements Serializable {
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
 	private transient volatile Invocable invocable;
-	private transient boolean running;
+	private transient volatile boolean initializing;
+	private transient volatile boolean running;
 	private transient volatile ThreadGroup threads;
 
 	private transient volatile GL2GL3 gl;
@@ -132,21 +133,53 @@ public final class Robot implements Serializable {
 
 	private transient final Simulator simulator = new Simulator();
 
+	private final class ColorSensor implements SimulatorInterface.ColorSensor {
+		private final Vector3 position;
+		private final Vector3 heading;
+
+		private ColorSensor(Vector3 position, Vector3 heading) {
+			this.position = position;
+			this.heading = heading;
+		}
+
+		@Override
+		public int getColor() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+	}
+
+	private final class LightSensor implements SimulatorInterface.LightSensor {
+		private final Vector3 position;
+		private final Vector3 heading;
+
+		private LightSensor(Vector3 position, Vector3 heading) {
+			this.position = position;
+			this.heading = heading;
+		}
+
+		@Override
+		public int getLight() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+	}
+
 	private final class CompassSensor implements
 			SimulatorInterface.CompassSensor {
-		private final Matrix3 offset;
+		private final Matrix3 heading;
 		private volatile double zero;
 
-		public CompassSensor(Matrix3 offset) {
-			if (offset != null) {
-				this.offset = offset;
+		private CompassSensor(Matrix3 heading) {
+			if (heading != null) {
+				this.heading = heading;
 			} else {
-				this.offset = Matrix3.IDENTITY;
+				this.heading = Matrix3.IDENTITY;
 			}
 		}
 
 		private double getAbsoluteAngle() {
-			final Vector3 needle = offset.by(heading.by(Vector3.K));
+			final Vector3 needle = this.heading.by(heading.by(Vector3.K));
 			final Vector2 flatNeedle = new Vector2(needle.z, -needle.x);
 			return (Math.atan2(flatNeedle.y, flatNeedle.x) + Math.PI * 2)
 					% (Math.PI * 2);
@@ -172,8 +205,41 @@ public final class Robot implements Serializable {
 		private RobotInterface() {
 		}
 
-		public CompassSensor createCompassSensor(Matrix3 offset) {
-			return new CompassSensor(offset);
+		public final class SensorPort {
+			private volatile SimulatorInterface.Sensor sensor;
+
+			private void initializeSensor(SimulatorInterface.Sensor sensor) {
+				if (initializing) {
+					this.sensor = sensor;
+				} else {
+					// TODO throw
+				}
+			}
+
+			public void initializeColorSensor(Vector3 position, Vector3 heading) {
+				initializeSensor(new ColorSensor(position, heading));
+			}
+
+			public void initializeLightSensor(Vector3 position, Vector3 heading) {
+				initializeSensor(new LightSensor(position, heading));
+			}
+
+			public void initializeCompassSensor(Matrix3 heading) {
+				initializeSensor(new CompassSensor(heading));
+			}
+
+			public SimulatorInterface.Sensor getSensor() {
+				return sensor;
+			}
+		}
+
+		public final SensorPort S1 = new SensorPort();
+		public final SensorPort S2 = new SensorPort();
+		public final SensorPort S3 = new SensorPort();
+		public final SensorPort S4 = new SensorPort();
+
+		public CompassSensor createCompassSensor(Matrix3 heading) {
+			return new CompassSensor(heading);
 		}
 
 		public void moveBy(double dx, double dy, double dz) {
@@ -188,12 +254,14 @@ public final class Robot implements Serializable {
 	private transient final RobotInterface robotInterface = new RobotInterface();
 
 	void play() throws ScriptException {
+		initializing = true;
 		final ScriptEngine scriptEngine = new ScriptEngineManager()
 				.getEngineByMimeType("text/javascript");
 		scriptEngine.put("robot", robotInterface);
 		scriptEngine.eval(script);
 		invocable = (Invocable) scriptEngine;
 		threads = new ThreadGroup("NXT" + index);
+		initializing = false;
 		running = true;
 		new Thread(threads, new Runnable() {
 			@Override

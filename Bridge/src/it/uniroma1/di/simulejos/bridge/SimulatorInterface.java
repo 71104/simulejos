@@ -39,8 +39,12 @@ public interface SimulatorInterface {
 	static interface Sensor {
 	}
 
-	static interface LightSensor extends Sensor {
+	static interface ColorSensor extends Sensor {
 		int getColor();
+	}
+
+	static interface LightSensor extends Sensor {
+		int getLight();
 	}
 
 	static interface CompassSensor extends Sensor {
