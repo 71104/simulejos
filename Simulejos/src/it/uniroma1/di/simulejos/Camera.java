@@ -7,10 +7,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.Serializable;
 
-import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.awt.GLJPanel;
 
-import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Program;
 
@@ -18,35 +16,28 @@ public class Camera implements Serializable {
 	private static final long serialVersionUID = -1189555495876080971L;
 
 	private volatile Vector3 position = new Vector3(0, 0, -10);
-	private volatile Matrix3 heading = Matrix3.IDENTITY;
+	private volatile double angleX;
+	private volatile double angleY;
 
-	private transient volatile GLAutoDrawable canvas;
+	private static final double ROTATION_DELTA = 0.1;
 
-	private static final double ROTATION_DELTA = 0.01;
-	private static final Matrix3 LEFT_ROTATION = Matrix3.createRotation(0, 1,
-			0, -ROTATION_DELTA);
-	private static final Matrix3 RIGHT_ROTATION = Matrix3.createRotation(0, 1,
-			0, ROTATION_DELTA);
-	private static final Matrix3 UP_ROTATION = Matrix3.createRotation(1, 0, 0,
-			-ROTATION_DELTA);
-	private static final Matrix3 DOWN_ROTATION = Matrix3.createRotation(1, 0,
-			0, ROTATION_DELTA);
+	private transient volatile GLJPanel canvas;
 
-	public transient final KeyAdapter keyListener = new KeyAdapter() {
+	private transient final KeyAdapter keyListener = new KeyAdapter() {
 		@Override
 		public void keyTyped(KeyEvent event) {
 			switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				heading = LEFT_ROTATION.by(heading);
+				angleX -= ROTATION_DELTA;
 				break;
 			case KeyEvent.VK_RIGHT:
-				heading = RIGHT_ROTATION.by(heading);
+				angleX += ROTATION_DELTA;
 				break;
 			case KeyEvent.VK_UP:
-				heading = UP_ROTATION.by(heading);
+				angleY -= ROTATION_DELTA;
 				break;
 			case KeyEvent.VK_DOWN:
-				heading = DOWN_ROTATION.by(heading);
+				angleY += ROTATION_DELTA;
 				break;
 			default:
 				return;
@@ -57,10 +48,25 @@ public class Camera implements Serializable {
 		}
 	};
 
-	public transient final MouseAdapter mouseListener = new MouseAdapter() {
+	private transient final MouseAdapter mouseListener = new MouseAdapter() {
+		private volatile int x0;
+		private volatile int y0;
+
+		@Override
+		public void mousePressed(MouseEvent event) {
+			x0 = event.getX();
+			y0 = event.getY();
+		}
+
 		@Override
 		public void mouseDragged(MouseEvent event) {
-			// TODO
+			final int x = event.getX();
+			final int y = event.getY();
+			angleX += Math.toRadians(x - x0) / 4;
+			angleY += Math.toRadians(y - y0) / 4;
+			canvas.repaint();
+			x0 = x;
+			y0 = y;
 		}
 
 		@Override
@@ -70,11 +76,21 @@ public class Camera implements Serializable {
 	};
 
 	public void setCanvas(GLJPanel canvas) {
+		if (this.canvas != null) {
+			this.canvas.removeKeyListener(keyListener);
+			this.canvas.removeMouseListener(mouseListener);
+			this.canvas.removeMouseMotionListener(mouseListener);
+		}
 		this.canvas = canvas;
+		if (canvas != null) {
+			canvas.addKeyListener(keyListener);
+			canvas.addMouseListener(mouseListener);
+			canvas.addMouseMotionListener(mouseListener);
+		}
 	}
 
 	public void uniform(Program program) {
 		program.uniform("Camera.Position", position);
-		program.uniform("Camera.Heading", heading);
+		program.uniform2f("Camera.Angle", (float) angleX, (float) angleY);
 	}
 }

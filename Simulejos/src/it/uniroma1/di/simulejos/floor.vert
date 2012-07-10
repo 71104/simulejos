@@ -1,8 +1,8 @@
 #version 120
 
 uniform struct {
+	vec2 Angle;
 	vec3 Position;
-	mat3 Heading;
 } Camera;
 
 mat4 ViewProjection = mat4(
@@ -11,15 +11,20 @@ mat4 ViewProjection = mat4(
 	0, 0, 0, 1,
 	0, 0, 1, 0
 ) * mat4(
-	Camera.Heading[0][0], Camera.Heading[1][0], Camera.Heading[2][0], 0,
-	Camera.Heading[0][1], Camera.Heading[1][1], Camera.Heading[2][1], 0,
-	Camera.Heading[0][2], Camera.Heading[1][2], Camera.Heading[2][2], 0,
-	0, 0, 0, 1
-) * mat4(
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, 0,
 	-Camera.Position, 1
+) * mat4(
+	1, 0, 0, 0,
+	0, cos(Camera.Angle.y), sin(Camera.Angle.y), 0,
+	0, -sin(Camera.Angle.y), cos(Camera.Angle.y), 0,
+	0, 0, 0, 1
+) * mat4(
+	cos(Camera.Angle.x), 0, -sin(Camera.Angle.x), 0,
+	0, 1, 0, 0,
+	sin(Camera.Angle.x), 0, cos(Camera.Angle.x), 0,
+	0, 0, 0, 1
 );
 
 mat4 Model = mat4(

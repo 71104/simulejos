@@ -1,6 +1,7 @@
 package it.uniroma1.di.simulejos.opengl;
 
 import it.uniroma1.di.simulejos.math.Matrix3;
+import it.uniroma1.di.simulejos.math.Matrix4;
 import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.math.Vector4;
@@ -207,11 +208,20 @@ public class Program extends GLObject {
 
 	public void uniform(String name, Matrix3 matrix) {
 		final double[] values = matrix.toArray();
-		final float[] floatValues = new float[9];
-		for (int i = 0; i < 9; i++) {
+		final float[] floatValues = new float[values.length];
+		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
 		gl.glUniformMatrix3fv(getUniformLocation(name), 1, true, floatValues, 0);
+	}
+
+	public void uniform(String name, Matrix4 matrix) {
+		final double[] values = matrix.toArray();
+		final float[] floatValues = new float[values.length];
+		for (int i = 0; i < values.length; i++) {
+			floatValues[i] = (float) values[i];
+		}
+		gl.glUniformMatrix4fv(getUniformLocation(name), 1, true, floatValues, 0);
 	}
 
 	public void getUniformfv(int location, float[] data) {

@@ -82,6 +82,12 @@ public class Matrix3 implements Cloneable, Serializable {
 		return values.clone();
 	}
 
+	public Matrix4 toHomogeneous() {
+		return Matrix4.create(new double[] { values[0], values[1], values[2],
+				0, values[3], values[4], values[5], 0, values[6], values[7],
+				values[8], 0, 0, 0, 0, 1 });
+	}
+
 	public double getAt(int i, int j) {
 		return values[i * 3 + j];
 	}
@@ -144,5 +150,9 @@ public class Matrix3 implements Cloneable, Serializable {
 				(values[3] * values[7] - values[6] * values[4]) / determinant,
 				(values[1] * values[6] - values[7] * values[0]) / determinant,
 				(values[0] * values[4] - values[3] * values[1]) / determinant });
+	}
+
+	public Matrix3 rotate(double x, double y, double z, double a) {
+		return by(Matrix3.createRotation(x, y, z, a));
 	}
 }
