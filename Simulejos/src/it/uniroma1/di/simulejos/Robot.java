@@ -72,6 +72,22 @@ public final class Robot implements Serializable {
 	private transient final Motor motorB = new Motor();
 	private transient final Motor motorC = new Motor();
 
+	private final class TouchSensor implements SimulatorInterface.TouchSensor {
+		private final Vector3 position;
+		private final Vector3 heading;
+
+		private TouchSensor(Vector3 position, Vector3 heading) {
+			this.position = position;
+			this.heading = heading;
+		}
+
+		@Override
+		public boolean isPressed() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+	}
+
 	private final class ColorSensor implements SimulatorInterface.ColorSensor {
 		private final Vector3 position;
 		private final Vector3 heading;
@@ -171,6 +187,10 @@ public final class Robot implements Serializable {
 									+ index
 									+ "'s script tried to initialize a sensor port after the initialization stage");
 				}
+			}
+
+			public void initializeTouchSensor(Vector3 position, Vector3 heading) {
+				initializeSensor(new TouchSensor(position, heading));
 			}
 
 			public void initializeColorSensor(Vector3 position, Vector3 heading) {

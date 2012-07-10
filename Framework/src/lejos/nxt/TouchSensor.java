@@ -1,35 +1,28 @@
 package lejos.nxt;
+
+import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import lejos.robotics.Touch;
 
-/*
- * WARNING: THIS CLASS IS SHARED BETWEEN THE classes AND pccomms PROJECTS.
- * DO NOT EDIT THE VERSION IN pccomms AS IT WILL BE OVERWRITTEN WHEN THE PROJECT IS BUILT.
- */
-
-/**
- * Abstraction for a NXT touch sensor.
- * Also works with RCX touch sensors.
- * 
- */
 public class TouchSensor implements SensorConstants, Touch {
-	ADSensorPort port;
-	
-	/**
-	 * Create a touch sensor object attached to the specified port.
-	 * @param port an Analog/Digital port, e.g. SensorPort.S1
-	 */
-	public TouchSensor(ADSensorPort port)
-	{
-	   this.port = port;
-	   port.setTypeAndMode(TYPE_SWITCH, MODE_BOOLEAN);
+	private final SimulatorInterface.TouchSensor sensor;
+
+	public TouchSensor(SensorPort port) {
+		final SimulatorInterface.Sensor sensor = port.getSensor();
+		if (sensor != null) {
+			if (sensor instanceof SimulatorInterface.TouchSensor) {
+				this.sensor = (SimulatorInterface.TouchSensor) sensor;
+			} else {
+				throw new RuntimeException("The sensor attached to port S"
+						+ (port.getId() + 1) + " is not a touch sensor");
+			}
+		} else {
+			throw new RuntimeException("No sensor attached to port S"
+					+ (port.getId() + 1));
+		}
 	}
-	
-	/**
-	 * Check if the sensor is pressed.
-	 * @return <code>true</code> if sensor is pressed, <code>false</code> otherwise.
-	 */
-	public boolean isPressed()
-	{
-		return (port.readRawValue() < 600);  
+
+	@Override
+	public boolean isPressed() {
+		return sensor.isPressed();
 	}
 }

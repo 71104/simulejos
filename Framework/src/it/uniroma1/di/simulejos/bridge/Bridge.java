@@ -1,8 +1,12 @@
 package it.uniroma1.di.simulejos.bridge;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+
+import lejos.nxt.LCDOutputStream;
 
 public final class Bridge {
 	public static SimulatorInterface SIMULATOR;
@@ -36,6 +40,36 @@ public final class Bridge {
 			}
 		});
 		BRICK = new NXTWindow(simulator.getParentWindow(), robotName);
+		System.setOut(new PrintStream(new LCDOutputStream()));
+		System.setErr(new PrintStream(new OutputStream() {
+			@Override
+			public void close() {
+				LOG.close();
+			}
+
+			@Override
+			public void flush() {
+				LOG.flush();
+			}
+
+			@Override
+			public void write(byte[] b, int off, int len) {
+				final byte[] bytes = new byte[len];
+				System.arraycopy(b, off, bytes, 0, len);
+				LOG.write(new String(bytes).toCharArray());
+			}
+
+			@Override
+			public void write(byte[] b) {
+				LOG.write(new String(b).toCharArray());
+			}
+
+			@Override
+			public void write(int b) {
+				final byte[] bytes = new byte[] { (byte) b };
+				LOG.write(new String(bytes).toCharArray());
+			}
+		}));
 	}
 
 	public static void cleanup() {

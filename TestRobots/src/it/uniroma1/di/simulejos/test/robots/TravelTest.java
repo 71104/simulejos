@@ -1,7 +1,6 @@
 package it.uniroma1.di.simulejos.test.robots;
 
 import lejos.nxt.Button;
-import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
@@ -14,9 +13,9 @@ public class TravelTest {
 		final DifferentialPilot pilot = new DifferentialPilot(2.25f, 5.5f,
 				Motor.A, Motor.B);
 		final TouchSensor bumper = new TouchSensor(SensorPort.S1);
-		LCD.SYSOUT.println("Press ENTER to start");
+		System.out.println("Press ENTER to start");
 		Button.ENTER.waitForPressAndRelease();
-		LCD.SYSOUT.print("going...");
+		System.out.print("going...");
 		new Thread() {
 			@Override
 			public void run() {
@@ -30,7 +29,7 @@ public class TravelTest {
 				pilot.stop();
 			}
 		}
-		LCD.SYSOUT.print(" distance traveled: "
+		System.out.println(" distance traveled: "
 				+ pilot.getMovement().getDistanceTraveled());
 		Button.waitForAnyPress();
 	}

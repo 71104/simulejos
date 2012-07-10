@@ -2,7 +2,6 @@ package lejos.nxt;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.PrintStream;
 
 import javax.imageio.ImageIO;
 
@@ -68,18 +67,6 @@ public class LCD {
 	private static final byte[] buffer = new byte[SCREEN_HEIGHT * SCREEN_WIDTH
 			/ 8];
 	private static int autoRefreshPeriod = DEFAULT_REFRESH_PERIOD;
-
-	/**
-	 * This isn't in Lejos, it's Simulejos-specific. Simulejos programs cannot
-	 * print on regular {@link System#out} because Java system classes are not
-	 * virtualized by the simulator, thus all the robots share the same instance
-	 * of {@link System#out}, which is the standard output stream of the
-	 * simulator itself. Lejos classes instead ARE virtualized, so you can use
-	 * this replacement when printing something on standard output and actually
-	 * meaning to print it on the robot's LCD.
-	 */
-	public static final PrintStream SYSOUT = new PrintStream(
-			new LCDOutputStream());
 
 	private static void doRefresh() {
 		final boolean[] data = new boolean[SCREEN_WIDTH * SCREEN_HEIGHT];

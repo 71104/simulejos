@@ -39,6 +39,10 @@ public interface SimulatorInterface {
 	static interface Sensor {
 	}
 
+	static interface TouchSensor extends Sensor {
+		boolean isPressed();
+	}
+
 	static interface ColorSensor extends Sensor {
 		static enum FloodLight {
 			FULL {
