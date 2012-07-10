@@ -40,6 +40,44 @@ public interface SimulatorInterface {
 	}
 
 	static interface ColorSensor extends Sensor {
+		static enum FloodLight {
+			FULL {
+				@Override
+				public int getColor() {
+					return 0xFFFFFF;
+				}
+			},
+			RED {
+				@Override
+				public int getColor() {
+					return 0xFF0000;
+				}
+			},
+			GREEN {
+				@Override
+				public int getColor() {
+					return 0x00FF00;
+				}
+			},
+			BLUE {
+				@Override
+				public int getColor() {
+					return 0x0000FF;
+				}
+			},
+			NONE {
+				@Override
+				public int getColor() {
+					return 0x000000;
+				}
+			};
+			public abstract int getColor();
+		}
+
+		FloodLight getFloodLight();
+
+		void setFloodLight(FloodLight light);
+
 		int getColor();
 	}
 

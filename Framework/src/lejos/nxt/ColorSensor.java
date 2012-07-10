@@ -1,282 +1,158 @@
 package lejos.nxt;
 
+import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import lejos.robotics.*;
 
-/*
- * WARNING: THIS CLASS IS SHARED BETWEEN THE classes AND pccomms PROJECTS.
- * DO NOT EDIT THE VERSION IN pccomms AS IT WILL BE OVERWRITTEN WHEN THE PROJECT IS BUILT.
- */
-/**
- * LEGO Color Sensor driver.
- * This driver provides access to the LEGO Color sensor. It allows the reading of
- * raw and processed color values. The sensor has a tri-color LED and this can
- * be set to output red/green/blue or off. It also has a full mode in which
- * four samples are read (off/red/green/blue) very quickly. These samples can
- * then be combined using the calibration data provided by the device to
- * determine the "LEGO" color currently being viewed.
- * @author andy
- */
-public class ColorSensor implements LampLightDetector, ColorDetector, SensorConstants
-{
+public class ColorSensor implements LampLightDetector, ColorDetector,
+		SensorConstants {
+	private static final int[] colorMap = { -1, Color.BLACK, Color.BLUE,
+			Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE };
 
-    protected static int[] colorMap =
-    {
-        -1, Color.BLACK, Color.BLUE, Color.GREEN, Color.YELLOW, Color.RED, Color.WHITE
-    };
-    protected SensorPort port;
-    protected int type;
-    private int zero = 1023;
-    private int hundred = 0;
-    private int[] all_vals = new int[4];
-    private int lampColor = Color.NONE;
+	private final SimulatorInterface.ColorSensor sensor;
+	private int zero = 1023;
+	private int hundred = 0;
 
-    /**
-     * Extended color class, that includes the background reading at
-     * the time that the other readings were made.
-     */
-    static public class Color extends lejos.robotics.Color
-    {
+	public static class Color extends lejos.robotics.Color {
+		private final int background;
 
-        private int background;
+		public Color(int red, int green, int blue, int background, int colorId) {
+			super(red, green, blue, colorId);
+			this.background = background;
+		}
 
-        public Color(int red, int green, int blue, int background, int colorId)
-        {
-            super(red, green, blue, colorId);
-            this.background = background;
-        }
+		public int getBackground() {
+			return background;
+		}
+	}
 
-        /**
-         * Return the background light level reading
-         * @return the background light level
-         */
-        public int getBackground()
-        {
-            return background;
-        }
-    }
+	public ColorSensor(SensorPort port) {
+		this(port, Color.WHITE);
+	}
 
-    /**
-     * Create a new Color Sensor instance and bind it to a port.
-     * @param port Port to use for the sensor.
-     */
-    public ColorSensor(SensorPort port)
-    {
-        this(port, Color.WHITE);
-    }
+	public ColorSensor(SensorPort port, int color) {
+		final SimulatorInterface.Sensor sensor = port.getSensor();
+		if (sensor != null) {
+			if (sensor instanceof SimulatorInterface.ColorSensor) {
+				this.sensor = (SimulatorInterface.ColorSensor) port.getSensor();
+				setFloodlight(color);
+			} else {
+				throw new RuntimeException("The sensor attached to port S"
+						+ (port.getId() + 1) + " is not a color sensor");
+			}
+		} else {
+			throw new RuntimeException("No sensor attached to port S"
+					+ (port.getId() + 1));
+		}
+	}
 
-    /**
-     * Create a new Color Sensor instance and bind it to a port. Set the
-     * floodlight to the specified color.
-     * @param port Port to use for the sensor.
-     * @param color The floodlight color.
-     */
-    public ColorSensor(SensorPort port, int color)
-    {
-        this.port = port;
-        port.enableColorSensor();
-        setFloodlight(color);
-    }
+	protected void setType(int type) {
+		switch (type) {
+		case TYPE_COLORFULL:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.FULL);
+			break;
+		case TYPE_COLORRED:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.RED);
+			break;
+		case TYPE_COLORGREEN:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.GREEN);
+			break;
+		case TYPE_COLORBLUE:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.BLUE);
+			break;
+		case TYPE_COLORNONE:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.NONE);
+			break;
+		default:
+			System.err
+					.println("invalid flood light type specified to color sensor");
+			break;
+		}
+	}
 
-    /**
-     * Change the type of the sensor
-     * @param type new sensor type.
-     */
-    protected void setType(int type)
-    {
-        port.setType(type);
-        this.type = type;
-    }
+	public int getLightValue() {
+		return sensor.getColor();
+	}
 
-    /**
-     * Return the calibrated light reading.
-     * @return Calibrated value as a percentage
-     */
-    public int getLightValue()
-    {
-        int val;
-        if (this.type == TYPE_COLORFULL)
-        {
-            port.readValues(all_vals);
-            val = (all_vals[RED_INDEX] + all_vals[BLUE_INDEX] + all_vals[GREEN_INDEX]) / 3;
-        } else
-            val = port.readValue();
-        return val;
-    }
+	public int getNormalizedLightValue() {
+		return getRawLightValue();
+	}
 
-    /**
-     * Return the normalized light level.
-     * @return The normalized light value.
-     */
-    public int getNormalizedLightValue()
-    {
-        // This is the same as the raw value
-        return getRawLightValue();
-    }
+	public int getRawLightValue() {
+		return sensor.getColor();
+	}
 
-    /**
-     * Return the Raw light reading.
-     * @return Raw light reading 0-1023
-     */
-    public int getRawLightValue()
-    {
-        int val;
-        if (this.type == TYPE_COLORFULL)
-        {
-            port.readRawValues(all_vals);
-            val = (all_vals[RED_INDEX] + all_vals[BLUE_INDEX] + all_vals[GREEN_INDEX]) / 3;
-        } else
-            val = port.readRawValue();
-        return val;
-    }
+	public void setFloodlight(boolean floodlight) {
+		setFloodlight(floodlight ? Color.RED : Color.NONE);
+	}
 
-    public void setFloodlight(boolean floodlight)
-    {
-        setFloodlight(floodlight ? Color.RED : Color.NONE);
-    }
+	public ColorSensor.Color getColor() {
+		final int reading = sensor.getColor();
+		return new Color(reading & 0xFF, (reading & 0xFF00) >> 8,
+				(reading & 0xFF0000) >> 16, 0, this.getColorID());
+	}
 
-    /**
-     * Return a Color Object that contains the calibrated color readings.
-     * @return Color data
-     */
-    public ColorSensor.Color getColor()
-    {
-        if (type != TYPE_COLORFULL)
-        {
-            int temp_type = type;
-            setType(TYPE_COLORFULL);
-            port.readValues(all_vals);
-            this.setType(temp_type);
-        } else
-            port.readValues(all_vals);
-        return new Color(all_vals[RED_INDEX], all_vals[GREEN_INDEX], all_vals[BLUE_INDEX], all_vals[BLANK_INDEX], this.getColorID());
-    }
+	public ColorSensor.Color getRawColor() {
+		final int reading = sensor.getColor();
+		return new Color(reading & 0xFF, (reading & 0xFF00) >> 8,
+				(reading & 0xFF0000) >> 16, 0, this.getColorID());
+	}
 
-    /**
-     * Return a Color Object that contains the raw color readings.
-     * @return Raw Color data (Note the color Id is always Color.NONE)
-     */
-    public ColorSensor.Color getRawColor()
-    {
-        if (type != TYPE_COLORFULL)
-        {
-            int temp_type = type;
-            setType(TYPE_COLORFULL);
-            port.readRawValues(all_vals);
-            this.setType(temp_type);
-        } else
-            port.readRawValues(all_vals);
-        return new Color(all_vals[RED_INDEX], all_vals[GREEN_INDEX], all_vals[BLUE_INDEX], all_vals[BLANK_INDEX], Color.NONE);
-    }
+	public int getFloodlight() {
+		return sensor.getFloodLight().getColor();
+	}
 
-    public int getFloodlight()
-    {
-        return lampColor;
-    }
+	public boolean isFloodlightOn() {
+		return sensor.getFloodLight() != SimulatorInterface.ColorSensor.FloodLight.NONE;
+	}
 
-    public boolean isFloodlightOn()
-    {
-        return (lampColor != Color.NONE);
-    }
+	public boolean setFloodlight(int color) {
+		switch (color) {
+		case Color.RED:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.RED);
+			break;
+		case Color.BLUE:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.BLUE);
+			break;
+		case Color.GREEN:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.GREEN);
+			break;
+		case Color.NONE:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.NONE);
+			break;
+		case Color.WHITE:
+			sensor.setFloodLight(SimulatorInterface.ColorSensor.FloodLight.FULL);
+			break;
+		default:
+			return false;
+		}
+		return true;
+	}
 
-    public boolean setFloodlight(int color)
-    {
-        switch (color)
-        {
-            case Color.RED:
-                lampColor = color;
-                setType(ColorSensor.TYPE_COLORRED);
-                break;
-            case Color.BLUE:
-                lampColor = color;
-                setType(ColorSensor.TYPE_COLORBLUE);
-                break;
-            case Color.GREEN:
-                lampColor = color;
-                setType(ColorSensor.TYPE_COLORGREEN);
-                break;
-            case Color.NONE:
-                lampColor = color;
-                setType(ColorSensor.TYPE_COLORNONE);
-                break;
-            case Color.WHITE:
-                lampColor = color;
-                setType(ColorSensor.TYPE_COLORFULL);
-                break;
-            default:
-                return false;
-        }
-        return true;
-    }
+	public void calibrateLow() {
+		zero = sensor.getColor();
+	}
 
-    // TODO: Since this calibrate code (and other code) is the same for every sensor, perhaps we should consider abstract classes to inherit shared code from
-    /**
-     * call this method when the light sensor is reading the low value - used by readValue
-     **/
-    public void calibrateLow()
-    {
-        zero = port.readRawValue();
-    }
+	public void calibrateHigh() {
+		hundred = sensor.getColor();
+	}
 
-    /**
-     *call this method when the light sensor is reading the high value - used by readValue
-     */
-    public void calibrateHigh()
-    {
-        hundred = port.readRawValue();
-    }
+	public void setLow(int low) {
+		zero = 1023 - low;
+	}
 
-    /**
-     * set the normalized value corresponding to readValue() = 0
-     * @param low the low value
-     */
-    public void setLow(int low)
-    {
-        zero = 1023 - low;
-    }
+	public void setHigh(int high) {
+		hundred = 1023 - high;
+	}
 
-    /**
-     * set the normalized value corresponding to  readValue() = 100;
-     * @param high the high value
-     */
-    public void setHigh(int high)
-    {
-        hundred = 1023 - high;
-    }
+	public int getLow() {
+		return 1023 - zero;
+	}
 
-    /**
-     * return  the normalized value corresponding to readValue() = 0
-     */
-    public int getLow()
-    {
-        return 1023 - zero;
-    }
+	public int getHigh() {
+		return 1023 - hundred;
+	}
 
-    /**
-     * return the normalized value corresponding to  readValue() = 100;
-     */
-    public int getHigh()
-    {
-        return 1023 - hundred;
-    }
-
-    /**
-     * Read the current color and return an enumeration constant. This is usually only accurate at a distance
-     * of about 1 cm.
-     * @return The color id under the sensor.
-     */
-    public int getColorID()
-    {
-        int col;
-        if (type != TYPE_COLORFULL)
-        {
-            int temp_type = this.type;
-            this.setType(TYPE_COLORFULL);
-            col = port.readValue();
-            this.setType(temp_type);
-        } else
-            col = port.readValue();
-        if (col <= 0)
-            return Color.NONE;
-        return colorMap[col];
-    }
+	public int getColorID() {
+		return colorMap[sensor.getColor()];
+	}
 }

@@ -2,7 +2,6 @@ package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
-import it.uniroma1.di.simulejos.bridge.SimulatorInterface.Sensor;
 import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
@@ -72,70 +71,11 @@ public final class Robot implements Serializable {
 	private transient final Motor motorA = new Motor();
 	private transient final Motor motorB = new Motor();
 	private transient final Motor motorC = new Motor();
-	private transient final Sensor[] sensors = new Sensor[4];
-
-	private class Simulator implements SimulatorInterface {
-		@Override
-		public String getRobotName() {
-			return "NXT" + index;
-		}
-
-		@Override
-		public Frame getParentWindow() {
-			return parentWindow;
-		}
-
-		@Override
-		public PrintWriter getLogWriter() {
-			return logWriter;
-		}
-
-		@Override
-		public Motor getA() {
-			return motorA;
-		}
-
-		@Override
-		public Motor getB() {
-			return motorB;
-		}
-
-		@Override
-		public Motor getC() {
-			return motorC;
-		}
-
-		@Override
-		public Sensor getS1() {
-			return sensors[0];
-		}
-
-		@Override
-		public Sensor getS2() {
-			return sensors[1];
-		}
-
-		@Override
-		public Sensor getS3() {
-			return sensors[2];
-		}
-
-		@Override
-		public Sensor getS4() {
-			return sensors[3];
-		}
-
-		@Override
-		public void shutDown() {
-			stop();
-		}
-	}
-
-	private transient final Simulator simulator = new Simulator();
 
 	private final class ColorSensor implements SimulatorInterface.ColorSensor {
 		private final Vector3 position;
 		private final Vector3 heading;
+		private volatile FloodLight floodLight = FloodLight.FULL;
 
 		private ColorSensor(Vector3 position, Vector3 heading) {
 			this.position = position;
@@ -146,6 +86,20 @@ public final class Robot implements Serializable {
 		public int getColor() {
 			// TODO Auto-generated method stub
 			return 0;
+		}
+
+		@Override
+		public FloodLight getFloodLight() {
+			return floodLight;
+		}
+
+		@Override
+		public void setFloodLight(FloodLight light) {
+			if (light != null) {
+				this.floodLight = light;
+			} else {
+				throw new IllegalArgumentException();
+			}
 		}
 	}
 
@@ -212,7 +166,10 @@ public final class Robot implements Serializable {
 				if (initializing) {
 					this.sensor = sensor;
 				} else {
-					// TODO throw
+					throw new RuntimeException(
+							"NXT"
+									+ index
+									+ "'s script tried to initialize a sensor port after the initialization stage");
 				}
 			}
 
@@ -252,6 +209,65 @@ public final class Robot implements Serializable {
 	}
 
 	private transient final RobotInterface robotInterface = new RobotInterface();
+
+	private class Simulator implements SimulatorInterface {
+		@Override
+		public String getRobotName() {
+			return "NXT" + index;
+		}
+
+		@Override
+		public Frame getParentWindow() {
+			return parentWindow;
+		}
+
+		@Override
+		public PrintWriter getLogWriter() {
+			return logWriter;
+		}
+
+		@Override
+		public Motor getA() {
+			return motorA;
+		}
+
+		@Override
+		public Motor getB() {
+			return motorB;
+		}
+
+		@Override
+		public Motor getC() {
+			return motorC;
+		}
+
+		@Override
+		public Sensor getS1() {
+			return robotInterface.S1.getSensor();
+		}
+
+		@Override
+		public Sensor getS2() {
+			return robotInterface.S2.getSensor();
+		}
+
+		@Override
+		public Sensor getS3() {
+			return robotInterface.S3.getSensor();
+		}
+
+		@Override
+		public Sensor getS4() {
+			return robotInterface.S4.getSensor();
+		}
+
+		@Override
+		public void shutDown() {
+			stop();
+		}
+	}
+
+	private transient final Simulator simulator = new Simulator();
 
 	void play() throws ScriptException {
 		initializing = true;
