@@ -13,6 +13,9 @@ public interface BrickInterface {
 	int readButtons();
 
 	static interface ButtonListener {
+		public static final class Token {
+		}
+
 		void onPress(int buttonIndex);
 
 		void onRelease(int buttonIndex);
@@ -28,9 +31,9 @@ public interface BrickInterface {
 		}
 	}
 
-	Object addButtonListener(ButtonListener listener);
+	ButtonListener.Token addButtonListener(ButtonListener listener);
 
-	void removeButtonListener(Object token);
+	void removeButtonListener(ButtonListener.Token token);
 
 	void dispose();
 }

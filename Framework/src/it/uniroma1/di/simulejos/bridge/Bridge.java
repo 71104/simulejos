@@ -9,14 +9,17 @@ import java.io.Writer;
 import lejos.nxt.LCDOutputStream;
 
 public final class Bridge {
-	public static SimulatorInterface SIMULATOR;
-	public static PrintWriter LOG;
-	public static BrickInterface BRICK;
+	private static volatile SimulatorInterface simulator;
+	private static volatile PrintWriter log;
+	private static volatile BrickInterface brick;
+
+	private static volatile PrintStream originalStdOut;
+	private static volatile PrintStream originalStdErr;
 
 	public static void initialize(String robotName,
 			final SimulatorInterface simulator) {
-		SIMULATOR = simulator;
-		LOG = new PrintWriter(new Writer() {
+		Bridge.simulator = simulator;
+		log = new PrintWriter(new Writer() {
 			private volatile boolean closed;
 			private final Writer writer = simulator.getLogWriter();
 
@@ -39,42 +42,54 @@ public final class Bridge {
 				closed = true;
 			}
 		});
-		BRICK = new NXTWindow(simulator.getParentWindow(), robotName);
+		brick = new NXTWindow(simulator.getParentWindow(), robotName);
+
+		originalStdOut = System.out;
+		originalStdErr = System.err;
 		System.setOut(new PrintStream(new LCDOutputStream()));
 		System.setErr(new PrintStream(new OutputStream() {
 			@Override
-			public void close() {
-				LOG.close();
-			}
-
-			@Override
 			public void flush() {
-				LOG.flush();
+				log.flush();
 			}
 
 			@Override
 			public void write(byte[] b, int off, int len) {
 				final byte[] bytes = new byte[len];
 				System.arraycopy(b, off, bytes, 0, len);
-				LOG.write(new String(bytes).toCharArray());
+				log.write(new String(bytes).toCharArray());
 			}
 
 			@Override
 			public void write(byte[] b) {
-				LOG.write(new String(b).toCharArray());
+				log.write(new String(b).toCharArray());
 			}
 
 			@Override
 			public void write(int b) {
 				final byte[] bytes = new byte[] { (byte) b };
-				LOG.write(new String(bytes).toCharArray());
+				log.write(new String(bytes).toCharArray());
 			}
 		}));
 	}
 
 	public static void cleanup() {
-		LOG.close();
-		BRICK.dispose();
+		System.setOut(originalStdOut);
+		System.setErr(originalStdErr);
+		log.close();
+		brick.dispose();
+	}
+
+	public static SimulatorInterface getSimulator() {
+		return simulator;
+	}
+
+	public static PrintWriter getLog() {
+		return log;
+	}
+
+	public static BrickInterface getBrick() {
+		return brick;
 	}
 
 	private Bridge() {

@@ -1,5 +1,7 @@
 package it.uniroma1.di.simulejos.bridge;
 
+import it.uniroma1.di.simulejos.bridge.BrickInterface.ButtonListener.Token;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -53,7 +55,7 @@ final class NXTWindow extends JDialog implements BrickInterface {
 	};
 
 	private volatile int buttonState = 0;
-	private final ConcurrentMap<Object, ButtonListener> buttonListeners = new ConcurrentHashMap<Object, ButtonListener>();
+	private final ConcurrentMap<Token, ButtonListener> buttonListeners = new ConcurrentHashMap<Token, ButtonListener>();
 
 	NXTWindow(Frame parent, String name) {
 		super(parent, name, false);
@@ -128,14 +130,14 @@ final class NXTWindow extends JDialog implements BrickInterface {
 	}
 
 	@Override
-	public Object addButtonListener(ButtonListener listener) {
-		Object token = new Object();
+	public Token addButtonListener(ButtonListener listener) {
+		final Token token = new Token();
 		buttonListeners.put(token, listener);
 		return token;
 	}
 
 	@Override
-	public void removeButtonListener(Object token) {
+	public void removeButtonListener(Token token) {
 		buttonListeners.remove(token);
 	}
 }

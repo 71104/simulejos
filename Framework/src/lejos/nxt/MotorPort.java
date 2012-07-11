@@ -26,17 +26,20 @@ public class MotorPort implements TachoMotorPort {
 	/**
 	 * MotorPort A.
 	 */
-	public static final MotorPort A = new MotorPort(0, Bridge.SIMULATOR.getA());
+	public static final MotorPort A = new MotorPort(0, Bridge.getSimulator()
+			.getA());
 
 	/**
 	 * MotorPort B.
 	 */
-	public static final MotorPort B = new MotorPort(1, Bridge.SIMULATOR.getB());
+	public static final MotorPort B = new MotorPort(1, Bridge.getSimulator()
+			.getB());
 
 	/**
 	 * MotorPort C.
 	 */
-	public static final MotorPort C = new MotorPort(2, Bridge.SIMULATOR.getC());
+	public static final MotorPort C = new MotorPort(2, Bridge.getSimulator()
+			.getC());
 
 	/**
 	 * Return the MotorPort with the given Id.

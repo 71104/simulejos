@@ -10,7 +10,6 @@ import java.util.prefs.Preferences;
  * 
  */
 public class SystemSettings {
-
 	public static final int MAX_SETTING_SIZE = 21;
 	private static final String VERSION_NAME = "settings.version";
 

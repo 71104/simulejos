@@ -16,8 +16,8 @@ public class NXT {
 	 * Shutdown the brick
 	 */
 	public static void shutDown() {
-		Bridge.LOG.println("NXT.shutDown() called");
-		Bridge.SIMULATOR.shutDown();
+		Bridge.getLog().println("NXT.shutDown() called");
+		Bridge.getSimulator().shutDown();
 	}
 
 	/**

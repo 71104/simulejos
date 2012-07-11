@@ -113,7 +113,7 @@ final class NewRobotDialog extends JDialog {
 					final Class<?> c;
 					try {
 						c = classLoader.loadClass(getBinaryName(subPath));
-					} catch (ClassNotFoundException e) {
+					} catch (ClassNotFoundException | LinkageError e) {
 						continue;
 					}
 					final Method mainMethod;

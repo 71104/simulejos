@@ -38,23 +38,23 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	/**
 	 * Port labeled 1 on NXT.
 	 */
-	public static final SensorPort S1 = new SensorPort(0,
-			Bridge.SIMULATOR.getS1());
+	public static final SensorPort S1 = new SensorPort(0, Bridge.getSimulator()
+			.getS1());
 	/**
 	 * Port labeled 2 on NXT.
 	 */
-	public static final SensorPort S2 = new SensorPort(1,
-			Bridge.SIMULATOR.getS2());
+	public static final SensorPort S2 = new SensorPort(1, Bridge.getSimulator()
+			.getS2());
 	/**
 	 * Port labeled 3 on NXT.
 	 */
-	public static final SensorPort S3 = new SensorPort(2,
-			Bridge.SIMULATOR.getS3());
+	public static final SensorPort S3 = new SensorPort(2, Bridge.getSimulator()
+			.getS3());
 	/**
 	 * Port labeled 4 on NXT.
 	 */
-	public static final SensorPort S4 = new SensorPort(3,
-			Bridge.SIMULATOR.getS4());
+	public static final SensorPort S4 = new SensorPort(3, Bridge.getSimulator()
+			.getS4());
 
 	/**
 	 * Array containing all three ports [0..3].
@@ -251,16 +251,6 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 		 */
 		public ColorSensorReader() {
 			initialized = false;
-		}
-
-		/**
-		 * initialize the raw and processed RGB values
-		 */
-		private void initValues() {
-			for (int i = 0; i < values.length; i++) {
-				values[i] = 0;
-				rawValues[i] = 0;
-			}
 		}
 
 		/**
@@ -495,18 +485,6 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 			resetSensor();
 			sendMode(mode);
 			return readCalibration();
-		}
-
-		/**
-		 * Check to see if a sensor is attached. Read the standard sensor
-		 * analogue pin to see if a the sensor is present. If it is it will pull
-		 * this pin down.
-		 * 
-		 * @return true if sensor is connected false otherwise.
-		 */
-		private boolean checkPresent() {
-			int ANAValue = readSensorPin(SensorPort.SP_ANA);
-			return (ANAValue <= 50);
 		}
 
 		/**

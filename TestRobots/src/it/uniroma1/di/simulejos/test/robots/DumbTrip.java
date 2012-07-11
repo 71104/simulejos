@@ -4,6 +4,8 @@ import lejos.nxt.Motor;
 
 public final class DumbTrip {
 	public static void main(String[] arguments) throws InterruptedException {
+		Motor.A.setSpeed(100);
+		Motor.B.setSpeed(60);
 		Motor.A.forward();
 		Thread.sleep(2000);
 		Motor.B.forward();

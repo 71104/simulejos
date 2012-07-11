@@ -76,7 +76,7 @@ public class LCD {
 						y);
 			}
 		}
-		Bridge.BRICK.updateDisplay(data);
+		Bridge.getBrick().updateDisplay(data);
 	}
 
 	public static void asyncRefresh() {
