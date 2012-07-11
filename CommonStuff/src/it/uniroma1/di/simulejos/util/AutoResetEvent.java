@@ -1,27 +1,28 @@
 package it.uniroma1.di.simulejos.util;
 
-public final class AutoResetEvent<T> {
-	private volatile Event<T> event = new Event<T>();
+public final class AutoResetEvent<DataType> {
+	private volatile Event<DataType> event = new Event<DataType>();
 
-	public T waitEvent() {
+	public DataType waitEvent() {
 		return event.waitEvent();
 	}
 
-	public T waitEvent(long timeout) {
+	public DataType waitEvent(long timeout) {
 		return event.waitEvent(timeout);
 	}
 
-	public T waitInterruptibleEvent() throws InterruptedException {
+	public DataType waitInterruptibleEvent() throws InterruptedException {
 		return event.waitInterruptibleEvent();
 	}
 
-	public T waitInterruptibleEvent(long timeout) throws InterruptedException {
+	public DataType waitInterruptibleEvent(long timeout)
+			throws InterruptedException {
 		return event.waitInterruptibleEvent(timeout);
 	}
 
-	public void notifyEvent(T data) {
-		final Event<T> cache = event;
-		event = new Event<T>();
+	public void notifyEvent(DataType data) {
+		final Event<DataType> cache = event;
+		event = new Event<DataType>();
 		cache.notifyEvent(data);
 	}
 }
