@@ -24,16 +24,6 @@ public class Matrix3 implements Cloneable, Serializable {
 		return new Matrix3(values.clone());
 	}
 
-	public static Matrix3 create(double[][] values) {
-		final double[] array = new double[9];
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				array[i * 3 + j] = values[i][j];
-			}
-		}
-		return new Matrix3(array);
-	}
-
 	public static Matrix3 createRotation(double x, double y, double z, double a) {
 		final double s = Math.sin(a);
 		final double c = Math.cos(a);

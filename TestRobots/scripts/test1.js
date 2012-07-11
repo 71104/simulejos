@@ -3,8 +3,9 @@ importPackage(Packages.it.uniroma1.di.simulejos.math);
 var wheelSpan = 2;
 var wheelDiameter = 1;
 
-robot.S1.initializeColorSensor(new Vector3(0, -0.75, 0.5), new Vector3(0, -1, 0));
-robot.S1.initializeTouchSensor(new Vector3(0, 0, 1), new Vector3(0, 0, 1));
+robot.S1.initializeCompassSensor(Matrix3.create([1, 0, 0, 0, 1, 0, 0, 0, 1]));
+robot.S2.initializeColorSensor(new Vector3(0, -0.75, 0.5), new Vector3(0, -1, 0));
+robot.S3.initializeTouchSensor(new Vector3(0, 0, 1), new Vector3(0, 0, 1));
 
 function tick(daa, dab, dac) {
 	var dsa = daa * wheelDiameter * Math.PI;

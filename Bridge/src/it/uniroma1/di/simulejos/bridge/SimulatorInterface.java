@@ -97,6 +97,10 @@ public interface SimulatorInterface {
 		void resetZero();
 	}
 
+	static interface UltrasonicSensor extends Sensor {
+		// TODO
+	}
+
 	Sensor getS1();
 
 	Sensor getS2();

@@ -3,7 +3,6 @@ package it.uniroma1.di.simulejos;
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Matrix3;
-import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Elements;
 import it.uniroma1.di.simulejos.opengl.Program;
@@ -16,6 +15,8 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.media.opengl.GL2GL3;
 
@@ -42,6 +43,7 @@ public final class Robot implements Serializable {
 	public final ModelData modelData;
 	private volatile Vector3 position = Vector3.NULL;
 	private volatile Matrix3 heading = Matrix3.IDENTITY;
+	private volatile Matrix3 inverseHeading = Matrix3.IDENTITY;
 
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
@@ -72,102 +74,19 @@ public final class Robot implements Serializable {
 	private transient final Motor motorB = new Motor();
 	private transient final Motor motorC = new Motor();
 
-	private final class TouchSensor implements SimulatorInterface.TouchSensor {
-		private final Vector3 position;
-		private final Vector3 heading;
-
-		private TouchSensor(Vector3 position, Vector3 heading) {
-			this.position = position;
-			this.heading = heading;
-		}
-
-		@Override
-		public boolean isPressed() {
-			// TODO Auto-generated method stub
-			return false;
+	abstract class Sensor implements SimulatorInterface.Sensor {
+		protected Vector3 transform(Vector3 v) {
+			return position.plus(heading.by(v));
 		}
 	}
 
-	private final class ColorSensor implements SimulatorInterface.ColorSensor {
-		private final Vector3 position;
-		private final Vector3 heading;
-		private volatile FloodLight floodLight = FloodLight.FULL;
-
-		private ColorSensor(Vector3 position, Vector3 heading) {
-			this.position = position;
-			this.heading = heading;
+	abstract class GPUSensor extends Sensor {
+		protected GPUSensor(int bufferWidth, int bufferHeight) {
+			// TODO
 		}
 
-		@Override
-		public int getColor() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public FloodLight getFloodLight() {
-			return floodLight;
-		}
-
-		@Override
-		public void setFloodLight(FloodLight light) {
-			if (light != null) {
-				this.floodLight = light;
-			} else {
-				throw new IllegalArgumentException();
-			}
-		}
-	}
-
-	private final class LightSensor implements SimulatorInterface.LightSensor {
-		private final Vector3 position;
-		private final Vector3 heading;
-
-		private LightSensor(Vector3 position, Vector3 heading) {
-			this.position = position;
-			this.heading = heading;
-		}
-
-		@Override
-		public int getLight() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-	}
-
-	private final class CompassSensor implements
-			SimulatorInterface.CompassSensor {
-		private final Matrix3 heading;
-		private volatile double zero;
-
-		private CompassSensor(Matrix3 heading) {
-			if (heading != null) {
-				this.heading = heading;
-			} else {
-				this.heading = Matrix3.IDENTITY;
-			}
-		}
-
-		private double getAbsoluteAngle() {
-			final Vector3 needle = this.heading.by(heading.by(Vector3.K));
-			final Vector2 flatNeedle = new Vector2(needle.z, -needle.x);
-			return (Math.atan2(flatNeedle.y, flatNeedle.x) + Math.PI * 2)
-					% (Math.PI * 2);
-		}
-
-		@Override
-		public double getAngle() {
-			return getAbsoluteAngle() - zero;
-		}
-
-		@Override
-		public void setZero() {
-			zero = getAbsoluteAngle();
-		}
-
-		@Override
-		public void resetZero() {
-			zero = 0;
+		public void tick() {
+			// TODO
 		}
 	}
 
@@ -190,19 +109,25 @@ public final class Robot implements Serializable {
 			}
 
 			public void initializeTouchSensor(Vector3 position, Vector3 heading) {
-				initializeSensor(new TouchSensor(position, heading));
+				initializeSensor(new TouchSensor(Robot.this, position, heading));
 			}
 
 			public void initializeColorSensor(Vector3 position, Vector3 heading) {
-				initializeSensor(new ColorSensor(position, heading));
+				initializeSensor(new ColorSensor(Robot.this, position, heading));
 			}
 
 			public void initializeLightSensor(Vector3 position, Vector3 heading) {
-				initializeSensor(new LightSensor(position, heading));
+				initializeSensor(new LightSensor(Robot.this, position, heading));
 			}
 
 			public void initializeCompassSensor(Matrix3 heading) {
-				initializeSensor(new CompassSensor(heading));
+				initializeSensor(new CompassSensor(Robot.this, heading));
+			}
+
+			public void initializeUltrasonicSensor(Vector3 position,
+					Matrix3 heading) {
+				initializeSensor(new UltrasonicSensor(Robot.this, position,
+						heading));
 			}
 
 			public SimulatorInterface.Sensor getSensor() {
@@ -215,20 +140,19 @@ public final class Robot implements Serializable {
 		public final SensorPort S3 = new SensorPort();
 		public final SensorPort S4 = new SensorPort();
 
-		public CompassSensor createCompassSensor(Matrix3 heading) {
-			return new CompassSensor(heading);
-		}
-
 		public void moveBy(double dx, double dy, double dz) {
-			position = position.plus(heading.by(new Vector3(dx, dy, dz)));
+			position = position
+					.plus(inverseHeading.by(new Vector3(dx, dy, dz)));
 		}
 
 		public void rotateBy(double x, double y, double z, double da) {
 			heading = Matrix3.createRotation(x, y, z, da).by(heading);
+			inverseHeading = heading.invert();
 		}
 	}
 
 	private transient final RobotInterface robotInterface = new RobotInterface();
+	private transient final List<GPUSensor> gpuSensors = new LinkedList<GPUSensor>();
 
 	private class Simulator implements SimulatorInterface {
 		@Override
@@ -385,6 +309,9 @@ public final class Robot implements Serializable {
 		if (running) {
 			invocable.invokeFunction("tick", motorA.sample(), motorB.sample(),
 					motorC.sample());
+			for (GPUSensor sensor : gpuSensors) {
+				sensor.tick();
+			}
 		}
 	}
 
