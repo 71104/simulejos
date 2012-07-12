@@ -30,19 +30,8 @@ public class ColorSensor implements LampLightDetector, ColorDetector,
 	}
 
 	public ColorSensor(SensorPort port, int color) {
-		final SimulatorInterface.Sensor sensor = port.getSensor();
-		if (sensor != null) {
-			if (sensor instanceof SimulatorInterface.ColorSensor) {
-				this.sensor = (SimulatorInterface.ColorSensor) port.getSensor();
-				setFloodlight(color);
-			} else {
-				throw new RuntimeException("The sensor attached to port S"
-						+ (port.getId() + 1) + " is not a color sensor");
-			}
-		} else {
-			throw new RuntimeException("No sensor attached to port S"
-					+ (port.getId() + 1));
-		}
+		this.sensor = port.getSensor(SimulatorInterface.ColorSensor.class);
+		setFloodlight(color);
 	}
 
 	protected void setType(int type) {

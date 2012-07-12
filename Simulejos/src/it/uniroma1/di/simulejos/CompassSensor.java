@@ -28,7 +28,12 @@ final class CompassSensor extends Sensor implements
 
 	@Override
 	public double getAngle() {
-		return getAbsoluteAngle() - zero;
+		return (zero + getAbsoluteAngle()) % 360;
+	}
+
+	@Override
+	public double getCartesianAngle() {
+		return (zero + 360 - getAbsoluteAngle()) % 360;
 	}
 
 	@Override

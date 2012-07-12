@@ -92,6 +92,8 @@ public interface SimulatorInterface {
 	static interface CompassSensor extends Sensor {
 		double getAngle();
 
+		double getCartesianAngle();
+
 		void setZero();
 
 		void resetZero();

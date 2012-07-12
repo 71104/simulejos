@@ -1,10 +1,16 @@
 package it.uniroma1.di.simulejos.test.robots;
 
 import lejos.nxt.Button;
+import lejos.nxt.LCD;
 import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.nxt.addon.CompassHTSensor;
+import lejos.robotics.DirectionFinder;
 
 public final class Driven {
 	private static volatile int currentSpeed = 100;
+	private static final DirectionFinder compass = new CompassHTSensor(
+			SensorPort.S1);
 
 	private static abstract class ButtonHandler {
 		public final Button button;
@@ -57,6 +63,41 @@ public final class Driven {
 				}
 			} };
 
+	private static void drawLine(int x0, int y0, int x1, int y1) {
+		if (Math.abs(y1 - y0) > Math.abs(x1 - x0)) {
+			if (y0 > y1) {
+				for (int y = y1; y < y0; y++) {
+					LCD.setPixel(x0 + (y - y0) * (x1 - x0) / (y1 - y0), y, 1);
+				}
+			} else {
+				for (int y = y0; y < y1; y++) {
+					LCD.setPixel(x0 + (y - y0) * (x1 - x0) / (y1 - y0), y, 1);
+				}
+			}
+		} else {
+			if (x0 > x1) {
+				for (int x = x1; x < x0; x++) {
+					LCD.setPixel(x, y0 + (x - x0) * (y1 - y0) / (x1 - x0), 1);
+				}
+			} else {
+				for (int x = x0; x < x1; x++) {
+					LCD.setPixel(x, y0 + (x - x0) * (y1 - y0) / (x1 - x0), 1);
+				}
+			}
+		}
+	}
+
+	private static void drawCompass() {
+		final int x0 = LCD.SCREEN_WIDTH / 2;
+		final int y0 = LCD.SCREEN_HEIGHT / 2;
+		final double length = LCD.SCREEN_HEIGHT * 0.45;
+		LCD.clear();
+		final float angle = compass.getDegreesCartesian();
+		final int x1 = x0 + (int) Math.round(Math.cos(angle) * length);
+		final int y1 = y0 + (int) Math.round(Math.sin(angle) * length);
+		drawLine(x0, y0, x1, y1);
+	}
+
 	public static void main(String[] arguments) throws InterruptedException {
 		for (final ButtonHandler handler : buttonHandlers) {
 			new Thread(new Runnable() {
@@ -76,6 +117,20 @@ public final class Driven {
 		Motor.B.setSpeed(currentSpeed);
 		Motor.A.forward();
 		Motor.B.forward();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					drawCompass();
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}).start();
 
 		final Object blocker = new Object();
 		synchronized (blocker) {
