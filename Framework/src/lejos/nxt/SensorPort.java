@@ -1,5 +1,6 @@
 package lejos.nxt;
 
+import it.uniroma1.di.simulejos.NotImplementedException;
 import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import lejos.util.Delay;
@@ -1020,7 +1021,9 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 * @param aPortId
 	 *            Port ID (0..4).
 	 */
-	private static native int readSensorValue(int aPortId);
+	private static int readSensorValue(int aPortId) {
+		throw new NotImplementedException("SensorPort.readSensorValue");
+	}
 
 	/**
 	 * Low-level method to set the input power setting for a sensor. Values are:
@@ -1037,7 +1040,8 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 * Low-level method to set the input power setting for a sensor. Values are:
 	 * 0 - no power, 1 RCX active power, 2 power always on.
 	 **/
-	private static native void setPowerTypeById(int aPortId, int aPortType);
+	private static void setPowerTypeById(int aPortId, int aPortType) {
+	}
 
 	/**
 	 * Call Port Listeners. Used by ListenerThread.
@@ -1060,7 +1064,8 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 * @param mode
 	 *            I/O mode to use
 	 */
-	private static native void i2cEnableById(int aPortId, int mode);
+	private static void i2cEnableById(int aPortId, int mode) {
+	}
 
 	/**
 	 * Low-level method to disable I2C on the port.
@@ -1068,7 +1073,8 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 * @param aPortId
 	 *            The port number for this device
 	 */
-	private static native void i2cDisableById(int aPortId);
+	private static void i2cDisableById(int aPortId) {
+	}
 
 	/**
 	 * Low-level method to return the i2c port status
@@ -1078,7 +1084,9 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 * @return 0 if ready -1: Invalid device -2: Device busy -3: Device fault
 	 *         -4: Buffer size error. -5: Bus is busy
 	 */
-	private static native int i2cStatusById(int aPortId);
+	private static int i2cStatusById(int aPortId) {
+		throw new NotImplementedException("SensorPort.i2cStatusById");
+	}
 
 	/**
 	 * Low-level method to start an I2C transaction.
@@ -1097,8 +1105,10 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 *            Number of bytes to read
 	 * @return < 0 if there is an error
 	 */
-	private static native int i2cStartById(int aPortId, int address,
-			byte[] writeBuffer, int writeOffset, int writeLen, int readLen);
+	private static int i2cStartById(int aPortId, int address,
+			byte[] writeBuffer, int writeOffset, int writeLen, int readLen) {
+		throw new NotImplementedException("SensorPort.i2cStartById");
+	}
 
 	/**
 	 * Complete and I2C operation and retrieve any data read.
@@ -1113,8 +1123,10 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 *            Number of bytes to read
 	 * @return < 0 if the is an error, or number of bytes transferred
 	 */
-	private static native int i2cCompleteById(int aPortId, byte[] readBuffer,
-			int offset, int readLen);
+	private static int i2cCompleteById(int aPortId, byte[] readBuffer,
+			int offset, int readLen) {
+		throw new NotImplementedException("SensorPort.i2cCompleteById");
+	}
 
 	/**
 	 * Low-level method to enable I2C on the port. Note because there can be
@@ -1274,7 +1286,8 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 * @param mode
 	 *            The new mode
 	 */
-	private static native void setSensorPinMode(int port, int pin, int mode);
+	private static void setSensorPinMode(int port, int pin, int mode) {
+	}
 
 	/**
 	 * Set the output state of a sensor pin
@@ -1286,7 +1299,8 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 * @param val
 	 *            The new output value (0/1)
 	 */
-	private static native void setSensorPin(int port, int pin, int val);
+	private static void setSensorPin(int port, int pin, int val) {
+	}
 
 	/**
 	 * Read the current state of a sensor port pin
@@ -1297,7 +1311,9 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 *            The pin id.
 	 * @return The current pin state (0/1)
 	 */
-	private static native int getSensorPin(int port, int pin);
+	private static int getSensorPin(int port, int pin) {
+		throw new NotImplementedException("SensorPort.getSensorPin");
+	}
 
 	/**
 	 * Read the current ADC value from a sensor port pin
@@ -1308,7 +1324,9 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	 *            The id of the pin to read (SP_DIGI1/SP_ANA)
 	 * @return The return from the ADC
 	 */
-	private static native int readSensorPin(int port, int pin);
+	private static int readSensorPin(int port, int pin) {
+		throw new NotImplementedException("SensorPort.readSensorPin");
+	}
 
 	/**
 	 * Low level method to set the operating mode for a sensor pin.
