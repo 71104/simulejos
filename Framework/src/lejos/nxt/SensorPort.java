@@ -1378,7 +1378,7 @@ public class SensorPort implements LegacySensorPort, I2CPort, ListenerCaller {
 	public <SensorType extends SimulatorInterface.Sensor> SensorType getSensor(
 			Class<SensorType> sensorType) {
 		if (sensor != null) {
-			if (sensor.getClass().isAssignableFrom(sensorType)) {
+			if (sensorType.isAssignableFrom(sensor.getClass())) {
 				return sensorType.cast(sensor);
 			} else {
 				throw new RuntimeException("The sensor attached to port S"

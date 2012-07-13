@@ -1,7 +1,5 @@
 package lejos.nxt;
 
-import it.uniroma1.di.simulejos.NotImplementedException;
-
 /**
  * This class allows communication of event data between the leJOS firmware and
  * the leJOS low level classes. It can be used to detect I/O completion, Port
@@ -78,7 +76,7 @@ public class NXTEvent {
 	 * @return >= 0 if the event has been registered < 0 if not.
 	 */
 	public int registerEvent() {
-		throw new NotImplementedException("NXTEvent.registerEvent");
+		return -1;
 	}
 
 	/**
@@ -88,7 +86,7 @@ public class NXTEvent {
 	 * @return >= 0 if the event was unregistered < 0 if not
 	 */
 	public int unregisterEvent() {
-		throw new NotImplementedException("NXTEvent.unregisterEvent");
+		return -1;
 	}
 
 	/**
@@ -101,7 +99,7 @@ public class NXTEvent {
 	 * @return the current events
 	 */
 	private int changeEvent(int set, int clear) {
-		throw new NotImplementedException("NXTEvent.changeEvent");
+		return 0;
 	}
 
 	/**
