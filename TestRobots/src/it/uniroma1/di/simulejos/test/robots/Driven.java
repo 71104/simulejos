@@ -92,7 +92,8 @@ public final class Driven {
 		final int y0 = LCD.SCREEN_HEIGHT / 2;
 		final double length = LCD.SCREEN_HEIGHT * 0.45;
 		LCD.clear();
-		final float angle = compass.getDegreesCartesian();
+		final double angle = Math.toRadians(compass.getDegreesCartesian())
+				+ Math.PI / 2;
 		final int x1 = x0 + (int) Math.round(Math.cos(angle) * length);
 		final int y1 = y0 + (int) Math.round(Math.sin(angle) * length);
 		drawLine(x0, y0, x1, y1);

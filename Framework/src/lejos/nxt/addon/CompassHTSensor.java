@@ -18,11 +18,11 @@ public class CompassHTSensor extends I2CSensor implements DirectionFinder {
 	}
 
 	public float getDegrees() {
-		return (float) sensor.getAngle();
+		return (float) Math.toDegrees(sensor.getAngle());
 	}
 
 	public float getDegreesCartesian() {
-		return (float) sensor.getCartesianAngle();
+		return (float) Math.toDegrees(sensor.getCartesianAngle());
 	}
 
 	public void resetCartesianZero() {
