@@ -75,7 +75,11 @@ public final class Robot implements Serializable {
 	private transient final Motor motorC = new Motor();
 
 	abstract class Sensor implements SimulatorInterface.Sensor {
-		protected Vector3 transform(Vector3 v) {
+		protected final Vector3 head(Vector3 v) {
+			return heading.by(v);
+		}
+
+		protected final Vector3 transform(Vector3 v) {
 			return position.plus(heading.by(v));
 		}
 	}
