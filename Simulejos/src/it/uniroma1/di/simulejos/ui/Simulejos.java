@@ -210,6 +210,16 @@ public final class Simulejos extends JFrame {
 			canvas.repaint();
 		}
 	};
+	public final Action SETTINGS_ACTION = new MyAction("Settings...",
+			"settings") {
+		private static final long serialVersionUID = 7589371832890775093L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			new SettingsDialog(Simulejos.this, simulation);
+			canvas.repaint();
+		}
+	};
 	public final Action PLAY_ACTION = new MyAction("Play", "play") {
 		private static final long serialVersionUID = 5318430767695567625L;
 
@@ -256,6 +266,7 @@ public final class Simulejos extends JFrame {
 		menuBar.add(fileMenu);
 		final JMenu simulationMenu = new JMenu("Simulation");
 		simulationMenu.add(ADD_ROBOT_ACTION);
+		simulationMenu.add(SETTINGS_ACTION);
 		simulationMenu.addSeparator();
 		simulationMenu.add(PLAY_ACTION);
 		simulationMenu.add(SUSPEND_ACTION);
@@ -269,6 +280,8 @@ public final class Simulejos extends JFrame {
 		toolbar.add(NEW_ACTION);
 		toolbar.add(LOAD_ACTION);
 		toolbar.add(SAVE_ACTION);
+		toolbar.addSeparator();
+		toolbar.add(SETTINGS_ACTION);
 		toolbar.addSeparator();
 		toolbar.add(ADD_ROBOT_ACTION);
 		toolbar.add(PLAY_ACTION);
