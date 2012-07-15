@@ -20,20 +20,20 @@ final class CompassSensor extends Sensor implements
 	}
 
 	private double getAbsoluteAngle() {
-		final Vector3 needle = transform(heading.by(Vector3.K));
+		final Vector3 needle = head(heading.by(Vector3.K));
 		final Vector2 flatNeedle = new Vector2(needle.z, -needle.x);
-		return (Math.atan2(flatNeedle.y, flatNeedle.x) + Math.PI * 2)
+		return (Math.PI * 2 - Math.atan2(flatNeedle.y, flatNeedle.x))
 				% (Math.PI * 2);
 	}
 
 	@Override
 	public double getAngle() {
-		return (zero + getAbsoluteAngle()) % 360;
+		return (zero + getAbsoluteAngle()) % (Math.PI * 2);
 	}
 
 	@Override
 	public double getCartesianAngle() {
-		return (zero + 360 - getAbsoluteAngle()) % 360;
+		return (zero + Math.PI * 2 - getAbsoluteAngle()) % (Math.PI * 2);
 	}
 
 	@Override

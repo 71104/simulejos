@@ -26,7 +26,7 @@ public class CompassHTSensor extends I2CSensor implements DirectionFinder {
 	}
 
 	public void resetCartesianZero() {
-		sensor.resetZero();
+		sensor.setZero();
 	}
 
 	public void startCalibration() {

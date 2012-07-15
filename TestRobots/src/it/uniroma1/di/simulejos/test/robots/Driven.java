@@ -90,13 +90,13 @@ public final class Driven {
 	private static void drawCompass() {
 		final int x0 = LCD.SCREEN_WIDTH / 2;
 		final int y0 = LCD.SCREEN_HEIGHT / 2;
-		final double length = LCD.SCREEN_HEIGHT * 0.45;
+		final double length = LCD.SCREEN_HEIGHT * 0.475;
 		LCD.clear();
 		final double angle = Math.toRadians(compass.getDegreesCartesian())
 				+ Math.PI / 2;
 		final int x1 = x0 + (int) Math.round(Math.cos(angle) * length);
 		final int y1 = y0 + (int) Math.round(Math.sin(angle) * length);
-		drawLine(x0, y0, x1, y1);
+		drawLine(x0, LCD.SCREEN_HEIGHT - y0, x1, LCD.SCREEN_HEIGHT - y1);
 	}
 
 	public static void main(String[] arguments) throws InterruptedException {
