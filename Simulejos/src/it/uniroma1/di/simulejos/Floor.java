@@ -3,12 +3,12 @@ package it.uniroma1.di.simulejos;
 import it.uniroma1.di.simulejos.opengl.Arrays;
 import it.uniroma1.di.simulejos.opengl.Program;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Externalizable;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
@@ -18,6 +18,8 @@ import static javax.media.opengl.GL2GL3.*;
 
 public final class Floor implements Externalizable {
 	private volatile BufferedImage texture;
+	private volatile boolean repeatX;
+	private volatile boolean repeatY;
 	private transient volatile boolean updateTexture;
 
 	private transient volatile GL2GL3 gl;
@@ -33,6 +35,8 @@ public final class Floor implements Externalizable {
 		} else {
 			texture = null;
 		}
+		repeatX = in.readBoolean();
+		repeatY = in.readBoolean();
 	}
 
 	@Override
@@ -44,11 +48,13 @@ public final class Floor implements Externalizable {
 		} else {
 			out.writeObject(null);
 		}
+		out.writeBoolean(repeatX);
+		out.writeBoolean(repeatY);
 	}
 
-	public void loadTexture(InputStream source) throws IOException {
-		this.texture = ImageIO.read(source);
-		updateTexture = true;
+	public void configure(Image texture, boolean repeatX, boolean repeatY) {
+		// TODO
+		this.updateTexture = true;
 	}
 
 	void draw(GL2GL3 gl, Camera camera) {

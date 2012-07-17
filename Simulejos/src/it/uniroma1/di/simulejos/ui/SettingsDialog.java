@@ -19,6 +19,7 @@ import it.uniroma1.di.simulejos.Simulation;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -93,7 +94,7 @@ final class SettingsDialog extends JDialog {
 
 		constraints.gridx = 2;
 		constraints.gridy = 0;
-		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.anchor = GridBagConstraints.NORTHWEST;
 		mainPanel.add(new JButton(new AbstractAction("Browse...") {
 			private static final long serialVersionUID = 8753217697250928446L;
 
@@ -112,6 +113,33 @@ final class SettingsDialog extends JDialog {
 				}
 			}
 		}), constraints);
+		constraints.anchor = GridBagConstraints.CENTER;
+
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.anchor = GridBagConstraints.WEST;
+		mainPanel.add(new JCheckBox(new AbstractAction("Repeat X") {
+			private static final long serialVersionUID = 4746389085071988385L;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				// TODO
+			}
+		}), constraints);
+		constraints.anchor = GridBagConstraints.CENTER;
+
+		constraints.gridx = 1;
+		constraints.gridy = 2;
+		constraints.anchor = GridBagConstraints.WEST;
+		mainPanel.add(new JCheckBox(new AbstractAction("Repeat Y") {
+			private static final long serialVersionUID = 4746389085071988385L;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				// TODO
+			}
+		}), constraints);
+		constraints.anchor = GridBagConstraints.CENTER;
 
 		add(mainPanel, BorderLayout.CENTER);
 
