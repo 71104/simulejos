@@ -148,8 +148,7 @@ final class NewRobotDialog extends JDialog {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		final JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridBagLayout());
+		final JPanel mainPanel = new JPanel(new GridBagLayout());
 		final GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;
@@ -271,8 +270,7 @@ final class NewRobotDialog extends JDialog {
 
 		add(mainPanel, BorderLayout.CENTER);
 
-		final JPanel lowerPanel = new JPanel();
-		lowerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		final JPanel lowerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		lowerPanel.add(new JButton(new AbstractAction("OK") {
 			private static final long serialVersionUID = 6317203848141758068L;
 
