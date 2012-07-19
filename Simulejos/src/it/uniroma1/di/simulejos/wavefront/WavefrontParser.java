@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -161,6 +162,9 @@ public class WavefrontParser {
 				corners.add(readCorner());
 				while (!isEol()) {
 					corners.add(readCorner());
+				}
+				if (!swapYAndZ) {
+					Collections.reverse(corners);
 				}
 				handler.face(corners.toArray(new Corner[corners.size()]));
 				skipEol();

@@ -1,6 +1,7 @@
 package it.uniroma1.di.simulejos.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -77,20 +78,23 @@ final class SettingsDialog extends JDialog {
 
 			{
 				setPreferredSize(new Dimension(200, 200));
-				setBorder(new BevelBorder(BevelBorder.LOWERED));
 			}
 
 			@Override
 			public void paint(Graphics g) {
-				g.clearRect(0, 0, 200, 200);
+				g.setColor(Color.LIGHT_GRAY);
+				g.fillRect(0, 0, 200, 200);
 				if (floorTexture != null) {
 					g.drawImage(floorTexture, 0, 0, null);
 				}
 			}
 		};
+		final JPanel overviewContainer = new JPanel(new BorderLayout());
+		overviewContainer.setBorder(new BevelBorder(BevelBorder.LOWERED));
+		overviewContainer.add(overviewPanel, BorderLayout.CENTER);
 		constraints.gridx = 1;
 		constraints.gridy = 0;
-		mainPanel.add(overviewPanel, constraints);
+		mainPanel.add(overviewContainer, constraints);
 
 		constraints.gridx = 2;
 		constraints.gridy = 0;
@@ -115,30 +119,18 @@ final class SettingsDialog extends JDialog {
 		}), constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
 
+		final JCheckBox repeatXField = new JCheckBox("Repeat X");
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.anchor = GridBagConstraints.WEST;
-		mainPanel.add(new JCheckBox(new AbstractAction("Repeat X") {
-			private static final long serialVersionUID = 4746389085071988385L;
-
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				// TODO
-			}
-		}), constraints);
+		mainPanel.add(repeatXField, constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
 
+		final JCheckBox repeatYField = new JCheckBox("Repeat Y");
 		constraints.gridx = 1;
 		constraints.gridy = 2;
 		constraints.anchor = GridBagConstraints.WEST;
-		mainPanel.add(new JCheckBox(new AbstractAction("Repeat Y") {
-			private static final long serialVersionUID = 4746389085071988385L;
-
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				// TODO
-			}
-		}), constraints);
+		mainPanel.add(repeatYField, constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
 
 		add(mainPanel, BorderLayout.CENTER);
@@ -149,6 +141,8 @@ final class SettingsDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
+				simulation.floor.configure(floorTexture,
+						repeatXField.isSelected(), repeatYField.isSelected());
 				dispose();
 			}
 		}));
