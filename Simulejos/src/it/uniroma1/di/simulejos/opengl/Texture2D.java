@@ -23,7 +23,7 @@ public class Texture2D extends GLObject {
 		bind();
 		setMinFilter(GL_LINEAR);
 		setMagFilter(GL_LINEAR);
-		// TODO
+		image(0, image);
 	}
 
 	public void bind() {
@@ -98,7 +98,8 @@ public class Texture2D extends GLObject {
 		final int width = image.getWidth();
 		final int height = image.getHeight();
 		final int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
-		// TODO
+		gl.glTexImage2D(GL_TEXTURE_2D, level, 4, width, height, 0, GL_BGRA,
+				GL_UNSIGNED_INT_8_8_8_8_REV, IntBuffer.wrap(pixels));
 	}
 
 	public void delete() {

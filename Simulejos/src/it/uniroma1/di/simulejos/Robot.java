@@ -324,6 +324,7 @@ public final class Robot implements Serializable {
 			elements = new Elements(gl, modelData.indices);
 			elements.add(4, modelData.vertices);
 		}
+		this.gl = gl;
 		program.uniform("Position", position);
 		program.uniform("Heading", heading);
 		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

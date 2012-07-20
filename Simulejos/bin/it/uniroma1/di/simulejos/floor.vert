@@ -42,5 +42,5 @@ void main() {
 		0, 1, 0, 0,
 		0, 0, 0, 1
 	) * in_Vertex;
-	gl_Position = ModelViewProjection * ex_Position;
+	gl_Position = ModelViewProjection * in_Vertex;
 }
