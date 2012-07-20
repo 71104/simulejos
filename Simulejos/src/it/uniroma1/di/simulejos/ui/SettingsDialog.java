@@ -119,14 +119,16 @@ final class SettingsDialog extends JDialog {
 		}), constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
 
-		final JCheckBox repeatXField = new JCheckBox("Repeat X");
+		final JCheckBox repeatXField = new JCheckBox("Repeat X",
+				simulation.floor.isRepeatX());
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.anchor = GridBagConstraints.WEST;
 		mainPanel.add(repeatXField, constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
 
-		final JCheckBox repeatYField = new JCheckBox("Repeat Y");
+		final JCheckBox repeatYField = new JCheckBox("Repeat Y",
+				simulation.floor.isRepeatY());
 		constraints.gridx = 1;
 		constraints.gridy = 2;
 		constraints.anchor = GridBagConstraints.WEST;

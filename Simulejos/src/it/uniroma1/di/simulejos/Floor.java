@@ -53,6 +53,14 @@ public final class Floor implements Externalizable {
 		out.writeBoolean(repeatY);
 	}
 
+	public boolean isRepeatX() {
+		return repeatX;
+	}
+
+	public boolean isRepeatY() {
+		return repeatY;
+	}
+
 	public void configure(BufferedImage textureImage, boolean repeatX,
 			boolean repeatY) {
 		this.textureImage = textureImage;
@@ -72,6 +80,12 @@ public final class Floor implements Externalizable {
 		if ((gl != this.gl) || updateTexture) {
 			if (textureImage != null) {
 				texture = new Texture2D(gl, textureImage);
+				if (!repeatX) {
+					texture.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+				}
+				if (!repeatY) {
+					texture.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+				}
 			} else {
 				texture = null;
 			}

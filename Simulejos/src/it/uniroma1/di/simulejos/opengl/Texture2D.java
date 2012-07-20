@@ -66,6 +66,30 @@ public class Texture2D extends GLObject {
 		gl.glTexParameteriv(GL_TEXTURE_2D, name, values, 0);
 	}
 
+	public int getWrapS() {
+		return getParameteri(GL_TEXTURE_WRAP_S);
+	}
+
+	public void setWrapS(int wrapType) {
+		parameter(GL_TEXTURE_WRAP_S, wrapType);
+	}
+
+	public int getWrapT() {
+		return getParameteri(GL_TEXTURE_WRAP_T);
+	}
+
+	public void setWrapT(int wrapType) {
+		parameter(GL_TEXTURE_WRAP_T, wrapType);
+	}
+
+	public int getWrapR() {
+		return getParameteri(GL_TEXTURE_WRAP_R);
+	}
+
+	public void setWrapR(int wrapType) {
+		parameter(GL_TEXTURE_WRAP_R, wrapType);
+	}
+
 	public int getMinFilter() {
 		return getParameteri(GL_TEXTURE_MIN_FILTER);
 	}
