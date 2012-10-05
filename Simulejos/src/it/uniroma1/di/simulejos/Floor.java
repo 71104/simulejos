@@ -14,6 +14,7 @@ import java.io.ObjectOutput;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL2GL3;
+
 import static javax.media.opengl.GL2GL3.*;
 
 public final class Floor implements Externalizable {
@@ -22,7 +23,6 @@ public final class Floor implements Externalizable {
 	private volatile boolean repeatY;
 	private transient volatile boolean updateTexture;
 
-	private transient volatile GL2GL3 gl;
 	private transient volatile Program program;
 	private transient volatile Arrays arrays;
 	private transient volatile Texture2D texture;
@@ -69,28 +69,33 @@ public final class Floor implements Externalizable {
 		this.updateTexture = true;
 	}
 
-	void draw(GL2GL3 gl, Camera camera) {
-		if (gl != this.gl) {
-			program = new Program(gl, getClass(), "floor",
-					new String[] { "in_Vertex" });
-			arrays = new Arrays(gl, 6);
-			arrays.add(4, new double[] { 0, 0, 0, 1, 1, 0, 1, 0, -1, 0, 1, 0,
-					-1, 0, -1, 0, 1, 0, -1, 0, 1, 0, 1, 0 });
-		}
-		if ((gl != this.gl) || updateTexture) {
-			if (textureImage != null) {
-				texture = new Texture2D(gl, textureImage);
-				if (!repeatX) {
-					texture.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-				}
-				if (!repeatY) {
-					texture.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-				}
-			} else {
-				texture = null;
+	private void updateTexture(GL2GL3 gl) {
+		if (textureImage != null) {
+			texture = new Texture2D(gl, textureImage);
+			if (!repeatX) {
+				texture.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 			}
+			if (!repeatY) {
+				texture.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			}
+		} else {
+			texture = null;
 		}
-		this.gl = gl;
+	}
+
+	void init(GL2GL3 gl) {
+		program = new Program(gl, getClass(), "floor",
+				new String[] { "in_Vertex" });
+		arrays = new Arrays(gl, 6);
+		arrays.add(4, new double[] { 0, 0, 0, 1, 1, 0, 1, 0, -1, 0, 1, 0, -1,
+				0, -1, 0, 1, 0, -1, 0, 1, 0, 1, 0 });
+		updateTexture(gl);
+	}
+
+	void draw(GL2GL3 gl, Camera camera) {
+		if (updateTexture) {
+			updateTexture(gl);
+		}
 		updateTexture = false;
 		program.use();
 		camera.uniform(program);

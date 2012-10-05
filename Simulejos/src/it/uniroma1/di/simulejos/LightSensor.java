@@ -1,5 +1,7 @@
 package it.uniroma1.di.simulejos;
 
+import javax.media.opengl.GL2GL3;
+
 import it.uniroma1.di.simulejos.Robot.GPUSensor;
 import it.uniroma1.di.simulejos.math.Vector3;
 
@@ -18,5 +20,10 @@ final class LightSensor extends GPUSensor implements
 	public int getLight() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	protected void sample(GL2GL3 gl) {
+		// TODO
 	}
 }

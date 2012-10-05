@@ -63,6 +63,10 @@ public final class Simulation implements Serializable {
 			gl.glEnable(GL_CULL_FACE);
 			robotProgram = new Program(gl, Robot.class, "robot",
 					new String[] { "in_Vertex" });
+			floor.init(gl);
+			for (Robot robot : robots) {
+				robot.init(gl);
+			}
 		}
 
 		@Override
@@ -152,6 +156,7 @@ public final class Simulation implements Serializable {
 			return this;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public State suspend() {
 			thread.suspend();
@@ -162,6 +167,7 @@ public final class Simulation implements Serializable {
 			return suspendedState;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public State stop() {
 			thread.stop();
@@ -174,6 +180,7 @@ public final class Simulation implements Serializable {
 	};
 
 	private transient final State suspendedState = new State() {
+		@SuppressWarnings("deprecation")
 		@Override
 		public State play() {
 			simulationLogWriter.println("resumed");
@@ -189,6 +196,7 @@ public final class Simulation implements Serializable {
 			return this;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public State stop() {
 			thread.stop();
@@ -209,8 +217,8 @@ public final class Simulation implements Serializable {
 				private volatile long lastTimestamp;
 
 				private void waitTo(int period) throws InterruptedException {
+					long elapsed;
 					synchronized (blocker) {
-						long elapsed;
 						while ((elapsed = System.currentTimeMillis()
 								- lastTimestamp) < period) {
 							blocker.wait(period - elapsed);

@@ -1,5 +1,7 @@
 package it.uniroma1.di.simulejos;
 
+import javax.media.opengl.GL2GL3;
+
 import it.uniroma1.di.simulejos.Robot.GPUSensor;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Vector3;
@@ -34,5 +36,10 @@ final class ColorSensor extends GPUSensor implements
 		} else {
 			throw new IllegalArgumentException();
 		}
+	}
+
+	@Override
+	protected void sample(GL2GL3 gl) {
+		// TODO
 	}
 }

@@ -19,6 +19,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.media.opengl.GL2GL3;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLDrawableFactory;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
 
 import static javax.media.opengl.GL2GL3.*;
 import javax.script.Invocable;
@@ -52,7 +56,6 @@ public final class Robot implements Serializable {
 	private transient volatile boolean running;
 	private transient volatile ThreadGroup threads;
 
-	private transient volatile GL2GL3 gl;
 	private transient volatile Elements elements;
 
 	Robot(File classPath, String mainClassName, String script,
@@ -85,12 +88,44 @@ public final class Robot implements Serializable {
 	}
 
 	abstract class GPUSensor extends Sensor {
+		private final int width;
+		private final int height;
+		private volatile GLAutoDrawable buffer;
+
 		protected GPUSensor(int bufferWidth, int bufferHeight) {
-			// TODO
+			this.width = bufferWidth;
+			this.height = bufferHeight;
 		}
 
-		public void tick() {
-			// TODO
+		protected abstract void sample(GL2GL3 gl);
+
+		public final void init(GL2GL3 gl) {
+			buffer = GLDrawableFactory.getFactory(GLProfile.getDefault())
+					.createGLPbuffer(null, null, null, width, height,
+							gl.getContext());
+			buffer.addGLEventListener(new GLEventListener() {
+				@Override
+				public void init(GLAutoDrawable drawable) {
+				}
+
+				@Override
+				public void reshape(GLAutoDrawable drawable, int x, int y,
+						int width, int height) {
+				}
+
+				@Override
+				public void display(GLAutoDrawable drawable) {
+					sample(drawable.getGL().getGL2GL3());
+				}
+
+				@Override
+				public void dispose(GLAutoDrawable drawable) {
+				}
+			});
+		}
+
+		public final void tick() {
+			buffer.display();
 		}
 	}
 
@@ -112,24 +147,23 @@ public final class Robot implements Serializable {
 				}
 			}
 
-			public void initializeTouchSensor(Vector3 position, Vector3 heading) {
+			public void touchSensor(Vector3 position, Vector3 heading) {
 				initializeSensor(new TouchSensor(Robot.this, position, heading));
 			}
 
-			public void initializeColorSensor(Vector3 position, Vector3 heading) {
+			public void colorSensor(Vector3 position, Vector3 heading) {
 				initializeSensor(new ColorSensor(Robot.this, position, heading));
 			}
 
-			public void initializeLightSensor(Vector3 position, Vector3 heading) {
+			public void lightSensor(Vector3 position, Vector3 heading) {
 				initializeSensor(new LightSensor(Robot.this, position, heading));
 			}
 
-			public void initializeCompassSensor(Matrix3 heading) {
+			public void compassSensor(Matrix3 heading) {
 				initializeSensor(new CompassSensor(Robot.this, heading));
 			}
 
-			public void initializeUltrasonicSensor(Vector3 position,
-					Matrix3 heading) {
+			public void ultrasonicSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new UltrasonicSensor(Robot.this, position,
 						heading));
 			}
@@ -319,12 +353,19 @@ public final class Robot implements Serializable {
 		}
 	}
 
+	void init(GL2GL3 gl) {
+		elements = new Elements(gl, modelData.indices);
+		elements.add(4, modelData.vertices);
+		for (GPUSensor sensor : gpuSensors) {
+			sensor.init(gl);
+		}
+	}
+
 	void draw(GL2GL3 gl, Program program) {
-		if (gl != this.gl) {
+		if (elements == null) {
 			elements = new Elements(gl, modelData.indices);
 			elements.add(4, modelData.vertices);
 		}
-		this.gl = gl;
 		program.uniform("Position", position);
 		program.uniform("Heading", heading);
 		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
