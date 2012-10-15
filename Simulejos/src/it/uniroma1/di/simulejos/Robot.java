@@ -363,8 +363,7 @@ public final class Robot implements Serializable {
 
 	void draw(GL2GL3 gl, Program program) {
 		if (elements == null) {
-			elements = new Elements(gl, modelData.indices);
-			elements.add(4, modelData.vertices);
+			init(gl);
 		}
 		program.uniform("Position", position);
 		program.uniform("Heading", heading);
