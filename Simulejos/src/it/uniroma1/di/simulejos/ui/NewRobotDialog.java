@@ -64,6 +64,22 @@ final class NewRobotDialog extends JDialog {
 	private static final JFileChooser classPathChooser = new JFileChooser();
 	{
 		classPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		loadLastClassDirectory();
+	}
+
+	private static void loadLastClassDirectory() {
+		final String path = Preferences
+				.userNodeForPackage(NewRobotDialog.class).get(
+						"lastClassDirectory", null);
+		if (path != null) {
+			classPathChooser.setCurrentDirectory(new File(path));
+		}
+	}
+
+	private static void storeLastClassDirectory() {
+		Preferences.userNodeForPackage(NewRobotDialog.class).put(
+				"lastClassDirectory",
+				classPathChooser.getCurrentDirectory().getAbsolutePath());
 	}
 
 	private static final JFileChooser modelChooser = new JFileChooser();
@@ -215,6 +231,7 @@ final class NewRobotDialog extends JDialog {
 					final File classPath = classPathChooser.getSelectedFile();
 					classList.detectMainClasses(classPath);
 					classPathField.setText(classPath.getAbsolutePath());
+					storeLastClassDirectory();
 				}
 			}
 		}), constraints);
