@@ -41,7 +41,7 @@ final class VirtualClassLoader extends URLClassLoader {
 	}
 
 	public VirtualClassLoader(URL[] urls) {
-		super(urls, VirtualClassLoader.class.getClassLoader());
+		super(urls);
 	}
 
 	@Override
