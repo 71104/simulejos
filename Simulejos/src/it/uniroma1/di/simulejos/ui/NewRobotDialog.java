@@ -129,7 +129,7 @@ final class NewRobotDialog extends JDialog {
 					final Class<?> c;
 					try {
 						c = classLoader.loadClass(getBinaryName(subPath));
-					} catch (ClassNotFoundException | LinkageError e) {
+					} catch (Throwable e) {
 						continue;
 					}
 					final Method mainMethod;
@@ -154,7 +154,8 @@ final class NewRobotDialog extends JDialog {
 				throw new RuntimeException(e);
 			}
 			final URL[] urls = { url };
-			final URLClassLoader classLoader = new URLClassLoader(urls);
+			final URLClassLoader classLoader = new URLClassLoader(urls,
+					NewRobotDialog.class.getClassLoader());
 			detectMainClasses(classLoader, path, "");
 		}
 	}
