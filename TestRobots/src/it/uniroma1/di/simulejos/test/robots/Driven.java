@@ -6,11 +6,14 @@ import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.DirectionFinder;
+import lejos.util.DebugMessages;
 
 public final class Driven {
 	private static volatile int currentSpeed = 100;
 	private static final DirectionFinder compass = new CompassHTSensor(
 			SensorPort.S1);
+
+	private static final DebugMessages messages = new DebugMessages();
 
 	private static abstract class ButtonHandler {
 		public final Button button;
@@ -31,21 +34,25 @@ public final class Driven {
 				@Override
 				public void onPress() {
 					Motor.B.setSpeed(currentSpeed * 2);
+					messages.echo("left");
 				}
 
 				@Override
 				public void onRelease() {
 					Motor.B.setSpeed(currentSpeed);
+					messages.echo("forward");
 				}
 			}, new ButtonHandler(Button.RIGHT) {
 				@Override
 				public void onPress() {
 					Motor.A.setSpeed(currentSpeed * 2);
+					messages.echo("right");
 				}
 
 				@Override
 				public void onRelease() {
 					Motor.A.setSpeed(currentSpeed);
+					messages.echo("forward");
 				}
 			}, new ButtonHandler(Button.ENTER) {
 				@Override
@@ -53,6 +60,7 @@ public final class Driven {
 					currentSpeed += 100;
 					Motor.A.setSpeed(currentSpeed);
 					Motor.B.setSpeed(currentSpeed);
+					messages.echo("faster");
 				}
 			}, new ButtonHandler(Button.ESCAPE) {
 				@Override
@@ -60,6 +68,7 @@ public final class Driven {
 					currentSpeed = Math.max(currentSpeed - 100, 0);
 					Motor.A.setSpeed(currentSpeed);
 					Motor.B.setSpeed(currentSpeed);
+					messages.echo("slower");
 				}
 			} };
 

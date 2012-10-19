@@ -1,3 +1,4 @@
 lejos.robotics.navigation.SegowayPilot.stop rinominato in _stop
 lejos.nxt.LCD rifatta
 lejos.nxt.Button rifatta
+lejos.util.DebugMessages rifatta (stampa sulla console del simulatore)
