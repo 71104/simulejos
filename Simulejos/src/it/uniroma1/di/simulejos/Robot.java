@@ -271,8 +271,7 @@ public final class Robot implements Serializable {
 					throw new RuntimeException(e);
 				}
 				final VirtualClassLoader classLoader = new VirtualClassLoader(
-						new URL[] { Robot.class.getResource("Framework.jar"),
-								url });
+						new URL[] { url });
 				final Class<?> bridge;
 				try {
 					bridge = classLoader.loadClass(Bridge.class.getName());
