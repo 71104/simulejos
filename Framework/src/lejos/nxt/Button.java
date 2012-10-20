@@ -46,24 +46,24 @@ public class Button implements ListenerCaller {
 				@Override
 				public void onPress(int buttonIndex) {
 					if ((1 << buttonIndex) == id) {
-						pressEvent.notifyEvent();
+						pressEvent.signal();
 						for (ButtonListener listener : listeners) {
 							listener.buttonPressed(Button.this);
 						}
-						anyPress.notifyEvent(1 << buttonIndex);
-						anyEvent.notifyEvent(1 << buttonIndex);
+						anyPress.signal(1 << buttonIndex);
+						anyEvent.signal(1 << buttonIndex);
 					}
 				}
 
 				@Override
 				public void onRelease(int buttonIndex) {
 					if ((1 << buttonIndex) == id) {
-						releaseEvent.notifyEvent();
+						releaseEvent.signal();
 						for (ButtonListener listener : listeners) {
 							listener.buttonReleased(Button.this);
 						}
-						anyRelease.notifyEvent(1 << (buttonIndex + 8));
-						anyEvent.notifyEvent(1 << (buttonIndex + 8));
+						anyRelease.signal(1 << (buttonIndex + 8));
+						anyEvent.signal(1 << (buttonIndex + 8));
 					}
 				}
 			});

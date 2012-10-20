@@ -55,7 +55,7 @@ public final class Event<DataType> {
 		}
 	}
 
-	public void notifyEvent(DataType data) {
+	public void signal(DataType data) {
 		if (data == null) {
 			synchronized (blocker) {
 				this.data = data;

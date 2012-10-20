@@ -53,7 +53,7 @@ public final class BooleanEvent {
 		}
 	}
 
-	public void notifyEvent() {
+	public void signal() {
 		synchronized (blocker) {
 			occur = true;
 			blocker.notifyAll();

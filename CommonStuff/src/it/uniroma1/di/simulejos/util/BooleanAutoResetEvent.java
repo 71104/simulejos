@@ -1,6 +1,7 @@
 package it.uniroma1.di.simulejos.util;
 
 public final class BooleanAutoResetEvent {
+	private final Object mutex = new Object();
 	private volatile BooleanEvent event = new BooleanEvent();
 
 	public void waitEvent() {
@@ -20,9 +21,12 @@ public final class BooleanAutoResetEvent {
 		return event.waitInterruptibleEvent(timeout);
 	}
 
-	public void notifyEvent() {
-		final BooleanEvent cache = event;
-		event = new BooleanEvent();
-		cache.notifyEvent();
+	public void signal() {
+		final BooleanEvent cache;
+		synchronized (mutex) {
+			cache = event;
+			event = new BooleanEvent();
+		}
+		cache.signal();
 	}
 }

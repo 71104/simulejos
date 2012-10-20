@@ -1,6 +1,7 @@
 package it.uniroma1.di.simulejos.util;
 
 public final class AutoResetEvent<DataType> {
+	private final Object mutex = new Object();
 	private volatile Event<DataType> event = new Event<DataType>();
 
 	public DataType waitEvent() {
@@ -20,9 +21,12 @@ public final class AutoResetEvent<DataType> {
 		return event.waitInterruptibleEvent(timeout);
 	}
 
-	public void notifyEvent(DataType data) {
-		final Event<DataType> cache = event;
-		event = new Event<DataType>();
-		cache.notifyEvent(data);
+	public void signal(DataType data) {
+		final Event<DataType> cache;
+		synchronized (mutex) {
+			cache = event;
+			event = new Event<DataType>();
+		}
+		cache.signal(data);
 	}
 }
