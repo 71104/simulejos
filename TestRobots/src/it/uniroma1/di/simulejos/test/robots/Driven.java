@@ -59,7 +59,9 @@ public final class Driven {
 				public void onPress() {
 					currentSpeed += 100;
 					Motor.A.setSpeed(currentSpeed);
+					Motor.A.forward();
 					Motor.B.setSpeed(currentSpeed);
+					Motor.B.forward();
 					messages.echo("faster");
 				}
 			}, new ButtonHandler(Button.ESCAPE) {

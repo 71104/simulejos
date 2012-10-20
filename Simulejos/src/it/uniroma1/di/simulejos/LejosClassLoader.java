@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.CodeSource;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,6 +18,9 @@ import java.util.jar.Manifest;
 
 public final class LejosClassLoader extends URLClassLoader {
 	private static final Manifest manifest;
+	private static final CodeSource codeSource = LejosClassLoader.class
+			.getProtectionDomain().getCodeSource();
+
 	private static final Set<String> packages = Collections
 			.synchronizedSet(new HashSet<String>());
 	private static final Map<String, byte[]> classes = new ConcurrentHashMap<String, byte[]>();
@@ -69,7 +73,7 @@ public final class LejosClassLoader extends URLClassLoader {
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		final byte[] bytes = classes.get(name);
 		if (bytes != null) {
-			return defineClass(name, bytes, 0, bytes.length);
+			return defineClass(name, bytes, 0, bytes.length, codeSource);
 		} else {
 			return super.findClass(name);
 		}
