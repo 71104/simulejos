@@ -12,9 +12,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.prefs.Preferences;
 
+import it.uniroma1.di.simulejos.LejosClassLoader;
 import it.uniroma1.di.simulejos.Robot;
 import it.uniroma1.di.simulejos.Simulation;
 import it.uniroma1.di.simulejos.util.FullReader;
@@ -153,10 +153,7 @@ final class NewRobotDialog extends JDialog {
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}
-			final URL[] urls = { url };
-			final URLClassLoader classLoader = new URLClassLoader(urls,
-					NewRobotDialog.class.getClassLoader());
-			detectMainClasses(classLoader, path, "");
+			detectMainClasses(new LejosClassLoader(new URL[] { url }), path, "");
 		}
 	}
 

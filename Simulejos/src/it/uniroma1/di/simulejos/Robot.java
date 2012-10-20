@@ -1,6 +1,5 @@
 package it.uniroma1.di.simulejos;
 
-import it.uniroma1.di.simulejos.bridge.Bridge;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector3;
@@ -276,11 +275,12 @@ public final class Robot implements Serializable {
 				} catch (MalformedURLException e) {
 					throw new RuntimeException(e);
 				}
-				final VirtualClassLoader classLoader = new VirtualClassLoader(
+				final LejosClassLoader classLoader = new LejosClassLoader(
 						new URL[] { url });
 				final Class<?> bridge;
 				try {
-					bridge = classLoader.loadClass(Bridge.class.getName());
+					bridge = classLoader
+							.loadClass("it.uniroma1.di.simulejos.bridge.Bridge");
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException(e);
 				}

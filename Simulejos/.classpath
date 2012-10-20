@@ -6,7 +6,6 @@
 	<classpathentry kind="lib" path="C:/jogamp-all-platforms/jar/gluegen.jar"/>
 	<classpathentry kind="lib" path="C:/jogamp-all-platforms/jar/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="C:/jogamp-all-platforms/jar/jogl.all.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Framework"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CommonStuff"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
