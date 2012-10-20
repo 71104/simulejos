@@ -13,8 +13,21 @@ public final class Bridge {
 	private static volatile PrintWriter log;
 	private static volatile BrickInterface brick;
 
-	private static volatile PrintStream originalStdOut;
-	private static volatile PrintStream originalStdErr;
+	private static boolean checkRedirectIOPermission() {
+		final SecurityManager securityManager = System.getSecurityManager();
+		if (securityManager != null) {
+			try {
+				securityManager.checkPermission(new RuntimePermission("setIO"));
+				return true;
+			} catch (SecurityException e) {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	private static final boolean redirectIO = checkRedirectIOPermission();
 
 	public static void initialize(String robotName,
 			final SimulatorInterface simulator) {
@@ -44,38 +57,36 @@ public final class Bridge {
 		});
 		brick = new NXTWindow(simulator.getParentWindow(), robotName);
 
-		originalStdOut = System.out;
-		originalStdErr = System.err;
-		System.setOut(new PrintStream(new LCDOutputStream()));
-		System.setErr(new PrintStream(new OutputStream() {
-			@Override
-			public void flush() {
-				log.flush();
-			}
+		if (redirectIO) {
+			System.setOut(new PrintStream(new LCDOutputStream()));
+			System.setErr(new PrintStream(new OutputStream() {
+				@Override
+				public void flush() {
+					log.flush();
+				}
 
-			@Override
-			public void write(byte[] b, int off, int len) {
-				final byte[] bytes = new byte[len];
-				System.arraycopy(b, off, bytes, 0, len);
-				log.write(new String(bytes).toCharArray());
-			}
+				@Override
+				public void write(byte[] b, int off, int len) {
+					final byte[] bytes = new byte[len];
+					System.arraycopy(b, off, bytes, 0, len);
+					log.write(new String(bytes).toCharArray());
+				}
 
-			@Override
-			public void write(byte[] b) {
-				log.write(new String(b).toCharArray());
-			}
+				@Override
+				public void write(byte[] b) {
+					log.write(new String(b).toCharArray());
+				}
 
-			@Override
-			public void write(int b) {
-				final byte[] bytes = new byte[] { (byte) b };
-				log.write(new String(bytes).toCharArray());
-			}
-		}));
+				@Override
+				public void write(int b) {
+					final byte[] bytes = new byte[] { (byte) b };
+					log.write(new String(bytes).toCharArray());
+				}
+			}));
+		}
 	}
 
 	public static void cleanup() {
-		System.setOut(originalStdOut);
-		System.setErr(originalStdErr);
 		log.close();
 		brick.dispose();
 	}

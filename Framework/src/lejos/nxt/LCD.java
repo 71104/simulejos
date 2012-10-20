@@ -52,7 +52,7 @@ public class LCD {
 	static {
 		final BufferedImage fontImage;
 		try {
-			fontImage = ImageIO.read(LCD.class.getResource("font.png"));
+			fontImage = ImageIO.read(LCD.class.getResourceAsStream("font.png"));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -10,9 +10,11 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -70,10 +72,14 @@ final class NXTWindow extends JDialog implements BrickInterface {
 			private static final long serialVersionUID = -8099406163811415439L;
 
 			private Button(final int index) {
-				putValue(
-						LARGE_ICON_KEY,
-						new ImageIcon((NXTWindow.class
-								.getResource(ICON_NAMES[index]))));
+				try {
+					putValue(
+							LARGE_ICON_KEY,
+							new ImageIcon(ImageIO.read(NXTWindow.class
+									.getResourceAsStream(ICON_NAMES[index]))));
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
 				buttons.add(this).addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent event) {

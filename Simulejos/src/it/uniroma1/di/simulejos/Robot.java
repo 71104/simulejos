@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLDrawableFactory;
@@ -57,6 +58,11 @@ public final class Robot implements Serializable {
 	private transient volatile ThreadGroup threads;
 
 	private transient volatile Elements elements;
+
+	static {
+		/* XXX workaround a bug in ImageIO when used with Java Web Start */
+		ImageIO.setUseCache(false);
+	}
 
 	Robot(File classPath, String mainClassName, String script,
 			ModelData modelData) throws ScriptException {
