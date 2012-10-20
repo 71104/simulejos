@@ -94,6 +94,8 @@ public final class LejosClassLoader extends URLClassLoader {
 
 	@Override
 	protected PermissionCollection getPermissions(CodeSource codeSource) {
-		// TODO
+		final Permissions permissions = new Permissions();
+		permissions.add(new AllPermission());
+		return permissions;
 	}
 }
