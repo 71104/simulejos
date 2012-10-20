@@ -17,7 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL2GL3;
@@ -200,9 +199,6 @@ public final class Robot implements Serializable {
 	private transient final List<GPUSensor> gpuSensors = new LinkedList<GPUSensor>();
 
 	private class Simulator implements SimulatorInterface {
-		private final Preferences preferences = Preferences
-				.userNodeForPackage(Robot.class);
-
 		@Override
 		public String getRobotName() {
 			return "NXT" + index;
