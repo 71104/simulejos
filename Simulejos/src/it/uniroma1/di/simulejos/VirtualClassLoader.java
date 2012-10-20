@@ -6,13 +6,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.jar.Manifest;
 
 final class VirtualClassLoader extends URLClassLoader {
+	private static final Manifest manifest;
+	private static final Set<String> packages = Collections
+			.synchronizedSet(new HashSet<String>());
 	private static final Map<String, byte[]> classes = new ConcurrentHashMap<String, byte[]>();
 	private static final Map<String, byte[]> resources = new ConcurrentHashMap<String, byte[]>();
 
@@ -29,10 +35,11 @@ final class VirtualClassLoader extends URLClassLoader {
 
 	static {
 		try {
-			final ZipInputStream zis = new JarInputStream(
+			final JarInputStream jis = new JarInputStream(
 					VirtualClassLoader.class
 							.getResourceAsStream("Framework.jar"));
-			ZipEntry entry = zis.getNextEntry();
+			manifest = jis.getManifest();
+			JarEntry entry = jis.getNextJarEntry();
 			while (entry != null) {
 				if (!entry.isDirectory()) {
 					String name = entry.getName();
@@ -40,12 +47,12 @@ final class VirtualClassLoader extends URLClassLoader {
 						name = name.substring(0,
 								name.length() - ".class".length()).replaceAll(
 								"\\/", ".");
-						classes.put(name, readAll(zis));
+						classes.put(name, readAll(jis));
 					} else {
-						resources.put(name, readAll(zis));
+						resources.put(name, readAll(jis));
 					}
 				}
-				entry = zis.getNextEntry();
+				entry = jis.getNextJarEntry();
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -54,6 +61,9 @@ final class VirtualClassLoader extends URLClassLoader {
 
 	public VirtualClassLoader(URL[] urls) {
 		super(urls, VirtualClassLoader.class.getClassLoader());
+		for (String name : packages) {
+			definePackage(name, manifest, null);
+		}
 	}
 
 	@Override
