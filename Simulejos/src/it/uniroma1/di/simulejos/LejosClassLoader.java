@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AllPermission;
 import java.security.CodeSource;
+import java.security.PermissionCollection;
+import java.security.Permissions;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -87,5 +90,10 @@ public final class LejosClassLoader extends URLClassLoader {
 		} else {
 			return super.getResourceAsStream(name);
 		}
+	}
+
+	@Override
+	protected PermissionCollection getPermissions(CodeSource codeSource) {
+		// TODO
 	}
 }
