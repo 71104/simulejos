@@ -19,6 +19,9 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLJPanel;
 import javax.script.ScriptException;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import static javax.media.opengl.GL2GL3.*;
 
 public final class Simulation implements Serializable {
@@ -227,18 +230,38 @@ public final class Simulation implements Serializable {
 					}
 				}
 
+				private void step() throws Exception {
+					for (Robot robot : robots) {
+						robot.tick();
+						for (Robot robot2 : robots) {
+							if ((robot != robot2) && robot.collidesWith(robot2)) {
+								final String message = "NXT" + robot.index
+										+ " collided with NXT" + robot2.index;
+								SwingUtilities.invokeLater(new Runnable() {
+									@Override
+									public void run() {
+										JOptionPane.showMessageDialog(
+												parentWindow, message,
+												"Simulejos",
+												JOptionPane.ERROR_MESSAGE);
+									}
+								});
+								Simulation.this.stop();
+							}
+						}
+					}
+				}
+
 				@Override
 				public void run() {
 					final int rate = Preferences.userNodeForPackage(
-							Simulation.class).getInt("frameRate", 60);
+							Simulation.class).getInt("rate", 60);
 					final int period = (int) Math.round(1000.0 / rate);
 					lastTimestamp = System.currentTimeMillis();
 					while (true) {
 						try {
 							waitTo(period);
-							for (Robot robot : robots) {
-								robot.tick();
-							}
+							step();
 						} catch (Exception e) {
 							e.printStackTrace();
 							Simulation.this.stop();

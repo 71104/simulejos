@@ -30,4 +30,9 @@ public class BoundingBox implements Cloneable, Serializable {
 		this.size = max.minus(min);
 		this.center = min.plus(max).by(0.5);
 	}
+
+	public boolean contains(Vector3 v) {
+		return (v.x >= min.x) && (v.x <= max.x) && (v.y >= min.y)
+				&& (v.y <= max.y) && (v.z >= min.z) && (v.z <= max.z);
+	}
 }

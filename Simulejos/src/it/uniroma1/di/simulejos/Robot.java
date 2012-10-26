@@ -1,6 +1,7 @@
 package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
+import it.uniroma1.di.simulejos.math.BoundingBox;
 import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Elements;
@@ -45,6 +46,7 @@ public final class Robot implements Serializable {
 	public final String mainClassName;
 	public final String script;
 	public final ModelData modelData;
+	public final BoundingBox boundingBox;
 	private volatile Vector3 position = Vector3.NULL;
 	private volatile Matrix3 heading = Matrix3.IDENTITY;
 	private volatile Matrix3 inverseHeading = Matrix3.IDENTITY;
@@ -70,6 +72,7 @@ public final class Robot implements Serializable {
 		this.mainClassName = mainClassName;
 		this.script = script;
 		this.modelData = modelData;
+		this.boundingBox = new BoundingBox(modelData.vertices);
 	}
 
 	void setUI(Frame parentWindow, Writer logWriter) {
@@ -346,6 +349,34 @@ public final class Robot implements Serializable {
 		motorA.setMode(Motor.Mode.FLOAT);
 		motorB.setMode(Motor.Mode.FLOAT);
 		motorC.setMode(Motor.Mode.FLOAT);
+	}
+
+	private Vector3 transform(Vector3 v) {
+		return heading.by(v).plus(position);
+	}
+
+	private boolean vertexCollides(Robot robot, double x, double y, double z) {
+		return boundingBox.contains(inverseHeading.by(robot
+				.transform(new Vector3(x, y, z))));
+	}
+
+	boolean collidesWith(Robot robot) {
+		return vertexCollides(robot, boundingBox.min.x, boundingBox.min.y,
+				boundingBox.min.z)
+				|| robot.vertexCollides(robot, boundingBox.min.x,
+						boundingBox.min.y, boundingBox.max.z)
+				|| robot.vertexCollides(robot, boundingBox.min.x,
+						boundingBox.max.y, boundingBox.min.z)
+				|| robot.vertexCollides(robot, boundingBox.min.x,
+						boundingBox.max.y, boundingBox.max.z)
+				|| robot.vertexCollides(robot, boundingBox.max.x,
+						boundingBox.min.y, boundingBox.min.z)
+				|| robot.vertexCollides(robot, boundingBox.max.x,
+						boundingBox.min.y, boundingBox.max.z)
+				|| robot.vertexCollides(robot, boundingBox.max.x,
+						boundingBox.max.y, boundingBox.min.z)
+				|| robot.vertexCollides(robot, boundingBox.max.x,
+						boundingBox.max.y, boundingBox.max.z);
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {
