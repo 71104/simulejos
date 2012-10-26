@@ -356,26 +356,26 @@ public final class Robot implements Serializable {
 	}
 
 	private boolean vertexCollides(Robot robot, double x, double y, double z) {
-		return boundingBox.contains(inverseHeading.by(robot
-				.transform(new Vector3(x, y, z))));
+		return boundingBox.contains(inverseHeading.by(robot.transform(
+				new Vector3(x, y, z)).minus(position)));
 	}
 
 	boolean collidesWith(Robot robot) {
-		return vertexCollides(robot, boundingBox.min.x, boundingBox.min.y,
+		return robot.vertexCollides(this, boundingBox.min.x, boundingBox.min.y,
 				boundingBox.min.z)
-				|| robot.vertexCollides(robot, boundingBox.min.x,
+				|| robot.vertexCollides(this, boundingBox.min.x,
 						boundingBox.min.y, boundingBox.max.z)
-				|| robot.vertexCollides(robot, boundingBox.min.x,
+				|| robot.vertexCollides(this, boundingBox.min.x,
 						boundingBox.max.y, boundingBox.min.z)
-				|| robot.vertexCollides(robot, boundingBox.min.x,
+				|| robot.vertexCollides(this, boundingBox.min.x,
 						boundingBox.max.y, boundingBox.max.z)
-				|| robot.vertexCollides(robot, boundingBox.max.x,
+				|| robot.vertexCollides(this, boundingBox.max.x,
 						boundingBox.min.y, boundingBox.min.z)
-				|| robot.vertexCollides(robot, boundingBox.max.x,
+				|| robot.vertexCollides(this, boundingBox.max.x,
 						boundingBox.min.y, boundingBox.max.z)
-				|| robot.vertexCollides(robot, boundingBox.max.x,
+				|| robot.vertexCollides(this, boundingBox.max.x,
 						boundingBox.max.y, boundingBox.min.z)
-				|| robot.vertexCollides(robot, boundingBox.max.x,
+				|| robot.vertexCollides(this, boundingBox.max.x,
 						boundingBox.max.y, boundingBox.max.z);
 	}
 
