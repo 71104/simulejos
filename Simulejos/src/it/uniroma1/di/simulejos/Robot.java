@@ -95,7 +95,7 @@ public final class Robot implements Serializable {
 		}
 	}
 
-	abstract class GPUSensor extends Sensor {
+	abstract class GPUSensor extends Sensor implements GLEventListener {
 		private final int width;
 		private final int height;
 		private volatile GLAutoDrawable buffer;
@@ -105,35 +105,33 @@ public final class Robot implements Serializable {
 			this.height = bufferHeight;
 		}
 
-		protected abstract void sample(GL2GL3 gl);
-
-		public final void init(GL2GL3 gl) {
-			buffer = GLDrawableFactory.getFactory(GLProfile.getDefault())
+		public final void resetBuffer(GL2GL3 gl) {
+			this.buffer = GLDrawableFactory.getFactory(GLProfile.getDefault())
 					.createGLPbuffer(null, null, null, width, height,
 							gl.getContext());
-			buffer.addGLEventListener(new GLEventListener() {
-				@Override
-				public void init(GLAutoDrawable drawable) {
-				}
-
-				@Override
-				public void reshape(GLAutoDrawable drawable, int x, int y,
-						int width, int height) {
-				}
-
-				@Override
-				public void display(GLAutoDrawable drawable) {
-					sample(drawable.getGL().getGL2GL3());
-				}
-
-				@Override
-				public void dispose(GLAutoDrawable drawable) {
-				}
-			});
+			this.buffer.addGLEventListener(this);
 		}
 
 		public final void tick() {
 			buffer.display();
+		}
+
+		protected final void uniform(Program program) {
+			program.uniform("RobotPosition", position);
+			program.uniform("RobotHeading", heading);
+		}
+
+		@Override
+		public void init(GLAutoDrawable drawable) {
+		}
+
+		@Override
+		public void reshape(GLAutoDrawable drawable, int x, int y, int width,
+				int height) {
+		}
+
+		@Override
+		public void dispose(GLAutoDrawable drawable) {
 		}
 	}
 
@@ -155,15 +153,17 @@ public final class Robot implements Serializable {
 				}
 			}
 
-			public void touchSensor(Vector3 position, Vector3 heading) {
-				initializeSensor(new TouchSensor(Robot.this, position, heading));
+			public void touchSensor(Vector3 position, Matrix3 heading,
+					float size) {
+				initializeSensor(new TouchSensor(Robot.this, position, heading,
+						size));
 			}
 
-			public void colorSensor(Vector3 position, Vector3 heading) {
+			public void colorSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new ColorSensor(Robot.this, position, heading));
 			}
 
-			public void lightSensor(Vector3 position, Vector3 heading) {
+			public void lightSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new LightSensor(Robot.this, position, heading));
 			}
 
@@ -393,7 +393,7 @@ public final class Robot implements Serializable {
 		elements = new Elements(gl, modelData.indices);
 		elements.add(4, modelData.vertices);
 		for (GPUSensor sensor : gpuSensors) {
-			sensor.init(gl);
+			sensor.resetBuffer(gl);
 		}
 	}
 

@@ -71,7 +71,10 @@ public class Camera implements Serializable {
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent event) {
-			// TODO
+			position = position.plus(new Vector3(
+					Math.cos(angleY + Math.PI / 2), Math.sin(angleX), Math
+							.sin(angleY + Math.PI / 2)));
+			canvas.repaint();
 		}
 	};
 

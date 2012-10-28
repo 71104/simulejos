@@ -33,12 +33,7 @@ mat4 ModelViewProjection = mat4(
 	0, 1, 0, 0,
 	0, 0, 1, 0,
 	Position, 1
-) * mat4(
-	Heading[0][0], Heading[1][0], Heading[2][0], 0,
-	Heading[0][1], Heading[1][1], Heading[2][1], 0,
-	Heading[0][2], Heading[1][2], Heading[2][2], 0,
-	0, 0, 0, 1
-);
+) * mat4(Heading);
 
 attribute vec4 in_Vertex;
 

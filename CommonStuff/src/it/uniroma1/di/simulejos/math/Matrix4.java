@@ -24,6 +24,17 @@ public class Matrix4 implements Cloneable, Serializable {
 		return new Matrix4(values.clone());
 	}
 
+	public static Matrix4 create(Matrix3 matrix) {
+		final double values[] = new double[16];
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				values[i * 4 + j] = matrix.getAt(i, j);
+			}
+		}
+		values[15] = 1;
+		return new Matrix4(values);
+	}
+
 	@Override
 	public String toString() {
 		return "((" + values[0] + ", " + values[1] + ", " + values[2] + "), ("

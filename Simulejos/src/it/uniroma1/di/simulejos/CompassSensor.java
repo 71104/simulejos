@@ -1,12 +1,13 @@
 package it.uniroma1.di.simulejos;
 
 import it.uniroma1.di.simulejos.Robot.Sensor;
+import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
 
 final class CompassSensor extends Sensor implements
-		it.uniroma1.di.simulejos.bridge.SimulatorInterface.CompassSensor {
+		SimulatorInterface.CompassSensor {
 	private final Matrix3 heading;
 	private volatile double zero;
 
