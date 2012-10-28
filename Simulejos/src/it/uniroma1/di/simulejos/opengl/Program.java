@@ -206,13 +206,34 @@ public class Program extends GLObject {
 		uniform4f(name, (float) v.x, (float) v.y, (float) v.z, (float) v.w);
 	}
 
+	public void uniform(String name, Matrix3 matrix, boolean transpose) {
+		final double[] values = matrix.toArray();
+		final float[] floatValues = new float[values.length];
+		for (int i = 0; i < values.length; i++) {
+			floatValues[i] = (float) values[i];
+		}
+		gl.glUniformMatrix3fv(getUniformLocation(name), 1, transpose,
+				floatValues, 0);
+	}
+
 	public void uniform(String name, Matrix3 matrix) {
 		final double[] values = matrix.toArray();
 		final float[] floatValues = new float[values.length];
 		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
-		gl.glUniformMatrix3fv(getUniformLocation(name), 1, true, floatValues, 0);
+		gl.glUniformMatrix3fv(getUniformLocation(name), 1, false, floatValues,
+				0);
+	}
+
+	public void uniform(String name, Matrix4 matrix, boolean transpose) {
+		final double[] values = matrix.toArray();
+		final float[] floatValues = new float[values.length];
+		for (int i = 0; i < values.length; i++) {
+			floatValues[i] = (float) values[i];
+		}
+		gl.glUniformMatrix4fv(getUniformLocation(name), 1, transpose,
+				floatValues, 0);
 	}
 
 	public void uniform(String name, Matrix4 matrix) {
@@ -221,7 +242,8 @@ public class Program extends GLObject {
 		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
-		gl.glUniformMatrix4fv(getUniformLocation(name), 1, true, floatValues, 0);
+		gl.glUniformMatrix4fv(getUniformLocation(name), 1, false, floatValues,
+				0);
 	}
 
 	public void getUniformfv(int location, float[] data) {
