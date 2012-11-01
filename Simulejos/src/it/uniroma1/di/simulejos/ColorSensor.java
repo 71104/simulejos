@@ -49,9 +49,9 @@ final class ColorSensor extends GPUSensor implements
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
-		floorProgram = new Program(gl, ColorSensor.class, "floor_light",
+		floorProgram = new Program(gl, ColorSensor.class, "floor_color",
 				new String[] { "in_Vertex" });
-		robotProgram = new Program(gl, ColorSensor.class, "robot_light",
+		robotProgram = new Program(gl, ColorSensor.class, "robot_color",
 				new String[] { "in_Vertex" });
 		gl.glClearColor(0, 0, 0, 0);
 		gl.glEnable(GL_DEPTH_TEST);

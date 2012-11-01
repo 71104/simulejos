@@ -1,5 +1,6 @@
 #version 120
 
+uniform Focus = 1;
 uniform vec3 RobotPosition;
 uniform mat3 InverseRobotHeading;
 uniform vec3 SensorPosition;
@@ -7,14 +8,13 @@ uniform mat3 InverseSensorHeading;
 uniform float Size;
 
 attribute vec3 in_Vertex;
-varying vec4 ex_Position;
 
 void main() {
-	ex_Vertex = mat4(
-		1 / Size, 0, 0, 0,
-		0, 1 / Size, 0, 0,
-		0, 0, 1 / Size, 0,
-		0, 0, 0, 1
+	gl_Position = mat4(
+		Focus, 0, 0, 0,
+		0, Focus, 0, 0,
+		0, 0, 0, 1,
+		0, 0, 1, Focus
 	) * mat4(InverseSensorHeading) * mat4(
 		1, 0, 0, 0,
 		0, 1, 0, 0,
@@ -25,6 +25,5 @@ void main() {
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 		-RobotPosition, 1
-	) * vec4(in_Vertex, 1);
-	gl_Position = ex_Position;
+	) * (vec4(in_Vertex, 1) - vec4(0, 0, Focus, 0));
 }
