@@ -14,6 +14,12 @@ public class Vector3 implements Cloneable, Serializable {
 	public static final Vector3 J = new Vector3(0, 1, 0);
 	public static final Vector3 K = new Vector3(0, 0, 1);
 
+	public static final Vector3 BLACK = new Vector3(0, 0, 0);
+	public static final Vector3 WHITE = new Vector3(0, 0, 0);
+	public static final Vector3 RED = new Vector3(1, 0, 0);
+	public static final Vector3 GREEN = new Vector3(0, 1, 0);
+	public static final Vector3 BLUE = new Vector3(0, 0, 1);
+
 	public Vector3(double x, double y, double z) {
 		this.x = x;
 		this.y = y;

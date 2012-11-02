@@ -56,6 +56,7 @@ public final class Robot implements Serializable {
 	private transient volatile Invocable invocable;
 	private transient volatile boolean initializing;
 	private transient volatile boolean running;
+	private transient volatile boolean suspended;
 	private transient volatile ThreadGroup threads;
 
 	private transient volatile Elements elements;
@@ -118,7 +119,7 @@ public final class Robot implements Serializable {
 
 		protected final void uniform(Program program) {
 			program.uniform("RobotPosition", position);
-			program.uniform("RobotHeading", heading);
+			program.uniform("InverseRobotHeading", inverseHeading);
 		}
 
 		@Override
@@ -260,6 +261,9 @@ public final class Robot implements Serializable {
 	private transient final Simulator simulator = new Simulator();
 
 	void play() throws ScriptException {
+		if (running) {
+			return;
+		}
 		initializing = true;
 		final ScriptEngine scriptEngine = new ScriptEngineManager()
 				.getEngineByMimeType("text/javascript");
@@ -269,6 +273,7 @@ public final class Robot implements Serializable {
 		threads = new ThreadGroup("NXT" + index);
 		initializing = false;
 		running = true;
+		suspended = false;
 		new Thread(threads, new Runnable() {
 			@Override
 			public void run() {
@@ -313,6 +318,7 @@ public final class Robot implements Serializable {
 					throw new RuntimeException(e);
 				} finally {
 					running = false;
+					suspended = false;
 					try {
 						bridge.getMethod("cleanup").invoke(null);
 					} catch (IllegalAccessException | InvocationTargetException
@@ -326,29 +332,38 @@ public final class Robot implements Serializable {
 
 	@SuppressWarnings("deprecation")
 	void suspend() {
-		threads.suspend();
-		running = false;
-		motorA.timer.suspend();
-		motorB.timer.suspend();
-		motorC.timer.suspend();
+		if (running) {
+			threads.suspend();
+			running = false;
+			suspended = true;
+			motorA.timer.suspend();
+			motorB.timer.suspend();
+			motorC.timer.suspend();
+		}
 	}
 
 	@SuppressWarnings("deprecation")
 	void resume() {
-		motorA.timer.resume();
-		motorB.timer.resume();
-		motorC.timer.resume();
-		running = true;
-		threads.resume();
+		if (running && suspended) {
+			motorA.timer.resume();
+			motorB.timer.resume();
+			motorC.timer.resume();
+			running = true;
+			suspended = false;
+			threads.resume();
+		}
 	}
 
 	@SuppressWarnings("deprecation")
 	void stop() {
-		threads.stop();
-		running = true;
-		motorA.setMode(Motor.Mode.FLOAT);
-		motorB.setMode(Motor.Mode.FLOAT);
-		motorC.setMode(Motor.Mode.FLOAT);
+		if (running) {
+			threads.stop();
+			running = false;
+			suspended = false;
+			motorA.setMode(Motor.Mode.FLOAT);
+			motorB.setMode(Motor.Mode.FLOAT);
+			motorC.setMode(Motor.Mode.FLOAT);
+		}
 	}
 
 	private Vector3 transform(Vector3 v) {
@@ -380,7 +395,7 @@ public final class Robot implements Serializable {
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {
-		if (running) {
+		if (running && !suspended) {
 			invocable.invokeFunction("tick", motorA.sample(), motorB.sample(),
 					motorC.sample());
 			for (GPUSensor sensor : gpuSensors) {
@@ -409,5 +424,11 @@ public final class Robot implements Serializable {
 		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		program.uniform3f("Color", 1, 1, 1);
 		elements.draw(GL_TRIANGLES);
+	}
+
+	void drawForSensor(GL2GL3 gl, Program program) {
+		program.uniform("TargetRobotPosition", position);
+		program.uniform("TargetRobotHeading", heading);
+		elements.bindAndDraw(GL_TRIANGLES);
 	}
 }

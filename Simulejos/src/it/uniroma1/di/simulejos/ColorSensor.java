@@ -15,6 +15,7 @@ final class ColorSensor extends GPUSensor implements
 		SimulatorInterface.ColorSensor {
 	private final Vector3 position;
 	private final Matrix3 heading;
+	private final Matrix3 inverseHeading;
 	private volatile Program floorProgram;
 	private volatile Program robotProgram;
 
@@ -24,6 +25,7 @@ final class ColorSensor extends GPUSensor implements
 		robot.super(1, 1);
 		this.position = position;
 		this.heading = heading;
+		this.inverseHeading = heading.invert();
 	}
 
 	@Override
@@ -65,13 +67,15 @@ final class ColorSensor extends GPUSensor implements
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		floorProgram.use();
+		floorProgram.uniform("Color", Vector3.RED);
 		floorProgram.uniform("SensorPosition", position);
-		floorProgram.uniform("SensorHeading", heading);
+		floorProgram.uniform("InverseSensorHeading", inverseHeading);
 		uniform(floorProgram);
 		// TODO
 		robotProgram.use();
+		robotProgram.uniform("Color", Vector3.RED);
 		robotProgram.uniform("SensorPosition", position);
-		robotProgram.uniform("SensorHeading", heading);
+		robotProgram.uniform("InverseSensorHeading", heading);
 		uniform(robotProgram);
 		// TODO
 	}

@@ -240,13 +240,13 @@ public final class Simulation implements Serializable {
 								SwingUtilities.invokeLater(new Runnable() {
 									@Override
 									public void run() {
+										Simulation.this.stop();
 										JOptionPane.showMessageDialog(
 												parentWindow, message,
 												"Simulejos",
 												JOptionPane.ERROR_MESSAGE);
 									}
 								});
-								Simulation.this.stop();
 							}
 						}
 					}
@@ -264,7 +264,12 @@ public final class Simulation implements Serializable {
 							step();
 						} catch (Exception e) {
 							e.printStackTrace();
-							Simulation.this.stop();
+							SwingUtilities.invokeLater(new Runnable() {
+								@Override
+								public void run() {
+									Simulation.this.stop();
+								}
+							});
 						}
 						canvas.display();
 					}
