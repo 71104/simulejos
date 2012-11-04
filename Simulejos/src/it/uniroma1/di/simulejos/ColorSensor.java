@@ -1,5 +1,7 @@
 package it.uniroma1.di.simulejos;
 
+import java.nio.IntBuffer;
+
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
 
@@ -20,6 +22,7 @@ final class ColorSensor extends GPUSensor implements
 	private volatile Program robotProgram;
 
 	private volatile FloodLight floodLight = FloodLight.FULL;
+	private final int[] value = new int[1];
 
 	public ColorSensor(Robot robot, Vector3 position, Matrix3 heading) {
 		robot.super(1, 1);
@@ -30,8 +33,7 @@ final class ColorSensor extends GPUSensor implements
 
 	@Override
 	public int getColor() {
-		// TODO Auto-generated method stub
-		return 0;
+		return value[0];
 	}
 
 	@Override
@@ -71,12 +73,16 @@ final class ColorSensor extends GPUSensor implements
 		floorProgram.uniform("SensorPosition", position);
 		floorProgram.uniform("InverseSensorHeading", inverseHeading);
 		uniform(floorProgram);
-		// TODO
+		floor.drawForSensor(gl, floorProgram);
 		robotProgram.use();
 		robotProgram.uniform("Color", Vector3.RED);
 		robotProgram.uniform("SensorPosition", position);
 		robotProgram.uniform("InverseSensorHeading", heading);
 		uniform(robotProgram);
-		// TODO
+		for (Robot robot : robots) {
+			robot.drawForSensor(gl, robotProgram);
+		}
+		gl.glReadPixels(0, 0, 1, 1, GL_RGB, GL_UNSIGNED_INT_8_8_8_8,
+				IntBuffer.wrap(value));
 	}
 }

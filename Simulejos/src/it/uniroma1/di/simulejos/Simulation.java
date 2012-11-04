@@ -140,7 +140,7 @@ public final class Simulation implements Serializable {
 			ParseException, ScriptException {
 		dirty = true;
 		final Robot robot = new Robot(classPath, mainClassName, script,
-				ModelData.parseWavefront(modelFile, swapYAndZ));
+				ModelData.parseWavefront(modelFile, swapYAndZ), floor, robots);
 		robot.setUI(parentWindow, logWriter);
 		robotList.add(robot);
 	}

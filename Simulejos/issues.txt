@@ -1,0 +1,8 @@
+Bug noti
+
+1.
+- aggiungere un robot
+- avviare simulazione
+- aggiungere un altro robot
+- mettere in pausa la simulazione
+- il primo robot smette di rispondere

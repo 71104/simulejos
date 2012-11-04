@@ -61,19 +61,25 @@ public final class Robot implements Serializable {
 
 	private transient volatile Elements elements;
 
+	private transient final Floor floor;
+	private transient final Iterable<Robot> robots;
+
 	static {
 		/* XXX workaround a bug in ImageIO when used with Java Web Start */
 		ImageIO.setUseCache(false);
 	}
 
 	Robot(File classPath, String mainClassName, String script,
-			ModelData modelData) throws ScriptException {
+			ModelData modelData, Floor floor, Iterable<Robot> robots)
+			throws ScriptException {
 		this.index = nextIndex++;
 		this.classPath = classPath;
 		this.mainClassName = mainClassName;
 		this.script = script;
 		this.modelData = modelData;
 		this.boundingBox = new BoundingBox(modelData.vertices);
+		this.floor = floor;
+		this.robots = robots;
 	}
 
 	void setUI(Frame parentWindow, Writer logWriter) {
@@ -87,12 +93,20 @@ public final class Robot implements Serializable {
 	private transient final Motor motorC = new Motor();
 
 	abstract class Sensor implements SimulatorInterface.Sensor {
+		protected final Floor floor = Robot.this.floor;
+		protected final Iterable<Robot> robots = Robot.this.robots;
+
 		protected final Vector3 head(Vector3 v) {
 			return heading.by(v);
 		}
 
 		protected final Vector3 transform(Vector3 v) {
 			return position.plus(heading.by(v));
+		}
+
+		protected final void uniform(Program program) {
+			program.uniform("RobotPosition", position);
+			program.uniform("InverseRobotHeading", inverseHeading);
 		}
 	}
 
@@ -104,6 +118,7 @@ public final class Robot implements Serializable {
 		protected GPUSensor(int bufferWidth, int bufferHeight) {
 			this.width = bufferWidth;
 			this.height = bufferHeight;
+			gpuSensors.add(this);
 		}
 
 		public final void resetBuffer(GL2GL3 gl) {
@@ -115,11 +130,6 @@ public final class Robot implements Serializable {
 
 		public final void tick() {
 			buffer.display();
-		}
-
-		protected final void uniform(Program program) {
-			program.uniform("RobotPosition", position);
-			program.uniform("InverseRobotHeading", inverseHeading);
 		}
 
 		@Override
