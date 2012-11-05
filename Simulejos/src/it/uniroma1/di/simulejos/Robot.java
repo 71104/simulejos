@@ -121,6 +121,12 @@ public final class Robot implements Serializable {
 			gpuSensors.add(this);
 		}
 
+		public final void assertBuffer(GL2GL3 gl) {
+			if (buffer == null) {
+				resetBuffer(gl);
+			}
+		}
+
 		public final void resetBuffer(GL2GL3 gl) {
 			this.buffer = GLDrawableFactory.getFactory(GLProfile.getDefault())
 					.createGLPbuffer(null, null, null, width, height,
@@ -129,7 +135,9 @@ public final class Robot implements Serializable {
 		}
 
 		public final void tick() {
-			buffer.display();
+			if (buffer != null) {
+				buffer.display();
+			}
 		}
 
 		@Override
@@ -425,6 +433,9 @@ public final class Robot implements Serializable {
 	void draw(GL2GL3 gl, Program program) {
 		if (elements == null) {
 			init(gl);
+		}
+		for (GPUSensor sensor : gpuSensors) {
+			sensor.assertBuffer(gl);
 		}
 		program.uniform("Position", position);
 		program.uniform("Heading", heading);
