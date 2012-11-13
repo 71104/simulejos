@@ -28,5 +28,16 @@ _gaq.push(['_trackPageview']);
 <p><script type="text/javascript">
 deployJava.createWebStartLaunchButton('http://www.simulejos.altervista.org/Simulejos.jnlp', '1.7.0');
 </script> or <a href="Simulejos.jnlp">Click here to run Simulejos</a></p>
+<h2>Known Issues</h2>
+<ul>
+<li>The provided security certificate is self-signed.</li>
+<li>At first, the program might not run if you are using Java 7. After launching the JNLP file Java Web Start will download it and complain about some stuff related to some certificate. This bug affects <em>all JOGL programs</em> and I can't do anything about it unfortunately, you have to manually adjust a Java security setting. Here's the steps in Windows 7:<ul>
+<li>open "Java" in the Control Panel,</li>
+<li>select the "Advanced" tab,</li>
+<li>expand the "Security" section and the "General" subsection,</li>
+<li>enable online certificate validation and join me in wondering why the heck was that disabled by default.</li>
+</ul></li>
+</ul>
+<p><a href="mailto:a71104@gmail.com">Contact me</a> if you find out unknown issues.</p>
 </body>
 </html>
