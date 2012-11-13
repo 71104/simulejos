@@ -129,8 +129,8 @@ public final class Robot implements Serializable {
 
 		public final void resetBuffer(GL2GL3 gl) {
 			this.buffer = GLDrawableFactory.getFactory(GLProfile.getDefault())
-					.createGLPbuffer(null, null, null, width, height,
-							gl.getContext());
+					.createOffscreenAutoDrawable(null, null, null, width,
+							height, gl.getContext());
 			this.buffer.addGLEventListener(this);
 		}
 
