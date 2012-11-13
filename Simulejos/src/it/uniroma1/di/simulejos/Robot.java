@@ -21,6 +21,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLDrawableFactory;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
@@ -128,9 +129,12 @@ public final class Robot implements Serializable {
 		}
 
 		public final void resetBuffer(GL2GL3 gl) {
-			this.buffer = GLDrawableFactory.getFactory(GLProfile.getDefault())
-					.createOffscreenAutoDrawable(null, null, null, width,
-							height, gl.getContext());
+			this.buffer = GLDrawableFactory
+					.getFactory(GLProfile.getDefault())
+					.createOffscreenAutoDrawable(
+							null,
+							new GLCapabilities(GLProfile.get(GLProfile.GL2GL3)),
+							null, width, height, gl.getContext());
 			this.buffer.addGLEventListener(this);
 		}
 

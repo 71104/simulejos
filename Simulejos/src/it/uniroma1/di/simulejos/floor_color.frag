@@ -4,11 +4,11 @@ uniform vec3 Color = vec3(1, 0, 0);
 uniform bool UseTexture;
 uniform sampler2D Texture;
 
-varying vec4 ex_Position;
+varying vec4 ex_Vertex;
 
 void main() {
 	if (UseTexture) {
-		gl_FragColor = vec4(Color, 1) * texture2DProj(Texture, ex_Position);
+		gl_FragColor = vec4(Color, 1) * texture2DProj(Texture, ex_Vertex);
 	} else {
 		gl_FragColor = vec4(Color * ex_Vertex.z / ex_Vertex.w, 1);
 	}
