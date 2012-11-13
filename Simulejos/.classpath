@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/CommonStuff"/>
 	<classpathentry kind="lib" path="C:/jogamp-all-platforms/jar/jogl-all.jar"/>
 	<classpathentry kind="lib" path="C:/jogamp-all-platforms/jar/gluegen-rt.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TestRobots"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
