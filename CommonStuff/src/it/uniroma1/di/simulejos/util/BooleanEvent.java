@@ -55,8 +55,10 @@ public final class BooleanEvent {
 
 	public void signal() {
 		synchronized (blocker) {
-			occur = true;
-			blocker.notifyAll();
+			if (!occur) {
+				occur = true;
+				blocker.notifyAll();
+			}
 		}
 	}
 }

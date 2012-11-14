@@ -87,6 +87,10 @@ public interface SimulatorInterface {
 
 	static interface LightSensor extends Sensor {
 		int getLight();
+
+		void setFloodLight(boolean on);
+
+		boolean isFloodLightOn();
 	}
 
 	static interface CompassSensor extends Sensor {

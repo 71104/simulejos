@@ -33,15 +33,15 @@ public class LineFollower {
 		PilotProps pp = new PilotProps();
 		pp.loadPersistentValues();
 		float wheelDiameter = Float.parseFloat(pp.getProperty(
-				PilotProps.KEY_WHEELDIAMETER, "4.96"));
+				PilotProps.KEY_WHEELDIAMETER, "1"));
 		float trackWidth = Float.parseFloat(pp.getProperty(
-				PilotProps.KEY_TRACKWIDTH, "13.0"));
+				PilotProps.KEY_TRACKWIDTH, "2"));
 		RegulatedMotor leftMotor = PilotProps.getMotor(pp.getProperty(
-				PilotProps.KEY_LEFTMOTOR, "B"));
+				PilotProps.KEY_LEFTMOTOR, "A"));
 		RegulatedMotor rightMotor = PilotProps.getMotor(pp.getProperty(
-				PilotProps.KEY_RIGHTMOTOR, "C"));
+				PilotProps.KEY_RIGHTMOTOR, "B"));
 		boolean reverse = Boolean.parseBoolean(pp.getProperty(
-				PilotProps.KEY_REVERSE, "false"));
+				PilotProps.KEY_REVERSE, "true"));
 
 		// Change last parameter of Pilot to specify on which
 		// direction you want to be "forward" for your vehicle.

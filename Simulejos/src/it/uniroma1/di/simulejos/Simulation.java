@@ -129,6 +129,7 @@ public final class Simulation implements Serializable {
 	}
 
 	public void discard() {
+		stop();
 		if (canvas != null) {
 			canvas.removeGLEventListener(glEventListener);
 			canvas = null;

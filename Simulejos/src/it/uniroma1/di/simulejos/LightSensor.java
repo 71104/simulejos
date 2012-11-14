@@ -28,6 +28,7 @@ final class LightSensor extends GPUSensor implements
 	private volatile Program robotProgram;
 
 	private final int[] value = new int[1];
+	private volatile boolean floodLight = true;
 
 	public LightSensor(Robot robot, Vector3 position, Matrix3 heading) {
 		robot.super(1, 1);
@@ -39,6 +40,16 @@ final class LightSensor extends GPUSensor implements
 	@Override
 	public int getLight() {
 		return value[0];
+	}
+
+	@Override
+	public void setFloodLight(boolean on) {
+		this.floodLight = on;
+	}
+
+	@Override
+	public boolean isFloodLightOn() {
+		return floodLight;
 	}
 
 	@Override
