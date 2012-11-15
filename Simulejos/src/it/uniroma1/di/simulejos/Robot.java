@@ -80,12 +80,16 @@ public final class Robot implements Serializable {
 		this.floor = floor;
 		this.robots = robots;
 
-		this.position = new Vector3(0, modelData.boundingBox.min.y, 0);
+		this.position = new Vector3(-modelData.boundingBox.center.x, -1
+				- modelData.boundingBox.min.y, -modelData.boundingBox.center.z);
 
 		final double maxSpan = modelData.boundingBox.getMaxSpan();
-		this.heading = Matrix3.createScaling(1 / maxSpan, 1 / maxSpan,
-				1 / maxSpan);
-		this.inverseHeading = Matrix3.createScaling(maxSpan, maxSpan, maxSpan);
+		this.heading = Matrix3.createScaling(2 / maxSpan, 2 / maxSpan,
+				2 / maxSpan);
+		this.inverseHeading = Matrix3.createScaling(maxSpan / 2, maxSpan / 2,
+				maxSpan / 2);
+
+		this.robotInterface = new RobotInterface();
 	}
 
 	void setUI(Frame parentWindow, Writer logWriter) {
@@ -164,6 +168,8 @@ public final class Robot implements Serializable {
 	}
 
 	public final class RobotInterface {
+		public final BoundingBox boundingBox = modelData.boundingBox;
+
 		private RobotInterface() {
 		}
 
@@ -225,7 +231,7 @@ public final class Robot implements Serializable {
 		}
 	}
 
-	private transient final RobotInterface robotInterface = new RobotInterface();
+	private transient final RobotInterface robotInterface;
 	private transient final List<GPUSensor> gpuSensors = new LinkedList<GPUSensor>();
 
 	private class Simulator implements SimulatorInterface {

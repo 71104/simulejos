@@ -25,11 +25,6 @@ void main() {
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 		-RobotPosition, 1
-	) * mat4(
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		0, -1, 0, 1
 	) * in_Vertex;
 	gl_Position = ex_Vertex;
 }

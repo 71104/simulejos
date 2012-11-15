@@ -1,9 +1,16 @@
 importPackage(Packages.it.uniroma1.di.simulejos.math);
 
-var wheelSpan = 2;
-var wheelDiameter = 1;
+var wheelSpan = robot.boundingBox.size.x;
+var wheelDiameter = robot.boundingBox.size.y * 0.8;
 
-robot.S1.lightSensor(new Vector3(0, -0.8, 0.5), Matrix3.create([1, 0, 0, 0, -1, 0, 0, 0, 1]));
+robot.S1.lightSensor(
+	new Vector3(
+		robot.boundingBox.center.x,
+		robot.boundingBox.center.y + robot.boundingBox.size.y * -0.49,
+		robot.boundingBox.center.z + robot.boundingBox.size.z * 0.5
+		),
+	Matrix3.create([1, 0, 0, 0, 0, 1, 0, -1, 0])
+	);
 
 function tick(daa, dab, dac) {
 	var dsa = daa * wheelDiameter * Math.PI;
