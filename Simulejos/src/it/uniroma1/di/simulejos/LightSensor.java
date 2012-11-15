@@ -1,14 +1,8 @@
 package it.uniroma1.di.simulejos;
 
-import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static javax.media.opengl.GL.GL_CULL_FACE;
-import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static javax.media.opengl.GL.GL_DEPTH_TEST;
-import static javax.media.opengl.GL.GL_LESS;
-import static javax.media.opengl.GL.GL_RGB;
-import static javax.media.opengl.GL2GL3.GL_UNSIGNED_INT_8_8_8_8;
+import static javax.media.opengl.GL2GL3.*;
 
-import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
@@ -27,7 +21,7 @@ final class LightSensor extends GPUSensor implements
 	private volatile Program floorProgram;
 	private volatile Program robotProgram;
 
-	private final int[] value = new int[1];
+	private final float[] value = new float[2];
 	private volatile boolean floodLight = true;
 
 	public LightSensor(Robot robot, Vector3 position, Matrix3 heading) {
@@ -39,7 +33,7 @@ final class LightSensor extends GPUSensor implements
 
 	@Override
 	public int getLight() {
-		return value[0];
+		return Math.round(value[0] * 1023);
 	}
 
 	@Override
@@ -71,20 +65,27 @@ final class LightSensor extends GPUSensor implements
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		floorProgram.use();
-		floorProgram.uniform("Color", Vector3.RED);
 		floorProgram.uniform("SensorPosition", position);
 		floorProgram.uniform("InverseSensorHeading", inverseHeading);
 		uniform(floorProgram);
 		floor.drawForSensor(gl, floorProgram);
 		robotProgram.use();
-		robotProgram.uniform("Color", Vector3.RED);
 		robotProgram.uniform("SensorPosition", position);
 		robotProgram.uniform("InverseSensorHeading", heading);
 		uniform(robotProgram);
 		for (Robot robot : robots) {
 			robot.drawForSensor(gl, robotProgram);
 		}
-		gl.glReadPixels(0, 0, 1, 1, GL_RGB, GL_UNSIGNED_INT_8_8_8_8,
-				IntBuffer.wrap(value));
+		for (float x : value) {
+			System.err.print(x + ", ");
+		}
+		System.err.println();
+		if (floodLight) {
+			gl.glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT,
+					FloatBuffer.wrap(value));
+		} else {
+			gl.glReadPixels(0, 0, 1, 1, GL_LUMINANCE, GL_FLOAT,
+					FloatBuffer.wrap(value));
+		}
 	}
 }

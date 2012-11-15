@@ -82,7 +82,7 @@ final class ColorSensor extends GPUSensor implements
 		for (Robot robot : robots) {
 			robot.drawForSensor(gl, robotProgram);
 		}
-		gl.glReadPixels(0, 0, 1, 1, GL_RGB, GL_UNSIGNED_INT_8_8_8_8,
+		gl.glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
 				IntBuffer.wrap(value));
 	}
 }

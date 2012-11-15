@@ -47,10 +47,9 @@ public final class Robot implements Serializable {
 	public final String mainClassName;
 	public final String script;
 	public final ModelData modelData;
-	public final BoundingBox boundingBox;
-	private volatile Vector3 position = Vector3.NULL;
-	private volatile Matrix3 heading = Matrix3.IDENTITY;
-	private volatile Matrix3 inverseHeading = Matrix3.IDENTITY;
+	private volatile Vector3 position;
+	private volatile Matrix3 heading;
+	private volatile Matrix3 inverseHeading;
 
 	private transient volatile Frame parentWindow;
 	private transient volatile PrintWriter logWriter;
@@ -78,9 +77,15 @@ public final class Robot implements Serializable {
 		this.mainClassName = mainClassName;
 		this.script = script;
 		this.modelData = modelData;
-		this.boundingBox = new BoundingBox(modelData.vertices);
 		this.floor = floor;
 		this.robots = robots;
+
+		this.position = new Vector3(0, modelData.boundingBox.min.y, 0);
+
+		final double maxSpan = modelData.boundingBox.getMaxSpan();
+		this.heading = Matrix3.createScaling(1 / maxSpan, 1 / maxSpan,
+				1 / maxSpan);
+		this.inverseHeading = Matrix3.createScaling(maxSpan, maxSpan, maxSpan);
 	}
 
 	void setUI(Frame parentWindow, Writer logWriter) {
@@ -393,27 +398,20 @@ public final class Robot implements Serializable {
 	}
 
 	private boolean vertexCollides(Robot robot, double x, double y, double z) {
-		return boundingBox.contains(inverseHeading.by(robot.transform(
-				new Vector3(x, y, z)).minus(position)));
+		return modelData.boundingBox.contains(inverseHeading.by(robot
+				.transform(new Vector3(x, y, z)).minus(position)));
 	}
 
 	boolean collidesWith(Robot robot) {
-		return robot.vertexCollides(this, boundingBox.min.x, boundingBox.min.y,
-				boundingBox.min.z)
-				|| robot.vertexCollides(this, boundingBox.min.x,
-						boundingBox.min.y, boundingBox.max.z)
-				|| robot.vertexCollides(this, boundingBox.min.x,
-						boundingBox.max.y, boundingBox.min.z)
-				|| robot.vertexCollides(this, boundingBox.min.x,
-						boundingBox.max.y, boundingBox.max.z)
-				|| robot.vertexCollides(this, boundingBox.max.x,
-						boundingBox.min.y, boundingBox.min.z)
-				|| robot.vertexCollides(this, boundingBox.max.x,
-						boundingBox.min.y, boundingBox.max.z)
-				|| robot.vertexCollides(this, boundingBox.max.x,
-						boundingBox.max.y, boundingBox.min.z)
-				|| robot.vertexCollides(this, boundingBox.max.x,
-						boundingBox.max.y, boundingBox.max.z);
+		final BoundingBox box = modelData.boundingBox;
+		return robot.vertexCollides(this, box.min.x, box.min.y, box.min.z)
+				|| robot.vertexCollides(this, box.min.x, box.min.y, box.max.z)
+				|| robot.vertexCollides(this, box.min.x, box.max.y, box.min.z)
+				|| robot.vertexCollides(this, box.min.x, box.max.y, box.max.z)
+				|| robot.vertexCollides(this, box.max.x, box.min.y, box.min.z)
+				|| robot.vertexCollides(this, box.max.x, box.min.y, box.max.z)
+				|| robot.vertexCollides(this, box.max.x, box.max.y, box.min.z)
+				|| robot.vertexCollides(this, box.max.x, box.max.y, box.max.z);
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {

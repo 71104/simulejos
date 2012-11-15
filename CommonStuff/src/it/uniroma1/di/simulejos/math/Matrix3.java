@@ -34,6 +34,10 @@ public class Matrix3 implements Cloneable, Serializable {
 				z * y * (1 - c) + x * s, c + z * z * (1 - c) });
 	}
 
+	public static Matrix3 createScaling(double x, double y, double z) {
+		return new Matrix3(new double[] { x, 0, 0, 0, y, 0, 0, 0, z });
+	}
+
 	@Override
 	public String toString() {
 		return "((" + values[0] + ", " + values[1] + ", " + values[2] + "), ("

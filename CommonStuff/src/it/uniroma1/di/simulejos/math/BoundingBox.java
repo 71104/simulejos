@@ -35,4 +35,20 @@ public class BoundingBox implements Cloneable, Serializable {
 		return (v.x >= min.x) && (v.x <= max.x) && (v.y >= min.y)
 				&& (v.y <= max.y) && (v.z >= min.z) && (v.z <= max.z);
 	}
+
+	public double getMaxSpan() {
+		if (size.x > size.y) {
+			if (size.x > size.z) {
+				return size.x;
+			} else {
+				return size.z;
+			}
+		} else {
+			if (size.y > size.z) {
+				return size.y;
+			} else {
+				return size.z;
+			}
+		}
+	}
 }
