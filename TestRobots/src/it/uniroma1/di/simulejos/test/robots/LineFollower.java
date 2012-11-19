@@ -16,7 +16,7 @@ import lejos.util.PilotProps;
  * line following robot.
  * 
  * Requires a wheeled vehicle with two independently controlled wheels with
- * motors connected to motor ports A and C, and a light sensor mounted forwards
+ * motors connected to motor ports A and B, and a light sensor mounted forwards
  * and pointing down, connected to sensor port 1.
  * 
  * Press ENTER to start the robot.
@@ -24,9 +24,6 @@ import lejos.util.PilotProps;
  * You can run the PilotParams sample to create a property file which sets the
  * parameters of the Pilot to the dimensions and motor connections for your
  * robot.
- * 
- * @author Lawrie Griffiths
- * 
  */
 public class LineFollower {
 	public static void main(String[] aArg) throws Exception {

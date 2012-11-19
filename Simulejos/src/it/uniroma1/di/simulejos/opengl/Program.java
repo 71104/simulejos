@@ -70,26 +70,38 @@ public class Program extends GLObject {
 				name), variableNames);
 	}
 
-	private int get(int name) {
+	private int get(GL2GL3 gl, int name) {
 		final int[] result = { 1234 };
 		gl.glGetProgramiv(id, name, result, 0);
 		return result[0];
+	}
+
+	public void use(GL2GL3 gl) {
+		gl.glUseProgram(id);
 	}
 
 	public void use() {
 		gl.glUseProgram(id);
 	}
 
+	public void attachShader(GL2GL3 gl, Shader shader) {
+		gl.glAttachShader(id, shader.id);
+	}
+
 	public void attachShader(Shader shader) {
 		gl.glAttachShader(id, shader.id);
+	}
+
+	public void detachShader(GL2GL3 gl, Shader shader) {
+		gl.glDetachShader(id, shader.id);
 	}
 
 	public void detachShader(Shader shader) {
 		gl.glDetachShader(id, shader.id);
 	}
 
-	public Shader[] getAttachedShaders() {
-		final int count = get(GL_ATTACHED_SHADERS);
+	public Shader[] getAttachedShaders(GL2GL3 gl) {
+		final int count = get(gl, GL_ATTACHED_SHADERS);
 		final int[] ids = new int[count];
 		gl.glGetAttachedShaders(id, count, null, 0, ids, 0);
 		final Shader[] shaders = new Shader[count];
@@ -99,28 +111,60 @@ public class Program extends GLObject {
 		return shaders;
 	}
 
+	public Shader[] getAttachedShaders() {
+		final int count = get(gl, GL_ATTACHED_SHADERS);
+		final int[] ids = new int[count];
+		gl.glGetAttachedShaders(id, count, null, 0, ids, 0);
+		final Shader[] shaders = new Shader[count];
+		for (int i = 0; i < ids.length; i++) {
+			shaders[i] = Shader.getById(gl, ids[i]);
+		}
+		return shaders;
+	}
+
+	public void link(GL2GL3 gl) {
+		uniformLocationCache.clear();
+		gl.glLinkProgram(id);
+	}
+
 	public void link() {
 		uniformLocationCache.clear();
 		gl.glLinkProgram(id);
 	}
 
-	public boolean isLinked() {
-		return get(GL_LINK_STATUS) != GL_FALSE;
+	public boolean isLinked(GL2GL3 gl) {
+		return get(gl, GL_LINK_STATUS) != GL_FALSE;
 	}
 
-	public String getInfoLog() {
-		final int length = get(GL_INFO_LOG_LENGTH);
+	public boolean isLinked() {
+		return get(gl, GL_LINK_STATUS) != GL_FALSE;
+	}
+
+	public String getInfoLog(GL2GL3 gl) {
+		final int length = get(gl, GL_INFO_LOG_LENGTH);
 		final byte[] log = new byte[length];
 		gl.glGetProgramInfoLog(id, length, null, 0, log, 0);
 		return new String(log);
 	}
 
-	public boolean validate() {
-		gl.glValidateProgram(id);
-		return get(GL_VALIDATE_STATUS) != GL_FALSE;
+	public String getInfoLog() {
+		final int length = get(gl, GL_INFO_LOG_LENGTH);
+		final byte[] log = new byte[length];
+		gl.glGetProgramInfoLog(id, length, null, 0, log, 0);
+		return new String(log);
 	}
 
-	public int getUniformLocation(String name) {
+	public boolean validate(GL2GL3 gl) {
+		gl.glValidateProgram(id);
+		return get(gl, GL_VALIDATE_STATUS) != GL_FALSE;
+	}
+
+	public boolean validate() {
+		gl.glValidateProgram(id);
+		return get(gl, GL_VALIDATE_STATUS) != GL_FALSE;
+	}
+
+	public int getUniformLocation(GL2GL3 gl, String name) {
 		if (uniformLocationCache.containsKey(name)) {
 			return uniformLocationCache.get(name);
 		} else {
@@ -130,80 +174,168 @@ public class Program extends GLObject {
 		}
 	}
 
+	public void uniform1f(GL2GL3 gl, String name, float x) {
+		gl.glUniform1f(getUniformLocation(gl, name), x);
+	}
+
 	public void uniform1f(String name, float x) {
-		gl.glUniform1f(getUniformLocation(name), x);
+		gl.glUniform1f(getUniformLocation(gl, name), x);
+	}
+
+	public void uniform2f(GL2GL3 gl, String name, float x, float y) {
+		gl.glUniform2f(getUniformLocation(gl, name), x, y);
 	}
 
 	public void uniform2f(String name, float x, float y) {
-		gl.glUniform2f(getUniformLocation(name), x, y);
+		gl.glUniform2f(getUniformLocation(gl, name), x, y);
+	}
+
+	public void uniform3f(GL2GL3 gl, String name, float x, float y, float z) {
+		gl.glUniform3f(getUniformLocation(gl, name), x, y, z);
 	}
 
 	public void uniform3f(String name, float x, float y, float z) {
-		gl.glUniform3f(getUniformLocation(name), x, y, z);
+		gl.glUniform3f(getUniformLocation(gl, name), x, y, z);
+	}
+
+	public void uniform4f(GL2GL3 gl, String name, float x, float y, float z,
+			float w) {
+		gl.glUniform4f(getUniformLocation(gl, name), x, y, z, w);
 	}
 
 	public void uniform4f(String name, float x, float y, float z, float w) {
-		gl.glUniform4f(getUniformLocation(name), x, y, z, w);
+		gl.glUniform4f(getUniformLocation(gl, name), x, y, z, w);
+	}
+
+	public void uniform1i(GL2GL3 gl, String name, int x) {
+		gl.glUniform1i(getUniformLocation(gl, name), x);
 	}
 
 	public void uniform1i(String name, int x) {
-		gl.glUniform1i(getUniformLocation(name), x);
+		gl.glUniform1i(getUniformLocation(gl, name), x);
+	}
+
+	public void uniform2i(GL2GL3 gl, String name, int x, int y) {
+		gl.glUniform2i(getUniformLocation(gl, name), x, y);
 	}
 
 	public void uniform2i(String name, int x, int y) {
-		gl.glUniform2i(getUniformLocation(name), x, y);
+		gl.glUniform2i(getUniformLocation(gl, name), x, y);
+	}
+
+	public void uniform3i(GL2GL3 gl, String name, int x, int y, int z) {
+		gl.glUniform3i(getUniformLocation(gl, name), x, y, z);
 	}
 
 	public void uniform3i(String name, int x, int y, int z) {
-		gl.glUniform3i(getUniformLocation(name), x, y, z);
+		gl.glUniform3i(getUniformLocation(gl, name), x, y, z);
+	}
+
+	public void uniform4i(GL2GL3 gl, String name, int x, int y, int z, int w) {
+		gl.glUniform4i(getUniformLocation(gl, name), x, y, z, w);
 	}
 
 	public void uniform4i(String name, int x, int y, int z, int w) {
-		gl.glUniform4i(getUniformLocation(name), x, y, z, w);
+		gl.glUniform4i(getUniformLocation(gl, name), x, y, z, w);
+	}
+
+	public void uniform1f(GL2GL3 gl, String name, float[] values) {
+		gl.glUniform1fv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
 	public void uniform1f(String name, float[] values) {
-		gl.glUniform1fv(getUniformLocation(name), values.length, values, 0);
+		gl.glUniform1fv(getUniformLocation(gl, name), values.length, values, 0);
+	}
+
+	public void uniform2f(GL2GL3 gl, String name, float[] values) {
+		gl.glUniform2fv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
 	public void uniform2f(String name, float[] values) {
-		gl.glUniform2fv(getUniformLocation(name), values.length, values, 0);
+		gl.glUniform2fv(getUniformLocation(gl, name), values.length, values, 0);
+	}
+
+	public void uniform3f(GL2GL3 gl, String name, float[] values) {
+		gl.glUniform3fv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
 	public void uniform3f(String name, float[] values) {
-		gl.glUniform3fv(getUniformLocation(name), values.length, values, 0);
+		gl.glUniform3fv(getUniformLocation(gl, name), values.length, values, 0);
+	}
+
+	public void uniform4f(GL2GL3 gl, String name, float[] values) {
+		gl.glUniform4fv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
 	public void uniform4f(String name, float[] values) {
-		gl.glUniform4fv(getUniformLocation(name), values.length, values, 0);
+		gl.glUniform4fv(getUniformLocation(gl, name), values.length, values, 0);
+	}
+
+	public void uniform1i(GL2GL3 gl, String name, int[] values) {
+		gl.glUniform1iv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
 	public void uniform1i(String name, int[] values) {
-		gl.glUniform1iv(getUniformLocation(name), values.length, values, 0);
+		gl.glUniform1iv(getUniformLocation(gl, name), values.length, values, 0);
+	}
+
+	public void uniform2i(GL2GL3 gl, String name, int[] values) {
+		gl.glUniform2iv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
 	public void uniform2i(String name, int[] values) {
-		gl.glUniform2iv(getUniformLocation(name), values.length, values, 0);
+		gl.glUniform2iv(getUniformLocation(gl, name), values.length, values, 0);
+	}
+
+	public void uniform3i(GL2GL3 gl, String name, int[] values) {
+		gl.glUniform3iv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
 	public void uniform3i(String name, int[] values) {
-		gl.glUniform3iv(getUniformLocation(name), values.length, values, 0);
+		gl.glUniform3iv(getUniformLocation(gl, name), values.length, values, 0);
+	}
+
+	public void uniform4i(GL2GL3 gl, String name, int[] values) {
+		gl.glUniform4iv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
 	public void uniform4i(String name, int[] values) {
-		gl.glUniform4iv(getUniformLocation(name), values.length, values, 0);
+		gl.glUniform4iv(getUniformLocation(gl, name), values.length, values, 0);
+	}
+
+	public void uniform(GL2GL3 gl, String name, Vector2 v) {
+		uniform2f(gl, name, (float) v.x, (float) v.y);
 	}
 
 	public void uniform(String name, Vector2 v) {
 		uniform2f(name, (float) v.x, (float) v.y);
 	}
 
+	public void uniform(GL2GL3 gl, String name, Vector3 v) {
+		uniform3f(gl, name, (float) v.x, (float) v.y, (float) v.z);
+	}
+
 	public void uniform(String name, Vector3 v) {
 		uniform3f(name, (float) v.x, (float) v.y, (float) v.z);
 	}
 
+	public void uniform(GL2GL3 gl, String name, Vector4 v) {
+		uniform4f(gl, name, (float) v.x, (float) v.y, (float) v.z, (float) v.w);
+	}
+
 	public void uniform(String name, Vector4 v) {
 		uniform4f(name, (float) v.x, (float) v.y, (float) v.z, (float) v.w);
+	}
+
+	public void uniform(GL2GL3 gl, String name, Matrix3 matrix,
+			boolean transpose) {
+		final double[] values = matrix.toArray();
+		final float[] floatValues = new float[values.length];
+		for (int i = 0; i < values.length; i++) {
+			floatValues[i] = (float) values[i];
+		}
+		gl.glUniformMatrix3fv(getUniformLocation(gl, name), 1, transpose,
+				floatValues, 0);
 	}
 
 	public void uniform(String name, Matrix3 matrix, boolean transpose) {
@@ -212,7 +344,17 @@ public class Program extends GLObject {
 		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
-		gl.glUniformMatrix3fv(getUniformLocation(name), 1, transpose,
+		gl.glUniformMatrix3fv(getUniformLocation(gl, name), 1, transpose,
+				floatValues, 0);
+	}
+
+	public void uniform(GL2GL3 gl, String name, Matrix3 matrix) {
+		final double[] values = matrix.toArray();
+		final float[] floatValues = new float[values.length];
+		for (int i = 0; i < values.length; i++) {
+			floatValues[i] = (float) values[i];
+		}
+		gl.glUniformMatrix3fv(getUniformLocation(gl, name), 1, false,
 				floatValues, 0);
 	}
 
@@ -222,8 +364,19 @@ public class Program extends GLObject {
 		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
-		gl.glUniformMatrix3fv(getUniformLocation(name), 1, false, floatValues,
-				0);
+		gl.glUniformMatrix3fv(getUniformLocation(gl, name), 1, false,
+				floatValues, 0);
+	}
+
+	public void uniform(GL2GL3 gl, String name, Matrix4 matrix,
+			boolean transpose) {
+		final double[] values = matrix.toArray();
+		final float[] floatValues = new float[values.length];
+		for (int i = 0; i < values.length; i++) {
+			floatValues[i] = (float) values[i];
+		}
+		gl.glUniformMatrix4fv(getUniformLocation(gl, name), 1, transpose,
+				floatValues, 0);
 	}
 
 	public void uniform(String name, Matrix4 matrix, boolean transpose) {
@@ -232,7 +385,17 @@ public class Program extends GLObject {
 		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
-		gl.glUniformMatrix4fv(getUniformLocation(name), 1, transpose,
+		gl.glUniformMatrix4fv(getUniformLocation(gl, name), 1, transpose,
+				floatValues, 0);
+	}
+
+	public void uniform(GL2GL3 gl, String name, Matrix4 matrix) {
+		final double[] values = matrix.toArray();
+		final float[] floatValues = new float[values.length];
+		for (int i = 0; i < values.length; i++) {
+			floatValues[i] = (float) values[i];
+		}
+		gl.glUniformMatrix4fv(getUniformLocation(gl, name), 1, false,
 				floatValues, 0);
 	}
 
@@ -242,25 +405,49 @@ public class Program extends GLObject {
 		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
-		gl.glUniformMatrix4fv(getUniformLocation(name), 1, false, floatValues,
-				0);
+		gl.glUniformMatrix4fv(getUniformLocation(gl, name), 1, false,
+				floatValues, 0);
+	}
+
+	public void uniform(GL2GL3 gl, String name, Texture2D texture) {
+		gl.glUniform1i(getUniformLocation(gl, name), texture.id);
 	}
 
 	public void uniform(String name, Texture2D texture) {
-		gl.glUniform1i(getUniformLocation(name), texture.id);
+		gl.glUniform1i(getUniformLocation(gl, name), texture.id);
+	}
+
+	public void getUniformfv(GL2GL3 gl, int location, float[] data) {
+		gl.glGetUniformfv(id, location, data, 0);
 	}
 
 	public void getUniformfv(int location, float[] data) {
 		gl.glGetUniformfv(id, location, data, 0);
 	}
 
+	public void getUniformiv(GL2GL3 gl, int location, int[] data) {
+		gl.glGetUniformiv(id, location, data, 0);
+	}
+
 	public void getUniformiv(int location, int[] data) {
 		gl.glGetUniformiv(id, location, data, 0);
+	}
+
+	public float getUniformf(GL2GL3 gl, int location) {
+		final float[] data = new float[1];
+		gl.glGetUniformfv(id, location, data, 0);
+		return data[0];
 	}
 
 	public float getUniformf(int location) {
 		final float[] data = new float[1];
 		gl.glGetUniformfv(id, location, data, 0);
+		return data[0];
+	}
+
+	public int getUniformi(GL2GL3 gl, int location) {
+		final int[] data = new int[1];
+		gl.glGetUniformiv(id, location, data, 0);
 		return data[0];
 	}
 
@@ -270,41 +457,79 @@ public class Program extends GLObject {
 		return data[0];
 	}
 
+	public void getUniformfv(GL2GL3 gl, String name, float[] data) {
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
+	}
+
 	public void getUniformfv(String name, float[] data) {
-		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
+	}
+
+	public void getUniformiv(GL2GL3 gl, String name, int[] data) {
+		gl.glGetUniformiv(id, getUniformLocation(gl, name), data, 0);
 	}
 
 	public void getUniformiv(String name, int[] data) {
-		gl.glGetUniformiv(id, getUniformLocation(name), data, 0);
+		gl.glGetUniformiv(id, getUniformLocation(gl, name), data, 0);
+	}
+
+	public float getUniformf(GL2GL3 gl, String name) {
+		final float[] data = new float[1];
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
+		return data[0];
 	}
 
 	public float getUniformf(String name) {
 		final float[] data = new float[1];
-		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
+		return data[0];
+	}
+
+	public int getUniformi(GL2GL3 gl, String name) {
+		final int[] data = new int[1];
+		gl.glGetUniformiv(id, getUniformLocation(gl, name), data, 0);
 		return data[0];
 	}
 
 	public int getUniformi(String name) {
 		final int[] data = new int[1];
-		gl.glGetUniformiv(id, getUniformLocation(name), data, 0);
+		gl.glGetUniformiv(id, getUniformLocation(gl, name), data, 0);
 		return data[0];
+	}
+
+	public Vector2 getUniformVector2(GL2GL3 gl, String name) {
+		final float[] data = new float[2];
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
+		return new Vector2(data[0], data[1]);
 	}
 
 	public Vector2 getUniformVector2(String name) {
 		final float[] data = new float[2];
-		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
 		return new Vector2(data[0], data[1]);
+	}
+
+	public Vector3 getUniformVector3(GL2GL3 gl, String name) {
+		final float[] data = new float[3];
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
+		return new Vector3(data[0], data[1], data[2]);
 	}
 
 	public Vector3 getUniformVector3(String name) {
 		final float[] data = new float[3];
-		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
 		return new Vector3(data[0], data[1], data[2]);
+	}
+
+	public Vector4 getUniformVector4(GL2GL3 gl, String name) {
+		final float[] data = new float[4];
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
+		return new Vector4(data[0], data[1], data[2], data[3]);
 	}
 
 	public Vector4 getUniformVector4(String name) {
 		final float[] data = new float[4];
-		gl.glGetUniformfv(id, getUniformLocation(name), data, 0);
+		gl.glGetUniformfv(id, getUniformLocation(gl, name), data, 0);
 		return new Vector4(data[0], data[1], data[2], data[3]);
 	}
 
@@ -312,7 +537,11 @@ public class Program extends GLObject {
 		gl.glDeleteProgram(id);
 	}
 
+	public boolean isDeleted(GL2GL3 gl) {
+		return get(gl, GL_DELETE_STATUS) != GL_FALSE;
+	}
+
 	public boolean isDeleted() {
-		return get(GL_DELETE_STATUS) != GL_FALSE;
+		return get(gl, GL_DELETE_STATUS) != GL_FALSE;
 	}
 }

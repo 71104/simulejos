@@ -76,10 +76,15 @@ public class Shader extends GLObject {
 		return SHADERS.putIfAbsent(id, new Shader(gl, id));
 	}
 
-	private int get(int name) {
+	private int get(GL2GL3 gl, int name) {
 		final int[] result = { 1234 };
 		gl.glGetShaderiv(id, name, result, 0);
 		return result[0];
+	}
+
+	public void source(GL2GL3 gl, String source) {
+		final String[] sources = { source };
+		gl.glShaderSource(id, 1, sources, null, 0);
 	}
 
 	public void source(String source) {
@@ -87,27 +92,53 @@ public class Shader extends GLObject {
 		gl.glShaderSource(id, 1, sources, null, 0);
 	}
 
+	public void source(GL2GL3 gl, Reader source) throws IOException {
+		source(gl, new FullReader(source).readAll());
+	}
+
 	public void source(Reader source) throws IOException {
 		source(new FullReader(source).readAll());
 	}
 
-	public String getSource() {
-		final int length = get(GL_SHADER_SOURCE_LENGTH);
+	public String getSource(GL2GL3 gl) {
+		final int length = get(gl, GL_SHADER_SOURCE_LENGTH);
 		final byte[] source = new byte[length];
 		gl.glGetShaderSource(id, length, null, 0, source, 0);
 		return new String(source);
+	}
+
+	public String getSource() {
+		final int length = get(gl, GL_SHADER_SOURCE_LENGTH);
+		final byte[] source = new byte[length];
+		gl.glGetShaderSource(id, length, null, 0, source, 0);
+		return new String(source);
+	}
+
+	public void compile(GL2GL3 gl) {
+		gl.glCompileShader(id);
 	}
 
 	public void compile() {
 		gl.glCompileShader(id);
 	}
 
+	public boolean isCompiled(GL2GL3 gl) {
+		return get(gl, GL_COMPILE_STATUS) != GL_FALSE;
+	}
+
 	public boolean isCompiled() {
-		return get(GL_COMPILE_STATUS) != GL_FALSE;
+		return get(gl, GL_COMPILE_STATUS) != GL_FALSE;
+	}
+
+	public String getInfoLog(GL2GL3 gl) {
+		final int length = get(gl, GL_INFO_LOG_LENGTH);
+		final byte[] log = new byte[length];
+		gl.glGetShaderInfoLog(id, length, null, 0, log, 0);
+		return new String(log);
 	}
 
 	public String getInfoLog() {
-		final int length = get(GL_INFO_LOG_LENGTH);
+		final int length = get(gl, GL_INFO_LOG_LENGTH);
 		final byte[] log = new byte[length];
 		gl.glGetShaderInfoLog(id, length, null, 0, log, 0);
 		return new String(log);
@@ -117,7 +148,11 @@ public class Shader extends GLObject {
 		gl.glDeleteShader(id);
 	}
 
+	public boolean isDeleted(GL2GL3 gl) {
+		return get(gl, GL_DELETE_STATUS) != GL_FALSE;
+	}
+
 	public boolean isDeleted() {
-		return get(GL_DELETE_STATUS) != GL_FALSE;
+		return get(gl, GL_DELETE_STATUS) != GL_FALSE;
 	}
 }
