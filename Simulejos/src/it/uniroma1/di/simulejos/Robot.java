@@ -366,6 +366,8 @@ public final class Robot implements Serializable {
 					logWriter.println("terminated regularly");
 				} catch (Exception e) {
 					throw new RuntimeException(e);
+				} catch (Throwable t) {
+					throw t;
 				} finally {
 					running = false;
 					suspended = false;
