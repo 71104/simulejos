@@ -110,11 +110,11 @@ public final class Floor implements Externalizable {
 
 	void drawForSensor(GL2GL3 gl, Program program) {
 		if (texture != null) {
-			program.uniform1i("UseTexture", GL_TRUE);
-			texture.bind();
+			program.uniform1i(gl, "UseTexture", GL_TRUE);
+			texture.bind(gl);
 		} else {
-			program.uniform1i("UseTexture", GL_FALSE);
+			program.uniform1i(gl, "UseTexture", GL_FALSE);
 		}
-		arrays.bindAndDraw(GL_TRIANGLE_FAN);
+		arrays.bindAndDraw(gl, GL_TRIANGLE_FAN);
 	}
 }

@@ -463,8 +463,8 @@ public final class Robot implements Serializable {
 	}
 
 	void drawForSensor(GL2GL3 gl, Program program) {
-		program.uniform("TargetRobotPosition", position);
-		program.uniform("TargetRobotHeading", heading);
-		elements.bindAndDraw(GL_TRIANGLES);
+		program.uniform(gl, "TargetRobotPosition", position);
+		program.uniform(gl, "TargetRobotHeading", heading);
+		elements.bindAndDraw(gl, GL_TRIANGLES);
 	}
 }

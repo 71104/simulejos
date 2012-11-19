@@ -72,6 +72,13 @@ public class Elements {
 		arrays.add(new DoubleArray(gl, nextIndex++, components, data));
 	}
 
+	public void bind(GL2GL3 gl) {
+		elementArray.bind(gl);
+		for (VertexArray array : arrays) {
+			array.bind(gl);
+		}
+	}
+
 	public void bind() {
 		elementArray.bind();
 		for (VertexArray array : arrays) {
@@ -79,7 +86,19 @@ public class Elements {
 		}
 	}
 
+	public void draw(GL2GL3 gl, int mode) {
+		gl.glDrawElements(mode, count, GL_UNSIGNED_SHORT, 0);
+	}
+
 	public void draw(int mode) {
+		gl.glDrawElements(mode, count, GL_UNSIGNED_SHORT, 0);
+	}
+
+	public void bindAndDraw(GL2GL3 gl, int mode) {
+		elementArray.bind(gl);
+		for (VertexArray array : arrays) {
+			array.bind(gl);
+		}
 		gl.glDrawElements(mode, count, GL_UNSIGNED_SHORT, 0);
 	}
 
