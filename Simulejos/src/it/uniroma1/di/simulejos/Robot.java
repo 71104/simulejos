@@ -384,7 +384,7 @@ public final class Robot implements Serializable {
 	void suspend() {
 		if (running) {
 			threads.suspend();
-			running = false;
+			running = true;
 			suspended = true;
 			motorA.timer.suspend();
 			motorB.timer.suspend();
