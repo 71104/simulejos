@@ -47,6 +47,7 @@ public final class Robot implements Serializable {
 	public final String mainClassName;
 	public final String script;
 	public final ModelData modelData;
+	public final BoundingBox boundingBox;
 	private volatile Vector3 position;
 	private volatile Matrix3 heading;
 	private volatile Matrix3 inverseHeading;
@@ -88,6 +89,10 @@ public final class Robot implements Serializable {
 				2 / maxSpan);
 		this.inverseHeading = Matrix3.createScaling(maxSpan / 2, maxSpan / 2,
 				maxSpan / 2);
+
+		this.boundingBox = new BoundingBox(
+				modelData.boundingBox.min.by(2 / maxSpan),
+				modelData.boundingBox.max.by(2 / maxSpan));
 
 		this.robotInterface = new RobotInterface();
 	}
@@ -175,7 +180,7 @@ public final class Robot implements Serializable {
 	}
 
 	public final class RobotInterface {
-		public final BoundingBox boundingBox = modelData.boundingBox;
+		public final BoundingBox boundingBox = Robot.this.boundingBox;
 
 		private RobotInterface() {
 		}

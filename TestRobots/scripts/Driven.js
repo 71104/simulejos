@@ -1,7 +1,7 @@
 importPackage(Packages.it.uniroma1.di.simulejos.math);
 
 var wheelSpan = robot.boundingBox.size.x;
-var wheelDiameter = robot.boundingBox.size.y * 0.8;
+var wheelDiameter = robot.boundingBox.size.y;
 
 robot.S1.compassSensor(Matrix3.create([1, 0, 0, 0, 1, 0, 0, 0, 1]));
 

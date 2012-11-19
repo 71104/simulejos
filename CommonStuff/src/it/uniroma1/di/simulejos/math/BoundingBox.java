@@ -10,6 +10,13 @@ public class BoundingBox implements Cloneable, Serializable {
 	public final Vector3 size;
 	public final Vector3 center;
 
+	public BoundingBox(Vector3 min, Vector3 max) {
+		this.min = min;
+		this.max = max;
+		this.size = max.minus(min);
+		this.center = min.plus(max).by(0.5);
+	}
+
 	public BoundingBox(float[] vertices) {
 		if (vertices.length < 4) {
 			throw new IllegalArgumentException();
