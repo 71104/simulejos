@@ -23,7 +23,7 @@ public class Texture2D extends GLObject {
 		bind();
 		setMinFilter(GL_LINEAR);
 		setMagFilter(GL_LINEAR);
-		image(0, image);
+		image(image);
 	}
 
 	public void bind() {
@@ -124,6 +124,29 @@ public class Texture2D extends GLObject {
 		final int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
 		gl.glTexImage2D(GL_TEXTURE_2D, level, 4, width, height, 0, GL_BGRA,
 				GL_UNSIGNED_INT_8_8_8_8_REV, IntBuffer.wrap(pixels));
+	}
+
+	public void image(BufferedImage image) {
+		final int width = image.getWidth();
+		final int height = image.getHeight();
+		final int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
+		gl.glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0, GL_BGRA,
+				GL_UNSIGNED_INT_8_8_8_8_REV, IntBuffer.wrap(pixels));
+	}
+
+	public void copyImage(int level, int x, int y, int width, int height,
+			int border) {
+		gl.glCopyTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, x, y, width, height,
+				border);
+	}
+
+	public void copyImage(int x, int y, int width, int height, int border) {
+		gl.glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, width, height,
+				border);
+	}
+
+	public void copyImage(int x, int y, int width, int height) {
+		gl.glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, width, height, 0);
 	}
 
 	public void delete() {

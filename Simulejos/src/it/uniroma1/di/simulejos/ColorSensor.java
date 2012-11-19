@@ -52,6 +52,7 @@ final class ColorSensor extends GPUSensor implements
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
+		super.init(drawable);
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
 		floorProgram = new Program(gl, ColorSensor.class, "floor_color",
 				new String[] { "in_Vertex" });
@@ -82,7 +83,16 @@ final class ColorSensor extends GPUSensor implements
 		for (Robot robot : robots) {
 			robot.drawForSensor(gl, robotProgram);
 		}
+		gl.glFinish();
 		gl.glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
 				IntBuffer.wrap(value));
+		super.display(drawable);
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		floorProgram.delete();
+		robotProgram.delete();
+		super.dispose(drawable);
 	}
 }

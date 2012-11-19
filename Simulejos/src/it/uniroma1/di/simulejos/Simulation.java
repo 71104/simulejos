@@ -27,6 +27,12 @@ import static javax.media.opengl.GL2GL3.*;
 public final class Simulation implements Serializable {
 	private static final long serialVersionUID = -290517947218502549L;
 
+	private static volatile boolean debugMode;
+
+	public static void setDebugMode(boolean debug) {
+		Simulation.debugMode = debug;
+	}
+
 	public final Camera camera = new Camera();
 	public final Floor floor = new Floor();
 	private final List<Robot> robotList = new LinkedList<>();
@@ -39,12 +45,6 @@ public final class Simulation implements Serializable {
 	private transient volatile PrintWriter simulationLogWriter;
 
 	private transient volatile Program robotProgram;
-
-	private static volatile boolean debugMode;
-
-	public static void setDebugMode(boolean debug) {
-		Simulation.debugMode = debug;
-	}
 
 	private static GL2GL3 getGL(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();

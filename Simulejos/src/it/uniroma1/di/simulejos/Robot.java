@@ -137,14 +137,17 @@ public final class Robot implements Serializable {
 			}
 		}
 
-		public final void resetBuffer(GL2GL3 gl) {
-			this.buffer = GLDrawableFactory
+		private final void resetBuffer(GL2GL3 gl) {
+			if (buffer != null) {
+				buffer.destroy();
+			}
+			buffer = GLDrawableFactory
 					.getFactory(GLProfile.getDefault())
 					.createOffscreenAutoDrawable(
 							null,
 							new GLCapabilities(GLProfile.get(GLProfile.GL2GL3)),
 							null, width, height, gl.getContext());
-			this.buffer.addGLEventListener(this);
+			buffer.addGLEventListener(this);
 		}
 
 		public final void tick() {
@@ -160,6 +163,10 @@ public final class Robot implements Serializable {
 		@Override
 		public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 				int height) {
+		}
+
+		@Override
+		public void display(GLAutoDrawable drawable) {
 		}
 
 		@Override

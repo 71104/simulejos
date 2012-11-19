@@ -246,6 +246,10 @@ public class Program extends GLObject {
 				0);
 	}
 
+	public void uniform(String name, Texture2D texture) {
+		gl.glUniform1i(getUniformLocation(name), texture.id);
+	}
+
 	public void getUniformfv(int location, float[] data) {
 		gl.glGetUniformfv(id, location, data, 0);
 	}

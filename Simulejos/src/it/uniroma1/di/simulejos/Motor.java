@@ -4,6 +4,7 @@ import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 
 final class Motor implements SimulatorInterface.Motor {
 	private static final int RPM = 160;
+	private static final long ONE_MINUTE_IN_NANOSECONDS = 60000000000l;
 
 	public static final class Timer {
 		private volatile long offset;
@@ -17,21 +18,21 @@ final class Motor implements SimulatorInterface.Motor {
 			if (suspended) {
 				return suspendTimestamp - offset;
 			} else {
-				return System.currentTimeMillis() - offset;
+				return System.nanoTime() - offset;
 			}
 		}
 
 		public synchronized void suspend() {
 			if (!suspended) {
 				suspended = true;
-				suspendTimestamp = System.currentTimeMillis();
+				suspendTimestamp = System.nanoTime();
 			}
 		}
 
 		public synchronized void resume() {
 			if (suspended) {
 				suspended = false;
-				offset += System.currentTimeMillis() - suspendTimestamp;
+				offset += System.nanoTime() - suspendTimestamp;
 			}
 		}
 	}
@@ -69,10 +70,10 @@ final class Motor implements SimulatorInterface.Motor {
 	private double delta(long timestamp) {
 		if (mode == Mode.FORWARD) {
 			return (timestamp - lastTimestamp) * (power * RPM / 100.0)
-					/ 60000.0;
+					/ (double) ONE_MINUTE_IN_NANOSECONDS;
 		} else if (mode == Mode.BACKWARD) {
 			return (lastTimestamp - timestamp) * (power * RPM / 100.0)
-					/ 60000.0;
+					/ (double) ONE_MINUTE_IN_NANOSECONDS;
 		} else {
 			return 0;
 		}

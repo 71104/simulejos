@@ -48,6 +48,7 @@ final class LightSensor extends GPUSensor implements
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
+		super.init(drawable);
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
 		floorProgram = new Program(gl, ColorSensor.class, "floor_light",
 				new String[] { "in_Vertex" });
@@ -80,6 +81,7 @@ final class LightSensor extends GPUSensor implements
 			System.err.print(x + ", ");
 		}
 		System.err.println();
+		gl.glFinish();
 		if (floodLight) {
 			gl.glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT,
 					FloatBuffer.wrap(value));
@@ -87,5 +89,13 @@ final class LightSensor extends GPUSensor implements
 			gl.glReadPixels(0, 0, 1, 1, GL_LUMINANCE, GL_FLOAT,
 					FloatBuffer.wrap(value));
 		}
+		super.display(drawable);
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		floorProgram.delete();
+		robotProgram.delete();
+		super.dispose(drawable);
 	}
 }
