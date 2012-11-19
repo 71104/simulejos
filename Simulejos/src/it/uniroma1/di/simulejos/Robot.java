@@ -161,6 +161,11 @@ public final class Robot implements Serializable {
 			}
 		}
 
+		private final void destroy() {
+			buffer.destroy();
+			buffer = null;
+		}
+
 		@Override
 		public void init(GLAutoDrawable drawable) {
 		}
@@ -408,6 +413,10 @@ public final class Robot implements Serializable {
 			motorA.setMode(Motor.Mode.FLOAT);
 			motorB.setMode(Motor.Mode.FLOAT);
 			motorC.setMode(Motor.Mode.FLOAT);
+			for (GPUSensor sensor : gpuSensors) {
+				sensor.destroy();
+			}
+			gpuSensors.clear();
 		}
 	}
 

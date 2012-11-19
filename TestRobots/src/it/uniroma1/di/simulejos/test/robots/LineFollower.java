@@ -38,7 +38,7 @@ public class LineFollower {
 		RegulatedMotor rightMotor = PilotProps.getMotor(pp.getProperty(
 				PilotProps.KEY_RIGHTMOTOR, "B"));
 		boolean reverse = Boolean.parseBoolean(pp.getProperty(
-				PilotProps.KEY_REVERSE, "true"));
+				PilotProps.KEY_REVERSE, "false"));
 
 		// Change last parameter of Pilot to specify on which
 		// direction you want to be "forward" for your vehicle.
