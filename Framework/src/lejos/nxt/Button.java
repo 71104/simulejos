@@ -108,11 +108,21 @@ public class Button implements ListenerCaller {
 	}
 
 	public static int waitForAnyEvent(int timeout) {
-		return anyEvent.waitEvent(timeout);
+		final Integer result = anyEvent.waitEvent(timeout);
+		if (result != null) {
+			return result;
+		} else {
+			return 0;
+		}
 	}
 
 	public static int waitForAnyPress(int timeout) {
-		return anyPress.waitEvent(timeout);
+		final Integer result = anyPress.waitEvent(timeout);
+		if (result != null) {
+			return result;
+		} else {
+			return 0;
+		}
 	}
 
 	public static int waitForAnyPress() {
