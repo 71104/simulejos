@@ -92,6 +92,10 @@ public final class Floor implements Externalizable {
 		updateTexture(gl);
 	}
 
+	void share(GL2GL3 gl) {
+		arrays.share(gl);
+	}
+
 	void draw(GL2GL3 gl, Camera camera) {
 		if (updateTexture) {
 			updateTexture(gl);

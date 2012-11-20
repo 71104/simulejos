@@ -72,6 +72,12 @@ public class Elements {
 		arrays.add(new DoubleArray(gl, nextIndex++, components, data));
 	}
 
+	public void share(GL2GL3 gl) {
+		for (VertexArray array : arrays) {
+			array.share(gl);
+		}
+	}
+
 	public void bind(GL2GL3 gl) {
 		elementArray.bind(gl);
 		for (VertexArray array : arrays) {

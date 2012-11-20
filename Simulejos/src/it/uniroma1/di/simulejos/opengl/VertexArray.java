@@ -196,6 +196,10 @@ public class VertexArray extends GLObject {
 		gl.glVertexAttribPointer(index, components, GL_DOUBLE, normalize, 0, 0);
 	}
 
+	public final void share(GL2GL3 gl) {
+		gl.glEnableVertexAttribArray(id);
+	}
+
 	public final void bind(GL2GL3 gl) {
 		buffer.bind(gl);
 		gl.glVertexAttribPointer(id, components, type, normalize, 0, 0);

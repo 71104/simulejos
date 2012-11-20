@@ -118,11 +118,6 @@ public final class Robot implements Serializable {
 		protected final Vector3 transform(Vector3 v) {
 			return position.plus(heading.by(v));
 		}
-
-		protected final void uniform(Program program) {
-			program.uniform("RobotPosition", position);
-			program.uniform("InverseRobotHeading", inverseHeading);
-		}
 	}
 
 	abstract class GPUSensor extends Sensor implements GLEventListener {
@@ -164,6 +159,11 @@ public final class Robot implements Serializable {
 		private final void destroy() {
 			buffer.destroy();
 			buffer = null;
+		}
+
+		protected final void uniform(Program program) {
+			program.uniform("RobotPosition", position);
+			program.uniform("InverseRobotHeading", inverseHeading);
 		}
 
 		@Override
@@ -459,6 +459,10 @@ public final class Robot implements Serializable {
 		for (GPUSensor sensor : gpuSensors) {
 			sensor.resetBuffer(gl);
 		}
+	}
+
+	void share(GL2GL3 gl) {
+		elements.share(gl);
 	}
 
 	void draw(GL2GL3 gl, Program program) {

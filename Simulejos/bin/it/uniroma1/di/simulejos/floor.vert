@@ -33,10 +33,10 @@ mat4 ModelViewProjection = mat4(
 );
 
 attribute vec4 in_Vertex;
-varying vec4 ex_Position;
+varying vec4 ex_Vertex;
 
 void main() {
-	ex_Position = mat4(
+	ex_Vertex = mat4(
 		1, 0, 0, 0,
 		0, 0, 1, 0,
 		0, 1, 0, 0,

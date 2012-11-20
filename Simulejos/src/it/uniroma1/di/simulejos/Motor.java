@@ -88,7 +88,7 @@ final class Motor implements SimulatorInterface.Motor {
 		final long timestamp = timer.getTimestamp();
 		count += delta(timestamp);
 		lastTimestamp = timestamp;
-		this.power = power;
+		this.power = Math.max(Math.min(power, 100), 0);
 		this.mode = mode;
 	}
 

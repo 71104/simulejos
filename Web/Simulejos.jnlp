@@ -18,10 +18,6 @@
 	<resources>
 		<j2se href="http://java.sun.com/products/autodl/j2se" version="1.7+"/>
 		<jar href="Simulejos.jar" main="true"/>
-	</resources>
-
-	<resources>
-		<j2se href="http://java.sun.com/products/autodl/j2se" version="1.4+"/>
 		<extension name="jogl-all-awt" href="http://jogamp.org/deployment/jogamp-current/jogl-all-awt.jnlp" />
 	</resources>
 

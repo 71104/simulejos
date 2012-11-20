@@ -6,13 +6,15 @@ var wheelDiameter = robot.boundingBox.size.y;
 robot.S1.lightSensor(
 	new Vector3(
 		robot.boundingBox.center.x,
-		robot.boundingBox.center.y + robot.boundingBox.size.y * -0.49,
-		robot.boundingBox.center.z + robot.boundingBox.size.z * 0.5
+		robot.boundingBox.min.y + 0.1,
+		robot.boundingBox.max.z + 0.1
 		),
-	Matrix3.create([1, 0, 0, 0, 0, 1, 0, -1, 0])
+	Matrix3.create([1, 0, 0, 0, 0, -1, 0, 1, 0])
 	);
 
 function tick(daa, dab, dac) {
+	daa /= 3;
+	dab /= 3;
 	var dsa = daa * wheelDiameter * Math.PI;
 	var dsb = dab * wheelDiameter * Math.PI;
 	if (dsa != dsb) {

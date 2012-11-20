@@ -6,6 +6,8 @@ var wheelDiameter = robot.boundingBox.size.y;
 robot.S1.compassSensor(Matrix3.create([1, 0, 0, 0, 1, 0, 0, 0, 1]));
 
 function tick(daa, dab, dac) {
+	daa /= 3;
+	dab /= 3;
 	var dsa = daa * wheelDiameter * Math.PI;
 	var dsb = dab * wheelDiameter * Math.PI;
 	if (dsa != dsb) {
