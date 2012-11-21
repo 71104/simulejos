@@ -72,11 +72,17 @@ public final class Floor implements Externalizable {
 	private void updateTexture(GL2GL3 gl) {
 		if (textureImage != null) {
 			texture = new Texture2D(gl, textureImage);
+			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			if (!repeatX) {
 				texture.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 			}
 			if (!repeatY) {
 				texture.parameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			}
+			if (gl.isExtensionAvailable("GL_EXT_texture_filter_anisotropic")) {
+				final float[] anisotropy = new float[1];
+				gl.glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, anisotropy, 0);
+				texture.parameter(GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropy[0]);
 			}
 		} else {
 			texture = null;

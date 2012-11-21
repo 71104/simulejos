@@ -20,7 +20,7 @@ final class LightSensor extends GPUSensor implements
 	private volatile Program floorProgram;
 	private volatile Program robotProgram;
 
-	private final float[] value = new float[1];
+	private volatile int value;
 	private volatile boolean floodLight = true;
 
 	public LightSensor(Robot robot, Vector3 position, Matrix3 heading) {
@@ -31,7 +31,7 @@ final class LightSensor extends GPUSensor implements
 
 	@Override
 	public int getLight() {
-		return 1023 - Math.round(value[0] * 1023);
+		return value;
 	}
 
 	@Override
@@ -77,13 +77,16 @@ final class LightSensor extends GPUSensor implements
 		// robot.drawForSensor(gl, robotProgram);
 		// }
 		gl.glFinish();
+		final float[] values = new float[1];
 		if (floodLight) {
 			gl.glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT,
-					FloatBuffer.wrap(value));
+					FloatBuffer.wrap(values));
 		} else {
 			gl.glReadPixels(0, 0, 1, 1, GL_LUMINANCE, GL_FLOAT,
-					FloatBuffer.wrap(value));
+					FloatBuffer.wrap(values));
 		}
+		value = 1023 - Math.round(values[0] * 1023);
+		System.err.println(value);
 	}
 
 	@Override

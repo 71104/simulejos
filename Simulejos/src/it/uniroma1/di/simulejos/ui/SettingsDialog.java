@@ -85,7 +85,7 @@ final class SettingsDialog extends JDialog {
 				g.setColor(Color.LIGHT_GRAY);
 				g.fillRect(0, 0, 200, 200);
 				if (floorTexture != null) {
-					g.drawImage(floorTexture, 0, 0, null);
+					g.drawImage(floorTexture, 0, 0, 200, 200, null);
 				}
 			}
 		};

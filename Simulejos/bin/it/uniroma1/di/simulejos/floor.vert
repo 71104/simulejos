@@ -36,11 +36,11 @@ attribute vec4 in_Vertex;
 varying vec4 ex_Vertex;
 
 void main() {
+	gl_Position = ModelViewProjection * in_Vertex;
 	ex_Vertex = mat4(
-		1, 0, 0, 0,
-		0, 0, 1, 0,
+		0.5, 0, 0, 0,
+		0, 0, 0.5, 0,
 		0, 1, 0, 0,
 		0, 0, 0, 1
 	) * in_Vertex;
-	gl_Position = ModelViewProjection * in_Vertex;
 }
