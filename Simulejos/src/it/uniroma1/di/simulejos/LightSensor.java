@@ -54,9 +54,9 @@ final class LightSensor extends GPUSensor implements
 				new String[] { "in_Vertex" });
 		gl.glClearColor(0, 0, 0, 1);
 		gl.glEnable(GL_DEPTH_TEST);
-		gl.glDepthFunc(GL_LESS);
-		gl.glClearDepth(1);
-		// gl.glEnable(GL_CULL_FACE);
+		gl.glClearDepth(0);
+		gl.glDepthFunc(GL_GREATER);
+		gl.glEnable(GL_CULL_FACE);
 	}
 
 	@Override
@@ -65,17 +65,17 @@ final class LightSensor extends GPUSensor implements
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		floorProgram.use();
 		floorProgram.uniform("SensorPosition", position);
-		floorProgram.uniform("InverseSensorHeading", inverseHeading);
+		floorProgram.uniform("InverseSensorHeading", inverseHeading, true);
 		uniform(floorProgram);
 		floor.drawForSensor(gl, floorProgram);
-		// robotProgram.use();
-		// robotProgram.uniform("SensorPosition", position);
-		// robotProgram.uniform("InverseSensorHeading", heading);
-		// uniform(robotProgram);
-		// for (Robot robot : robots) {
-		// robot.share(gl);
-		// robot.drawForSensor(gl, robotProgram);
-		// }
+		robotProgram.use();
+		robotProgram.uniform("SensorPosition", position);
+		robotProgram.uniform("InverseSensorHeading", inverseHeading, true);
+		uniform(robotProgram);
+		for (Robot robot : robots) {
+			robot.share(gl);
+			robot.drawForSensor(gl, robotProgram);
+		}
 		gl.glFinish();
 		final float[] values = new float[1];
 		if (floodLight) {
@@ -86,7 +86,6 @@ final class LightSensor extends GPUSensor implements
 					FloatBuffer.wrap(values));
 		}
 		value = 1023 - Math.round(values[0] * 1023);
-		System.err.println(value);
 	}
 
 	@Override

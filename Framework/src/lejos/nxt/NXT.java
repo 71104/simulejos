@@ -17,6 +17,7 @@ public class NXT {
 	 */
 	public static void shutDown() {
 		Bridge.getLog().println("NXT.shutDown() called");
+		Bridge.getLog().flush();
 		Bridge.getSimulator().shutDown();
 	}
 

@@ -78,6 +78,7 @@ public final class Simulejos extends JFrame {
 			}
 		}
 		simulation.discard();
+		logWindow.setText("");
 		return true;
 	}
 
