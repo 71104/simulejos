@@ -19,7 +19,7 @@ public class Camera implements Serializable {
 	private volatile double angleY;
 
 	private static final double ROTATION_DELTA = 0.1;
-	private static final double MOVING_DELTA = 1;
+	private static final double MOVING_DELTA = 0.3;
 
 	private transient volatile GLJPanel canvas;
 
@@ -53,8 +53,8 @@ public class Camera implements Serializable {
 				break;
 			case KeyEvent.VK_A:
 				position = position
-						.minus(new Vector3(MOVING_DELTA * Math.sin(angleX), 0,
-								MOVING_DELTA * -Math.cos(angleX)));
+						.minus(new Vector3(MOVING_DELTA * Math.cos(angleX), 0,
+								MOVING_DELTA * Math.sin(angleX)));
 				break;
 			case KeyEvent.VK_D:
 				position = position

@@ -44,7 +44,7 @@ public final class Simulejos extends JFrame {
 		canvas.setFocusable(true);
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent event) {
 				canvas.requestFocusInWindow();
 			}
 		});

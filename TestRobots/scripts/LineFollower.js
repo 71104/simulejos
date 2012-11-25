@@ -14,10 +14,12 @@ robot.S1.lightSensor(
 	);
 
 function tick(daa, dab, dac) {
+	daa *= 4; // rapporto di trasmissione
+	dab *= 4; // rapporto di trasmissione
 	if (daa != dab) {
 		var ra = daa * wheelSpan / (dab - daa);
 		var radius = ra + wheelSpan / 2;
-		var angle = daa * wheelRadius / ra;
+		var angle = (daa + dab) / (2 * radius);
 		robot.moveBy(radius * (Math.cos(angle) - 1), 0, radius * Math.sin(angle));
 		robot.rotateBy(0, 1, 0, angle);
 	} else {
