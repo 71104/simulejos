@@ -65,12 +65,12 @@ final class LightSensor extends GPUSensor implements
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		floorProgram.use();
 		floorProgram.uniform("SensorPosition", position);
-		floorProgram.uniform("InverseSensorHeading", inverseHeading, true);
+		floorProgram.uniform("InverseSensorHeading", inverseHeading);
 		uniform(floorProgram);
 		floor.drawForSensor(gl, floorProgram);
 		robotProgram.use();
 		robotProgram.uniform("SensorPosition", position);
-		robotProgram.uniform("InverseSensorHeading", inverseHeading, true);
+		robotProgram.uniform("InverseSensorHeading", inverseHeading);
 		uniform(robotProgram);
 		for (Robot robot : robots) {
 			robot.share(gl);

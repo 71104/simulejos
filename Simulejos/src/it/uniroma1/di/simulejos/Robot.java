@@ -163,7 +163,7 @@ public final class Robot implements Serializable {
 
 		protected final void uniform(Program program) {
 			program.uniform("RobotPosition", position);
-			program.uniform("InverseRobotHeading", inverseHeading, true);
+			program.uniform("InverseRobotHeading", inverseHeading);
 		}
 
 		@Override

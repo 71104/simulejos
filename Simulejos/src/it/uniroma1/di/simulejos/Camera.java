@@ -4,7 +4,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 import java.io.Serializable;
 
 import javax.media.opengl.awt.GLJPanel;
@@ -20,30 +19,53 @@ public class Camera implements Serializable {
 	private volatile double angleY;
 
 	private static final double ROTATION_DELTA = 0.1;
+	private static final double MOVING_DELTA = 1;
 
 	private transient volatile GLJPanel canvas;
 
 	private transient final KeyAdapter keyListener = new KeyAdapter() {
 		@Override
-		public void keyTyped(KeyEvent event) {
+		public void keyPressed(KeyEvent event) {
 			switch (event.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				angleX -= ROTATION_DELTA;
-				break;
-			case KeyEvent.VK_RIGHT:
 				angleX += ROTATION_DELTA;
 				break;
+			case KeyEvent.VK_RIGHT:
+				angleX -= ROTATION_DELTA;
+				break;
 			case KeyEvent.VK_UP:
-				angleY -= ROTATION_DELTA;
+				angleY += ROTATION_DELTA;
 				break;
 			case KeyEvent.VK_DOWN:
-				angleY += ROTATION_DELTA;
+				angleY -= ROTATION_DELTA;
+				break;
+			case KeyEvent.VK_W:
+				position = position.plus(new Vector3(MOVING_DELTA
+						* Math.cos(angleX + Math.PI / 2), MOVING_DELTA
+						* Math.sin(angleY), MOVING_DELTA
+						* Math.sin(angleX + Math.PI / 2)));
+				break;
+			case KeyEvent.VK_S:
+				position = position.minus(new Vector3(MOVING_DELTA
+						* Math.cos(angleX + Math.PI / 2), MOVING_DELTA
+						* Math.sin(angleY), MOVING_DELTA
+						* Math.sin(angleX + Math.PI / 2)));
+				break;
+			case KeyEvent.VK_A:
+				position = position
+						.minus(new Vector3(MOVING_DELTA * Math.sin(angleX), 0,
+								MOVING_DELTA * -Math.cos(angleX)));
+				break;
+			case KeyEvent.VK_D:
+				position = position
+						.plus(new Vector3(MOVING_DELTA * Math.cos(angleX), 0,
+								MOVING_DELTA * Math.sin(angleX)));
 				break;
 			default:
 				return;
 			}
 			if (canvas != null) {
-				canvas.display();
+				canvas.repaint();
 			}
 		}
 	};
@@ -67,14 +89,6 @@ public class Camera implements Serializable {
 			canvas.repaint();
 			x0 = x;
 			y0 = y;
-		}
-
-		@Override
-		public void mouseWheelMoved(MouseWheelEvent event) {
-			position = position.plus(new Vector3(
-					Math.cos(angleY + Math.PI / 2), Math.sin(angleX), Math
-							.sin(angleY + Math.PI / 2)));
-			canvas.repaint();
 		}
 	};
 

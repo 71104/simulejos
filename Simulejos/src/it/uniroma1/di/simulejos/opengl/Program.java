@@ -354,7 +354,7 @@ public class Program extends GLObject {
 		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
-		gl.glUniformMatrix3fv(getUniformLocation(gl, name), 1, false,
+		gl.glUniformMatrix3fv(getUniformLocation(gl, name), 1, true,
 				floatValues, 0);
 	}
 
@@ -364,7 +364,7 @@ public class Program extends GLObject {
 		for (int i = 0; i < values.length; i++) {
 			floatValues[i] = (float) values[i];
 		}
-		gl.glUniformMatrix3fv(getUniformLocation(gl, name), 1, false,
+		gl.glUniformMatrix3fv(getUniformLocation(gl, name), 1, true,
 				floatValues, 0);
 	}
 

@@ -2,6 +2,7 @@ importPackage(Packages.it.uniroma1.di.simulejos.math);
 
 var wheelSpan = robot.boundingBox.size.x;
 var wheelDiameter = robot.boundingBox.size.y;
+var wheelRadius = wheelDiameter / 2;
 
 robot.S1.lightSensor(
 	new Vector3(
@@ -13,16 +14,13 @@ robot.S1.lightSensor(
 	);
 
 function tick(daa, dab, dac) {
-	daa /= 3;
-	dab /= 3;
-	var dsa = daa * wheelDiameter * Math.PI;
-	var dsb = dab * wheelDiameter * Math.PI;
-	if (dsa != dsb) {
-		var radius = wheelSpan * (dsa + dsb) / (2 * (dsb - dsa));
-		var angle = (dab - daa) * Math.PI;
+	if (daa != dab) {
+		var ra = daa * wheelSpan / (dab - daa);
+		var radius = ra + wheelSpan / 2;
+		var angle = daa * wheelRadius / ra;
 		robot.moveBy(radius * (Math.cos(angle) - 1), 0, radius * Math.sin(angle));
 		robot.rotateBy(0, 1, 0, angle);
 	} else {
-		robot.moveBy(0, 0, dsa);
+		robot.moveBy(0, 0, daa * wheelRadius);
 	}
 }

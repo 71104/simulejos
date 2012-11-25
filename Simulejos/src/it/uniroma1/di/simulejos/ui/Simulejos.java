@@ -5,6 +5,8 @@ import it.uniroma1.di.simulejos.Simulation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.io.File;
@@ -40,7 +42,12 @@ public final class Simulejos extends JFrame {
 	{
 		canvas.setPreferredSize(new Dimension(800, 600));
 		canvas.setFocusable(true);
-		canvas.requestFocusInWindow();
+		canvas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				canvas.requestFocusInWindow();
+			}
+		});
 	}
 
 	private final LogWindow logWindow = new LogWindow();
