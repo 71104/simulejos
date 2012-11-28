@@ -28,10 +28,10 @@ public class Matrix3 implements Cloneable, Serializable {
 		final double s = Math.sin(a);
 		final double c = Math.cos(a);
 		return new Matrix3(new double[] { c + x * x * (1 - c),
-				x * y * (1 - c) - z * s, x * z * (1 - c) + y * s,
-				y * x * (1 - c) + z * s, c + y * y * (1 - c),
-				y * z * (1 - c) - x * s, z * x * (1 - c) - y * s,
-				z * y * (1 - c) + x * s, c + z * z * (1 - c) });
+				y * x * (1 - c) + z * s, z * x * (1 - c) - y * s,
+				x * y * (1 - c) - z * s, c + y * y * (1 - c),
+				z * y * (1 - c) + x * s, x * z * (1 - c) + y * s,
+				y * z * (1 - c) - x * s, c + z * z * (1 - c) });
 	}
 
 	public static Matrix3 createScaling(double x, double y, double z) {

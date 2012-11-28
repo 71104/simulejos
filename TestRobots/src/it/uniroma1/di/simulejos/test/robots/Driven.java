@@ -9,7 +9,7 @@ import lejos.robotics.DirectionFinder;
 import lejos.util.DebugMessages;
 
 public final class Driven {
-	private static volatile int currentSpeed = 150;
+	private static volatile int currentSpeed = 300;
 	private static final DirectionFinder compass = new CompassHTSensor(
 			SensorPort.S1);
 
@@ -57,7 +57,7 @@ public final class Driven {
 			}, new ButtonHandler(Button.ENTER) {
 				@Override
 				public void onPress() {
-					currentSpeed += 100;
+					currentSpeed += 200;
 					Motor.A.setSpeed(currentSpeed);
 					Motor.B.setSpeed(currentSpeed);
 					Motor.A.forward();
@@ -67,7 +67,7 @@ public final class Driven {
 			}, new ButtonHandler(Button.ESCAPE) {
 				@Override
 				public void onPress() {
-					currentSpeed = Math.max(currentSpeed - 100, 0);
+					currentSpeed = Math.max(currentSpeed - 200, 0);
 					Motor.A.setSpeed(currentSpeed);
 					Motor.B.setSpeed(currentSpeed);
 					messages.echo("slower");
