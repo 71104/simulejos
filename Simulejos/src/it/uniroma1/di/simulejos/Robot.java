@@ -9,6 +9,7 @@ import it.uniroma1.di.simulejos.opengl.Program;
 
 import java.awt.Frame;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
@@ -238,8 +239,7 @@ public final class Robot implements Serializable {
 		public final SensorPort S4 = new SensorPort();
 
 		public void moveBy(double dx, double dy, double dz) {
-			position = position
-					.plus(inverseHeading.by(new Vector3(dx, dy, dz)));
+			position = position.plus(heading.by(new Vector3(dx, dy, dz)));
 		}
 
 		public void rotateBy(double x, double y, double z, double da) {
@@ -340,6 +340,11 @@ public final class Robot implements Serializable {
 					bridge = classLoader
 							.loadClass("it.uniroma1.di.simulejos.bridge.Bridge");
 				} catch (ClassNotFoundException e) {
+					try {
+						classLoader.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					throw new RuntimeException(e);
 				}
 				try {
@@ -348,6 +353,11 @@ public final class Robot implements Serializable {
 							"NXT" + index, simulator);
 				} catch (IllegalAccessException | InvocationTargetException
 						| NoSuchMethodException e) {
+					try {
+						classLoader.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					throw new RuntimeException(e);
 				}
 				final Class<?> mainClass;
@@ -358,6 +368,11 @@ public final class Robot implements Serializable {
 							"Unable to find the specified main class "
 									+ mainClassName, "Simulejos",
 							JOptionPane.ERROR_MESSAGE);
+					try {
+						classLoader.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					return;
 				}
 				try {
@@ -366,8 +381,6 @@ public final class Robot implements Serializable {
 					logWriter.println("terminated regularly");
 				} catch (Exception e) {
 					throw new RuntimeException(e);
-				} catch (Throwable t) {
-					throw t;
 				} finally {
 					running = false;
 					suspended = false;
@@ -376,6 +389,11 @@ public final class Robot implements Serializable {
 					} catch (IllegalAccessException | InvocationTargetException
 							| NoSuchMethodException e) {
 						throw new RuntimeException(e);
+					}
+					try {
+						classLoader.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
 					}
 				}
 			}

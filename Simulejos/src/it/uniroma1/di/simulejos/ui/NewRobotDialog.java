@@ -292,8 +292,10 @@ final class NewRobotDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				try {
-					final String script = new FullReader(new FileReader(
-							scriptChooser.getSelectedFile())).readAll();
+					final FullReader reader = new FullReader(new FileReader(
+							scriptChooser.getSelectedFile()));
+					final String script = reader.readAll();
+					reader.close();
 					simulation.addRobot(classPathChooser.getSelectedFile(),
 							classList.getSelectedItem().toString(), script,
 							modelChooser.getSelectedFile(),

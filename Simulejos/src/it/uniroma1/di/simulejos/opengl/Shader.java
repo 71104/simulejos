@@ -93,11 +93,21 @@ public class Shader extends GLObject {
 	}
 
 	public void source(GL2GL3 gl, Reader source) throws IOException {
-		source(gl, new FullReader(source).readAll());
+		final FullReader reader = new FullReader(source);
+		try {
+			source(gl, reader.readAll());
+		} finally {
+			reader.close();
+		}
 	}
 
 	public void source(Reader source) throws IOException {
-		source(new FullReader(source).readAll());
+		final FullReader reader = new FullReader(source);
+		try {
+			source(reader.readAll());
+		} finally {
+			reader.close();
+		}
 	}
 
 	public String getSource(GL2GL3 gl) {
