@@ -56,6 +56,7 @@ final class NXTWindow extends JDialog implements BrickInterface {
 		}
 	};
 
+	private volatile boolean suspended;
 	private volatile int buttonState = 0;
 	private final ConcurrentMap<Token, ButtonListener> buttonListeners = new ConcurrentHashMap<Token, ButtonListener>();
 
@@ -83,17 +84,23 @@ final class NXTWindow extends JDialog implements BrickInterface {
 				buttons.add(this).addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent event) {
-						buttonState = buttonState | (1 << index);
-						for (ButtonListener listener : buttonListeners.values()) {
-							listener.onPress(index);
+						if (!suspended) {
+							buttonState = buttonState | (1 << index);
+							for (ButtonListener listener : buttonListeners
+									.values()) {
+								listener.onPress(index);
+							}
 						}
 					}
 
 					@Override
 					public void mouseReleased(MouseEvent event) {
-						buttonState = buttonState & ~(1 << index);
-						for (ButtonListener listener : buttonListeners.values()) {
-							listener.onRelease(index);
+						if (!suspended) {
+							buttonState = buttonState & ~(1 << index);
+							for (ButtonListener listener : buttonListeners
+									.values()) {
+								listener.onRelease(index);
+							}
 						}
 					}
 				});
@@ -115,6 +122,16 @@ final class NXTWindow extends JDialog implements BrickInterface {
 		pack();
 		setLocationByPlatform(true);
 		setVisible(true);
+	}
+
+	@Override
+	public void suspend() {
+		suspended = true;
+	}
+
+	@Override
+	public void resume() {
+		suspended = false;
 	}
 
 	@Override

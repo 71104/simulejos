@@ -1,6 +1,10 @@
 package it.uniroma1.di.simulejos.bridge;
 
 public interface BrickInterface {
+	void suspend();
+
+	void resume();
+
 	void updateDisplay(boolean[] data);
 
 	boolean[] readDisplay();

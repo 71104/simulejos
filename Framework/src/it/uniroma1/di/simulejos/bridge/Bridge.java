@@ -40,6 +40,18 @@ public final class Bridge {
 			}
 		});
 		brick = new NXTWindow(simulator.getParentWindow(), robotName);
+		simulator.onSuspend(new Runnable() {
+			@Override
+			public void run() {
+				brick.suspend();
+			}
+		});
+		simulator.onResume(new Runnable() {
+			@Override
+			public void run() {
+				brick.resume();
+			}
+		});
 
 		System.setOut(new PrintStream(new LCDOutputStream()));
 		System.setErr(new PrintStream(new OutputStream() {

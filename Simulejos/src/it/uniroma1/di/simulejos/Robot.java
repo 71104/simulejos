@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL2GL3;
@@ -256,6 +257,9 @@ public final class Robot implements Serializable {
 	private transient final List<GPUSensor> gpuSensors = new LinkedList<GPUSensor>();
 
 	private class Simulator implements SimulatorInterface {
+		private final List<Runnable> suspendHandlers = new Vector<Runnable>();
+		private final List<Runnable> resumeHandlers = new Vector<Runnable>();
+
 		@Override
 		public String getRobotName() {
 			return "NXT" + index;
@@ -269,6 +273,33 @@ public final class Robot implements Serializable {
 		@Override
 		public PrintWriter getLogWriter() {
 			return logWriter;
+		}
+
+		@Override
+		public void onSuspend(Runnable runnable) {
+			suspendHandlers.add(runnable);
+		}
+
+		@Override
+		public void onResume(Runnable runnable) {
+			resumeHandlers.add(runnable);
+		}
+
+		public void suspend() {
+			for (Runnable runnable : suspendHandlers) {
+				runnable.run();
+			}
+		}
+
+		public void resume() {
+			for (Runnable runnable : resumeHandlers) {
+				runnable.run();
+			}
+		}
+
+		public void stop() {
+			suspendHandlers.clear();
+			resumeHandlers.clear();
 		}
 
 		@Override
@@ -407,6 +438,7 @@ public final class Robot implements Serializable {
 	@SuppressWarnings("deprecation")
 	void suspend() {
 		if (running) {
+			simulator.suspend();
 			threads.suspend();
 			running = true;
 			suspended = true;
@@ -425,12 +457,14 @@ public final class Robot implements Serializable {
 			running = true;
 			suspended = false;
 			threads.resume();
+			simulator.resume();
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	void stop() {
 		if (running) {
+			simulator.stop();
 			threads.stop();
 			running = false;
 			suspended = false;

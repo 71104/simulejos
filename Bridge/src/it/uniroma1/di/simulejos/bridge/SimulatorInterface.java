@@ -12,6 +12,10 @@ public interface SimulatorInterface {
 
 	PrintWriter getLogWriter();
 
+	void onSuspend(Runnable runnable);
+
+	void onResume(Runnable runnable);
+
 	static interface Motor {
 		static enum Mode {
 			FORWARD, BACKWARD, STOP, FLOAT
