@@ -161,6 +161,10 @@ public class Vector3 implements Cloneable, Serializable {
 		return new Vector3(x * f, y * f, z * f);
 	}
 
+	public Vector3 div(double f) {
+		return new Vector3(x / f, y / f, z / f);
+	}
+
 	public double dot(Vector3 v) {
 		return x * v.x + y * v.y + z * v.z;
 	}

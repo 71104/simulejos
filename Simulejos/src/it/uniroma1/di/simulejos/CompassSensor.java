@@ -3,7 +3,6 @@ package it.uniroma1.di.simulejos;
 import it.uniroma1.di.simulejos.Robot.Sensor;
 import it.uniroma1.di.simulejos.bridge.SimulatorInterface;
 import it.uniroma1.di.simulejos.math.Matrix3;
-import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
 
 final class CompassSensor extends Sensor implements
@@ -21,10 +20,8 @@ final class CompassSensor extends Sensor implements
 	}
 
 	private double getAbsoluteAngle() {
-		final Vector3 needle = head(heading.by(Vector3.K));
-		final Vector2 flatNeedle = new Vector2(needle.z, -needle.x);
-		return (Math.PI * 2 - Math.atan2(flatNeedle.y, flatNeedle.x))
-				% (Math.PI * 2);
+		final Vector3 needle = head(heading.by(Vector3.I));
+		return Math.atan2(needle.z, needle.x);
 	}
 
 	@Override

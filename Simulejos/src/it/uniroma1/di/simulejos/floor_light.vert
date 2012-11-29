@@ -1,6 +1,7 @@
 #version 120
 
 uniform float Focus = 2;
+uniform vec2 Size = vec2(2, 2);
 uniform vec3 RobotPosition;
 uniform mat3 InverseRobotHeading;
 uniform vec3 SensorPosition;
@@ -32,9 +33,9 @@ void main() {
 		0, -1, 0, 1
 	) * in_Vertex;
 	ex_Vertex = mat4(
-		0.5, 0, 0, 0,
+		1 / Size.x, 0, 0, 0,
 		0, 0, 1, 0,
-		0, -0.5, 0, 0,
+		0, -1 / Size.y, 0, 0,
 		0, 0, 0, 1
 	) * in_Vertex;
 }

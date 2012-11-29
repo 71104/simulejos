@@ -1,6 +1,6 @@
 package it.uniroma1.di.simulejos;
 
-import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
@@ -11,29 +11,25 @@ import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Program;
 
+import static javax.media.opengl.GL.GL_FLOAT;
+import static javax.media.opengl.GL.GL_LUMINANCE;
 import static javax.media.opengl.GL2GL3.*;
 
 final class ColorSensor extends GPUSensor implements
 		SimulatorInterface.ColorSensor {
 	private final Vector3 position;
-	private final Matrix3 heading;
 	private final Matrix3 inverseHeading;
 	private volatile Program floorProgram;
 	private volatile Program robotProgram;
 
-	private volatile FloodLight floodLight = FloodLight.FULL;
-	private final int[] value = new int[1];
+	private volatile int value;
+	private volatile FloodLight floodLight;
+	private volatile Vector3 color;
 
 	public ColorSensor(Robot robot, Vector3 position, Matrix3 heading) {
 		robot.super(1, 1);
 		this.position = position;
-		this.heading = heading;
 		this.inverseHeading = heading.invert();
-	}
-
-	@Override
-	public int getColor() {
-		return value[0];
 	}
 
 	@Override
@@ -43,24 +39,30 @@ final class ColorSensor extends GPUSensor implements
 
 	@Override
 	public void setFloodLight(FloodLight light) {
-		if (light != null) {
-			this.floodLight = light;
-		} else {
-			throw new IllegalArgumentException();
-		}
+		this.floodLight = light;
+		final int color = floodLight.getColor();
+		this.color = new Vector3((double) ((color >> 16) & 0xFF) / 0xFF,
+				(double) ((color >> 8) & 0xFF) / 0xFF,
+				(double) (color & 0xFF) / 0xFF);
+	}
+
+	@Override
+	public int getColor() {
+		return value;
 	}
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
-		floorProgram = new Program(gl, ColorSensor.class, "floor_color",
+		floorProgram = new Program(gl, getClass(), "floor_color",
 				new String[] { "in_Vertex" });
-		robotProgram = new Program(gl, ColorSensor.class, "robot_color",
+		floor.share(gl);
+		robotProgram = new Program(gl, getClass(), "robot_color",
 				new String[] { "in_Vertex" });
-		gl.glClearColor(0, 0, 0, 0);
+		gl.glClearColor(0, 0, 0, 1);
 		gl.glEnable(GL_DEPTH_TEST);
-		gl.glDepthFunc(GL_LESS);
-		gl.glClearDepth(1);
+		gl.glClearDepth(0);
+		gl.glDepthFunc(GL_GREATER);
 		gl.glEnable(GL_CULL_FACE);
 	}
 
@@ -69,22 +71,25 @@ final class ColorSensor extends GPUSensor implements
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		floorProgram.use();
-		floorProgram.uniform("Color", Vector3.RED);
+		floorProgram.uniform("Color", color);
 		floorProgram.uniform("SensorPosition", position);
 		floorProgram.uniform("InverseSensorHeading", inverseHeading);
 		uniform(floorProgram);
 		floor.drawForSensor(gl, floorProgram);
 		robotProgram.use();
-		robotProgram.uniform("Color", Vector3.RED);
+		robotProgram.uniform("Color", color);
 		robotProgram.uniform("SensorPosition", position);
-		robotProgram.uniform("InverseSensorHeading", heading);
+		robotProgram.uniform("InverseSensorHeading", inverseHeading);
 		uniform(robotProgram);
 		for (Robot robot : robots) {
+			robot.share(gl);
 			robot.drawForSensor(gl, robotProgram);
 		}
 		gl.glFinish();
-		gl.glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
-				IntBuffer.wrap(value));
+		final float[] values = new float[1];
+		gl.glReadPixels(0, 0, 1, 1, GL_LUMINANCE, GL_FLOAT,
+				FloatBuffer.wrap(values));
+		value = 1023 - Math.round(values[0] * 1023);
 	}
 
 	@Override

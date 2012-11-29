@@ -303,6 +303,14 @@ public class Program extends GLObject {
 		gl.glUniform4iv(getUniformLocation(gl, name), values.length, values, 0);
 	}
 
+	public void uniform(GL2GL3 gl, String name, boolean value) {
+		uniform1i(gl, name, value ? 1 : 0);
+	}
+
+	public void uniform(String name, boolean value) {
+		uniform1i(name, value ? 1 : 0);
+	}
+
 	public void uniform(GL2GL3 gl, String name, Vector2 v) {
 		uniform2f(gl, name, (float) v.x, (float) v.y);
 	}

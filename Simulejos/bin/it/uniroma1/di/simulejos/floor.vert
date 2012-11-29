@@ -5,6 +5,8 @@ uniform struct {
 	vec3 Position;
 } Camera;
 
+uniform vec2 Size = vec2(2, 2);
+
 mat4 ModelViewProjection = mat4(
 	1, 0, 0, 0,
 	0, 1, 0, 0,
@@ -38,9 +40,9 @@ varying vec4 ex_Vertex;
 void main() {
 	gl_Position = ModelViewProjection * in_Vertex;
 	ex_Vertex = mat4(
-		0.5, 0, 0, 0,
+		1 / Size.x, 0, 0, 0,
 		0, 0, 1, 0,
-		0, -0.5, 0, 0,
+		0, -1 / Size.y, 0, 0,
 		0, 0, 0, 1
 	) * in_Vertex;
 }

@@ -1,5 +1,7 @@
 package it.uniroma1.di.simulejos.bridge;
 
+import it.uniroma1.di.simulejos.math.Vector3;
+
 import java.awt.Frame;
 import java.io.PrintWriter;
 
@@ -105,6 +107,12 @@ public interface SimulatorInterface {
 
 	static interface UltrasonicSensor extends Sensor {
 		// TODO
+	}
+
+	static interface Accelerometer extends Sensor {
+		Vector3 getTilt();
+
+		Vector3 getAcceleration();
 	}
 
 	Sensor getS1();

@@ -132,6 +132,10 @@ public class Vector2 implements Cloneable, Serializable {
 		return new Vector2(x * f, y * f);
 	}
 
+	public Vector2 div(double f) {
+		return new Vector2(x / f, y / f);
+	}
+
 	public double dot(Vector2 v) {
 		return x * v.x + y * v.y;
 	}

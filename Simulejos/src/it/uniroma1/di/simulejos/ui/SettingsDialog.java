@@ -119,6 +119,8 @@ final class SettingsDialog extends JDialog {
 		}), constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
 
+		// TODO relative size spin controls
+
 		final JCheckBox repeatXField = new JCheckBox("Repeat X",
 				simulation.floor.isRepeatX());
 		constraints.gridx = 1;
@@ -143,7 +145,7 @@ final class SettingsDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				simulation.floor.configure(floorTexture,
+				simulation.floor.configure(floorTexture, 2, 2,
 						repeatXField.isSelected(), repeatYField.isSelected());
 				dispose();
 			}

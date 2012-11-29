@@ -228,6 +228,10 @@ public final class Robot implements Serializable {
 						heading));
 			}
 
+			public void accelerometer() {
+				initializeSensor(new Accelerometer());
+			}
+
 			public SimulatorInterface.Sensor getSensor() {
 				return sensor;
 			}

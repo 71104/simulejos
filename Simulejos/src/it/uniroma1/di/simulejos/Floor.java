@@ -19,6 +19,8 @@ import static javax.media.opengl.GL2GL3.*;
 
 public final class Floor implements Externalizable {
 	private volatile BufferedImage textureImage;
+	private volatile float width;
+	private volatile float depth;
 	private volatile boolean repeatX;
 	private volatile boolean repeatY;
 	private transient volatile boolean updateTexture;
@@ -61,9 +63,11 @@ public final class Floor implements Externalizable {
 		return repeatY;
 	}
 
-	public void configure(BufferedImage textureImage, boolean repeatX,
-			boolean repeatY) {
+	public void configure(BufferedImage textureImage, float width, float depth,
+			boolean repeatX, boolean repeatY) {
 		this.textureImage = textureImage;
+		this.width = width;
+		this.depth = depth;
 		this.repeatX = repeatX;
 		this.repeatY = repeatY;
 		this.updateTexture = true;
@@ -110,20 +114,22 @@ public final class Floor implements Externalizable {
 		program.use();
 		camera.uniform(program);
 		if (texture != null) {
-			program.uniform1i("UseTexture", GL_TRUE);
+			program.uniform("UseTexture", true);
+			program.uniform2f("Size", width, depth);
 			texture.bind();
 		} else {
-			program.uniform1i("UseTexture", GL_FALSE);
+			program.uniform("UseTexture", false);
 		}
 		arrays.bindAndDraw(GL_TRIANGLE_FAN);
 	}
 
 	void drawForSensor(GL2GL3 gl, Program program) {
 		if (texture != null) {
-			program.uniform1i(gl, "UseTexture", GL_TRUE);
+			program.uniform(gl, "UseTexture", true);
+			program.uniform2f("Size", width, depth);
 			texture.bind(gl);
 		} else {
-			program.uniform1i(gl, "UseTexture", GL_FALSE);
+			program.uniform(gl, "UseTexture", false);
 		}
 		arrays.bindAndDraw(gl, GL_TRIANGLE_FAN);
 	}
