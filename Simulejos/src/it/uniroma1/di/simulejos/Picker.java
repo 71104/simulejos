@@ -15,6 +15,7 @@ import javax.media.opengl.GLProfile;
 import static javax.media.opengl.GL2GL3.*;
 
 public final class Picker {
+	private final Camera camera;
 	private final Iterable<Robot> robots;
 	private volatile GLAutoDrawable buffer;
 
@@ -24,7 +25,7 @@ public final class Picker {
 		public final int x;
 		public final int y;
 
-		private PickRequest(int x, int y) {
+		public PickRequest(int x, int y) {
 			this.x = x;
 			this.y = y;
 			Picker.this.request = this;
@@ -37,7 +38,8 @@ public final class Picker {
 		public abstract void handle(int passThrough, Vector3 position);
 	}
 
-	Picker(Iterable<Robot> robots) {
+	Picker(Camera camera, Iterable<Robot> robots) {
+		this.camera = camera;
 		this.robots = robots;
 	}
 
@@ -82,6 +84,7 @@ public final class Picker {
 				if (request != null) {
 					final GL2GL3 gl = drawable.getGL().getGL2GL3();
 					gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+					camera.uniform(gl, program);
 					for (Robot robot : robots) {
 						robot.share(gl);
 						robot.drawForPicker(gl, program);

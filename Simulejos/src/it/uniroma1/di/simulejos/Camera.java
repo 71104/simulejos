@@ -2,9 +2,8 @@ package it.uniroma1.di.simulejos;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
+import javax.media.opengl.GL2GL3;
 import javax.media.opengl.awt.GLJPanel;
 
 import it.uniroma1.di.simulejos.math.Vector3;
@@ -61,43 +60,28 @@ public class Camera {
 			default:
 				return;
 			}
-			if (canvas != null) {
-				canvas.repaint();
-			}
-		}
-	};
-
-	private final MouseAdapter mouseListener = new MouseAdapter() {
-		private volatile int x0;
-		private volatile int y0;
-
-		@Override
-		public void mousePressed(MouseEvent event) {
-			x0 = event.getX();
-			y0 = event.getY();
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent event) {
-			final int x = event.getX();
-			final int y = event.getY();
-			angleX += Math.toRadians(x - x0) / 4;
-			angleY += Math.toRadians(y - y0) / 4;
-			canvas.repaint();
-			x0 = x;
-			y0 = y;
+			canvas.display();
 		}
 	};
 
 	Camera(GLJPanel canvas) {
 		this.canvas = canvas;
 		canvas.addKeyListener(keyListener);
-		canvas.addMouseListener(mouseListener);
-		canvas.addMouseMotionListener(mouseListener);
 	}
 
 	public void uniform(Program program) {
 		program.uniform("Camera.Position", position);
 		program.uniform2f("Camera.Angle", (float) angleX, (float) angleY);
+	}
+
+	public void uniform(GL2GL3 gl, Program program) {
+		program.uniform(gl, "Camera.Position", position);
+		program.uniform2f(gl, "Camera.Angle", (float) angleX, (float) angleY);
+	}
+
+	public void rotate(double dx, double dy) {
+		angleX += dx;
+		angleY += dy;
+		canvas.display();
 	}
 }

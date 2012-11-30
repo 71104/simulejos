@@ -15,11 +15,11 @@ public final class Floor {
 	private volatile float depth;
 	private volatile boolean repeatX;
 	private volatile boolean repeatY;
-	private transient volatile boolean updateTexture;
+	private volatile boolean updateTexture;
 
-	private transient volatile Program program;
-	private transient volatile Arrays arrays;
-	private transient volatile Texture2D texture;
+	private volatile Program program;
+	private volatile Arrays arrays;
+	private volatile Texture2D texture;
 
 	public boolean isRepeatX() {
 		return repeatX;

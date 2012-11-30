@@ -660,7 +660,7 @@ public final class Robot {
 	void drawForPicker(GL2GL3 gl, Program program) {
 		program.uniform(gl, "Position", position);
 		program.uniform(gl, "Heading", heading);
-		program.uniform1f(gl, "PassThorugh", (float) (index + 1) / 1024);
-		elements.draw(GL_TRIANGLES);
+		program.uniform1f(gl, "PassThrough", (float) (index + 1) / 1024);
+		elements.bindAndDraw(gl, GL_TRIANGLES);
 	}
 }

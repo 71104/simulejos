@@ -9,7 +9,7 @@ import javax.media.opengl.awt.GLJPanel;
 final class Canvas extends GLJPanel {
 	private static final long serialVersionUID = 4619660049948947766L;
 
-	{
+	public Canvas(MouseAdapter mouseHandler) {
 		setPreferredSize(new Dimension(800, 600));
 		setFocusable(true);
 		addMouseListener(new MouseAdapter() {
@@ -18,5 +18,7 @@ final class Canvas extends GLJPanel {
 				requestFocusInWindow();
 			}
 		});
+		addMouseListener(mouseHandler);
+		addMouseMotionListener(mouseHandler);
 	}
 }

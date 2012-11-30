@@ -34,6 +34,7 @@ public final class Simulation {
 	public final Floor floor = new Floor();
 	private final List<Robot> robotList = new LinkedList<>();
 	public final Iterable<Robot> robots = robotList;
+	public final Picker picker;
 	private volatile boolean dirty;
 
 	private final Frame parentWindow;
@@ -43,8 +44,6 @@ public final class Simulation {
 	private volatile PrintWriter simulationLogWriter;
 
 	private volatile Program robotProgram;
-
-	public final Picker picker = new Picker(robots);
 
 	private static GL2GL3 getGL(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
@@ -62,6 +61,7 @@ public final class Simulation {
 				"Simulation", logWriter));
 		this.canvas = canvas;
 		this.camera = new Camera(canvas);
+		this.picker = new Picker(camera, robots);
 		canvas.addGLEventListener(new GLEventListener() {
 			@Override
 			public void init(GLAutoDrawable drawable) {
@@ -108,6 +108,7 @@ public final class Simulation {
 				robotProgram.delete();
 			}
 		});
+		canvas.addGLEventListener(picker.new CanvasHandler());
 	}
 
 	public boolean isDirty() {

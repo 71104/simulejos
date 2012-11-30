@@ -1,9 +1,13 @@
 package it.uniroma1.di.simulejos.ui;
 
+import it.uniroma1.di.simulejos.Robot;
 import it.uniroma1.di.simulejos.Simulation;
+import it.uniroma1.di.simulejos.math.Vector3;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.io.IOException;
@@ -29,38 +33,124 @@ import javax.swing.SwingUtilities;
 public final class Simulejos extends JFrame {
 	private static final long serialVersionUID = 1344391485057572344L;
 
+	private static abstract class CursorState {
+		public void mousePressed(int x, int y) {
+		}
+
+		public void mouseMoved(int x, int y) {
+		}
+
+		public void mouseReleased(int x, int y) {
+		}
+	}
+
+	public final CursorState navigateCursorState = new CursorState() {
+		private volatile boolean pressed;
+		private volatile int x0;
+		private volatile int y0;
+
+		@Override
+		public void mousePressed(int x, int y) {
+			pressed = true;
+			x0 = x;
+			y0 = y;
+		}
+
+		@Override
+		public void mouseMoved(int x, int y) {
+			if (pressed) {
+				simulation.camera.rotate(Math.toRadians(x - x0) / 4,
+						Math.toRadians(y - y0) / 4);
+				x0 = x;
+				y0 = y;
+			}
+		}
+
+		@Override
+		public void mouseReleased(int x, int y) {
+			pressed = false;
+		}
+	};
+
+	public final CursorState moveRobotCursorState = new CursorState() {
+		@Override
+		public void mousePressed(int x, int y) {
+			// TODO
+		}
+
+		@Override
+		public void mouseMoved(int x, int y) {
+			// TODO
+		}
+
+		@Override
+		public void mouseReleased(int x, int y) {
+			// TODO
+		}
+	};
+
+	public final CursorState deleteRobotCursorState = new CursorState() {
+		private volatile int hilitedIndex = -1;
+
+		@Override
+		public void mouseMoved(int x, int y) {
+			simulation.picker.new PickRequest(x, y) {
+				@Override
+				public void handle(int passThrough, Vector3 position) {
+					hilitedIndex = passThrough;
+					for (Robot robot : simulation.robots) {
+						robot.hilited = (robot.index == hilitedIndex);
+					}
+					canvas.repaint();
+				}
+			};
+		}
+
+		@Override
+		public void mouseReleased(int x, int y) {
+			if ((hilitedIndex != -1)
+					&& (JOptionPane.showConfirmDialog(Simulejos.this,
+							"Do you actually want to delete NXT" + hilitedIndex
+									+ "?", "Simulejos",
+							JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION)) {
+				// TODO
+			}
+		}
+	};
+
+	private volatile CursorState cursorState = navigateCursorState;
+
+	private final MouseAdapter mouseHandler = new MouseAdapter() {
+		@Override
+		public void mouseMoved(MouseEvent event) {
+			cursorState.mouseMoved(event.getX(), event.getY());
+		}
+
+		@Override
+		public void mousePressed(MouseEvent event) {
+			cursorState.mousePressed(event.getX(), event.getY());
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent event) {
+			cursorState.mouseReleased(event.getX(), event.getY());
+		}
+	};
+
 	private final JSplitPane splitPane = new JSplitPane(
 			JSplitPane.VERTICAL_SPLIT);
-	private volatile GLJPanel canvas = new Canvas();
+	private volatile GLJPanel canvas = new Canvas(mouseHandler);
 	private final LogWindow logWindow = new LogWindow();
 	private volatile Simulation simulation = new Simulation(this, canvas,
 			logWindow.getWriter());
 
-	private boolean discard() {
-		if (simulation.isDirty()
-				&& (JOptionPane.showConfirmDialog(this,
+	private boolean canDiscard() {
+		return !simulation.isDirty()
+				|| (JOptionPane.showConfirmDialog(this,
 						"Do you want to discard the current simulation?",
 						"Simulejos", JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.WARNING_MESSAGE) != JOptionPane.OK_OPTION)) {
-			return false;
-		}
-		simulation.stop();
-		logWindow.setText("");
-		return true;
-	}
-
-	private boolean reset() {
-		if (discard()) {
-			final GLAutoDrawable oldCanvas = canvas;
-			canvas = new Canvas();
-			splitPane.setLeftComponent(canvas);
-			oldCanvas.destroy();
-			simulation = new Simulation(this, canvas, logWindow.getWriter());
-			canvas.repaint();
-			return true;
-		} else {
-			return false;
-		}
+						JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION);
 	}
 
 	private static abstract class MyAction extends AbstractAction {
@@ -85,7 +175,17 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			reset();
+			if (canDiscard()) {
+				simulation.stop();
+				final GLAutoDrawable oldCanvas = canvas;
+				canvas = new Canvas(mouseHandler);
+				simulation = new Simulation(Simulejos.this, canvas,
+						logWindow.getWriter());
+				splitPane.setLeftComponent(canvas);
+				oldCanvas.destroy();
+				logWindow.setText("");
+				canvas.repaint();
+			}
 		}
 	};
 	public final Action EXIT_ACTION = new AbstractAction("Exit") {
@@ -93,7 +193,9 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (reset()) {
+			if (canDiscard()) {
+				simulation.stop();
+				canvas.destroy();
 				dispose();
 			}
 		}
@@ -115,6 +217,32 @@ public final class Simulejos extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			new NewRobotDialog(Simulejos.this, simulation);
 			canvas.repaint();
+		}
+	};
+	public final Action NAVIGATE_ACTION = new MyAction("Navigate world",
+			"navigate") {
+		private static final long serialVersionUID = 2357493963267102486L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			cursorState = navigateCursorState;
+		}
+	};
+	public final Action MOVE_ACTION = new MyAction("Move robot", "move") {
+		private static final long serialVersionUID = 2357493963267102486L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			cursorState = moveRobotCursorState;
+		}
+	};
+	public final Action DELETE_ACTION = new MyAction("Delete robot...",
+			"delete") {
+		private static final long serialVersionUID = 2357493963267102486L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			cursorState = deleteRobotCursorState;
 		}
 	};
 	public final Action PLAY_ACTION = new MyAction("Play", "play") {
@@ -175,6 +303,10 @@ public final class Simulejos extends JFrame {
 		toolbar.add(SETTINGS_ACTION);
 		toolbar.addSeparator();
 		toolbar.add(ADD_ROBOT_ACTION);
+		toolbar.addSeparator();
+		toolbar.add(NAVIGATE_ACTION);
+		toolbar.add(MOVE_ACTION);
+		toolbar.add(DELETE_ACTION);
 		toolbar.addSeparator();
 		toolbar.add(PLAY_ACTION);
 		toolbar.add(SUSPEND_ACTION);
