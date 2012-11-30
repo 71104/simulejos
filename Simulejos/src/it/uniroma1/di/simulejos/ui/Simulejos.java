@@ -9,12 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -24,7 +19,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -33,7 +27,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public final class Simulejos extends JFrame {
 	private static final long serialVersionUID = 1344391485057572344L;
@@ -51,102 +44,29 @@ public final class Simulejos extends JFrame {
 	}
 
 	private final LogWindow logWindow = new LogWindow();
-
-	private volatile Simulation simulation = new Simulation();
-	{
-		simulation.setUI(this, canvas, logWindow.getWriter());
-	}
-
-	private volatile File file = null;
-	private final JFileChooser fileChooser = new JFileChooser();
-	{
-		fileChooser.setFileFilter(new FileNameExtensionFilter(
-				"Simulation files", "sim"));
-		fileChooser.setAcceptAllFileFilterUsed(true);
-	}
+	private volatile Simulation simulation = new Simulation(this, canvas,
+			logWindow.getWriter());
 
 	private boolean discard() {
-		if (simulation.isDirty()) {
-			switch (JOptionPane
-					.showConfirmDialog(
-							this,
-							"The current simulation has unsaved changes. Do you want to save it first?",
-							"Simulejos", JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.WARNING_MESSAGE)) {
-			case JOptionPane.YES_OPTION:
-				if (!save()) {
-					return false;
-				}
-				break;
-			case JOptionPane.NO_OPTION:
-				break;
-			default:
-				return false;
-			}
+		if (simulation.isDirty()
+				&& (JOptionPane.showConfirmDialog(this,
+						"Do you want to discard the current simulation?",
+						"Simulejos", JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.WARNING_MESSAGE) != JOptionPane.OK_OPTION)) {
+			return false;
 		}
-		simulation.discard();
+		simulation.stop();
 		logWindow.setText("");
 		return true;
 	}
 
 	private boolean reset() {
 		if (discard()) {
-			simulation = new Simulation();
-			simulation.setUI(this, canvas, logWindow.getWriter());
+			simulation = new Simulation(this, canvas, logWindow.getWriter());
 			canvas.repaint();
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	private boolean load() {
-		if ((fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-				&& discard()) {
-			try {
-				simulation = (Simulation) new ObjectInputStream(
-						new FileInputStream(fileChooser.getSelectedFile()))
-						.readObject();
-			} catch (ClassNotFoundException | IOException | ClassCastException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage(),
-						"Simulejos", JOptionPane.ERROR_MESSAGE);
-			}
-			simulation.setUI(this, canvas, logWindow.getWriter());
-			canvas.repaint();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private void doSave() {
-		try {
-			new ObjectOutputStream(new FileOutputStream(file))
-					.writeObject(simulation);
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "Simulejos",
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		simulation.clearDirty();
-	}
-
-	private boolean saveAs() {
-		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-			file = fileChooser.getSelectedFile();
-			doSave();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean save() {
-		if (file != null) {
-			doSave();
-			return true;
-		} else {
-			return saveAs();
 		}
 	}
 
@@ -167,36 +87,12 @@ public final class Simulejos extends JFrame {
 		}
 	}
 
-	public final Action NEW_ACTION = new MyAction("New", "new") {
+	public final Action RESET_ACTION = new MyAction("Reset", "reset") {
 		private static final long serialVersionUID = -4726361137806256305L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			reset();
-		}
-	};
-	public final Action LOAD_ACTION = new MyAction("Load...", "load") {
-		private static final long serialVersionUID = 5108135153655697921L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			load();
-		}
-	};
-	public final Action SAVE_ACTION = new MyAction("Save", "save") {
-		private static final long serialVersionUID = -1829243020102401543L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			save();
-		}
-	};
-	public final Action SAVE_AS_ACTION = new AbstractAction("Save as...") {
-		private static final long serialVersionUID = -2297922078695549898L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			saveAs();
 		}
 	};
 	public final Action EXIT_ACTION = new AbstractAction("Exit") {
@@ -265,10 +161,7 @@ public final class Simulejos extends JFrame {
 		final JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		final JMenu fileMenu = new JMenu("File");
-		fileMenu.add(NEW_ACTION);
-		fileMenu.add(LOAD_ACTION);
-		fileMenu.add(SAVE_ACTION);
-		fileMenu.add(SAVE_AS_ACTION);
+		fileMenu.add(RESET_ACTION);
 		fileMenu.addSeparator();
 		fileMenu.add(EXIT_ACTION);
 		menuBar.add(fileMenu);
@@ -285,11 +178,9 @@ public final class Simulejos extends JFrame {
 		splitPane.setResizeWeight(1);
 		add(splitPane, BorderLayout.CENTER);
 		final JToolBar toolbar = new JToolBar("Simulejos", JToolBar.HORIZONTAL);
-		toolbar.add(NEW_ACTION);
-		toolbar.add(LOAD_ACTION);
-		toolbar.add(SAVE_ACTION);
-		toolbar.addSeparator();
+		toolbar.add(RESET_ACTION);
 		toolbar.add(SETTINGS_ACTION);
+		toolbar.addSeparator();
 		toolbar.add(ADD_ROBOT_ACTION);
 		toolbar.addSeparator();
 		toolbar.add(PLAY_ACTION);

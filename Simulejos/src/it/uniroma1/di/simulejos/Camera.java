@@ -92,18 +92,11 @@ public class Camera implements Serializable {
 		}
 	};
 
-	public void setCanvas(GLJPanel canvas) {
-		if (this.canvas != null) {
-			this.canvas.removeKeyListener(keyListener);
-			this.canvas.removeMouseListener(mouseListener);
-			this.canvas.removeMouseMotionListener(mouseListener);
-		}
+	Camera(GLJPanel canvas) {
 		this.canvas = canvas;
-		if (canvas != null) {
-			canvas.addKeyListener(keyListener);
-			canvas.addMouseListener(mouseListener);
-			canvas.addMouseMotionListener(mouseListener);
-		}
+		canvas.addKeyListener(keyListener);
+		canvas.addMouseListener(mouseListener);
+		canvas.addMouseMotionListener(mouseListener);
 	}
 
 	public void uniform(Program program) {

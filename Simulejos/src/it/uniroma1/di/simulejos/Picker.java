@@ -62,6 +62,7 @@ public final class Picker {
 				gl.glEnable(GL_CULL_FACE);
 				program = new Program(gl, Picker.class, "robot_picker",
 						new String[] { "in_Vertex" });
+				program.use();
 			}
 
 			@Override

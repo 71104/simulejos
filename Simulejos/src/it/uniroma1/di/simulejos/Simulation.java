@@ -33,15 +33,16 @@ public final class Simulation implements Serializable {
 		Simulation.debugMode = debug;
 	}
 
-	public final Camera camera = new Camera();
+	public final Camera camera;
 	public final Floor floor = new Floor();
 	private final List<Robot> robotList = new LinkedList<>();
 	public transient final Iterable<Robot> robots = robotList;
 	private transient volatile boolean dirty;
 
+	private transient final Frame parentWindow;
+	private transient final GLAutoDrawable canvas;
+	private transient final Writer logWriter;
 	private transient volatile Thread thread;
-	private transient volatile Frame parentWindow;
-	private transient volatile Writer logWriter;
 	private transient volatile PrintWriter simulationLogWriter;
 
 	private transient volatile Program robotProgram;
@@ -57,52 +58,60 @@ public final class Simulation implements Serializable {
 		}
 	}
 
-	private transient volatile GLAutoDrawable canvas;
-	private transient final GLEventListener glEventListener = new GLEventListener() {
-		@Override
-		public void init(GLAutoDrawable drawable) {
-			final GL2GL3 gl = getGL(drawable);
-			gl.glEnable(GL_DEPTH_TEST);
-			gl.glClearDepth(0);
-			gl.glDepthFunc(GL_GREATER);
-			gl.glEnable(GL_CULL_FACE);
-			robotProgram = new Program(gl, Robot.class, "robot",
-					new String[] { "in_Vertex" });
-			floor.init(gl);
-			for (Robot robot : robots) {
-				robot.init(gl);
+	public Simulation(Frame parentWindow, GLJPanel canvas, Writer logWriter) {
+		this.parentWindow = parentWindow;
+		this.logWriter = logWriter;
+		this.simulationLogWriter = new PrintWriter(new PartialWriter(
+				"Simulation", logWriter));
+		this.canvas = canvas;
+		this.camera = new Camera(canvas);
+		canvas.addGLEventListener(new GLEventListener() {
+			@Override
+			public void init(GLAutoDrawable drawable) {
+				final GL2GL3 gl = getGL(drawable);
+				gl.glEnable(GL_DEPTH_TEST);
+				gl.glClearDepth(0);
+				gl.glDepthFunc(GL_GREATER);
+				gl.glEnable(GL_CULL_FACE);
+				robotProgram = new Program(gl, Robot.class, "robot",
+						new String[] { "in_Vertex" });
+				floor.init(gl);
+				for (Robot robot : robots) {
+					robot.init(gl);
+				}
 			}
-		}
 
-		@Override
-		public void reshape(GLAutoDrawable drawable, int x, int y, int width,
-				int height) {
-			final GL2GL3 gl = getGL(drawable);
-			if (height > width) {
-				gl.glViewport((width - height) / 2, 0, height, height);
-			} else {
-				gl.glViewport(0, (height - width) / 2, width, width);
+			@Override
+			public void reshape(GLAutoDrawable drawable, int x, int y,
+					int width, int height) {
+				final GL2GL3 gl = getGL(drawable);
+				if (height > width) {
+					gl.glViewport((width - height) / 2, 0, height, height);
+				} else {
+					gl.glViewport(0, (height - width) / 2, width, width);
+				}
 			}
-		}
 
-		@Override
-		public void display(GLAutoDrawable drawable) {
-			final GL2GL3 gl = getGL(drawable);
-			gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT | GL2GL3.GL_DEPTH_BUFFER_BIT);
-			floor.draw(gl, camera);
-			robotProgram.use();
-			camera.uniform(robotProgram);
-			for (Robot robot : robots) {
-				robot.draw(gl, robotProgram);
+			@Override
+			public void display(GLAutoDrawable drawable) {
+				final GL2GL3 gl = getGL(drawable);
+				gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT
+						| GL2GL3.GL_DEPTH_BUFFER_BIT);
+				floor.draw(gl, camera);
+				robotProgram.use();
+				camera.uniform(robotProgram);
+				for (Robot robot : robots) {
+					robot.draw(gl, robotProgram);
+				}
+				gl.glFlush();
 			}
-			gl.glFlush();
-		}
 
-		@Override
-		public void dispose(GLAutoDrawable drawable) {
-			robotProgram.delete();
-		}
-	};
+			@Override
+			public void dispose(GLAutoDrawable drawable) {
+				robotProgram.delete();
+			}
+		});
+	}
 
 	public boolean isDirty() {
 		return dirty;
@@ -110,32 +119,6 @@ public final class Simulation implements Serializable {
 
 	public void clearDirty() {
 		dirty = false;
-	}
-
-	public void setUI(Frame parentWindow, GLJPanel canvas, Writer logWriter) {
-		this.parentWindow = parentWindow;
-		this.logWriter = logWriter;
-		this.simulationLogWriter = new PrintWriter(new PartialWriter(
-				"Simulation", logWriter));
-		if (this.canvas != null) {
-			this.canvas.removeGLEventListener(glEventListener);
-		}
-		this.canvas = canvas;
-		if (canvas != null) {
-			canvas.addGLEventListener(glEventListener);
-		}
-		this.camera.setCanvas(canvas);
-		for (Robot robot : this.robots) {
-			robot.setUI(parentWindow, logWriter);
-		}
-	}
-
-	public void discard() {
-		stop();
-		if (canvas != null) {
-			canvas.removeGLEventListener(glEventListener);
-			canvas = null;
-		}
 	}
 
 	public Robot addRobot(File classPath, String mainClassName, String script,
