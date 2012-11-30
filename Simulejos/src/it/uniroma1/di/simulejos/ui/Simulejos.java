@@ -3,16 +3,14 @@ package it.uniroma1.di.simulejos.ui;
 import it.uniroma1.di.simulejos.Simulation;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.io.IOException;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
+import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.awt.GLJPanel;
 import javax.script.ScriptException;
 import javax.swing.AbstractAction;
@@ -31,18 +29,9 @@ import javax.swing.SwingUtilities;
 public final class Simulejos extends JFrame {
 	private static final long serialVersionUID = 1344391485057572344L;
 
-	private final GLJPanel canvas = new GLJPanel();
-	{
-		canvas.setPreferredSize(new Dimension(800, 600));
-		canvas.setFocusable(true);
-		canvas.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent event) {
-				canvas.requestFocusInWindow();
-			}
-		});
-	}
-
+	private final JSplitPane splitPane = new JSplitPane(
+			JSplitPane.VERTICAL_SPLIT);
+	private volatile GLJPanel canvas = new Canvas();
 	private final LogWindow logWindow = new LogWindow();
 	private volatile Simulation simulation = new Simulation(this, canvas,
 			logWindow.getWriter());
@@ -62,6 +51,10 @@ public final class Simulejos extends JFrame {
 
 	private boolean reset() {
 		if (discard()) {
+			final GLAutoDrawable oldCanvas = canvas;
+			canvas = new Canvas();
+			splitPane.setLeftComponent(canvas);
+			oldCanvas.destroy();
 			simulation = new Simulation(this, canvas, logWindow.getWriter());
 			canvas.repaint();
 			return true;
@@ -173,8 +166,8 @@ public final class Simulejos extends JFrame {
 		simulationMenu.add(SUSPEND_ACTION);
 		simulationMenu.add(STOP_ACTION);
 		menuBar.add(simulationMenu);
-		final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				canvas, new JScrollPane(logWindow));
+		splitPane.setLeftComponent(canvas);
+		splitPane.setRightComponent(new JScrollPane(logWindow));
 		splitPane.setResizeWeight(1);
 		add(splitPane, BorderLayout.CENTER);
 		final JToolBar toolbar = new JToolBar("Simulejos", JToolBar.HORIZONTAL);
