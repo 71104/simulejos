@@ -297,7 +297,7 @@ public final class Robot implements Serializable {
 			}
 		}
 
-		public void stop() {
+		public void reset() {
 			suspendHandlers.clear();
 			resumeHandlers.clear();
 		}
@@ -339,7 +339,7 @@ public final class Robot implements Serializable {
 
 		@Override
 		public void shutDown() {
-			stop();
+			reset();
 		}
 	}
 
@@ -464,7 +464,7 @@ public final class Robot implements Serializable {
 	@SuppressWarnings("deprecation")
 	void stop() {
 		if (running) {
-			simulator.stop();
+			simulator.reset();
 			threads.stop();
 			running = false;
 			suspended = false;
@@ -542,5 +542,12 @@ public final class Robot implements Serializable {
 		program.uniform(gl, "TargetRobotPosition", position);
 		program.uniform(gl, "TargetRobotHeading", heading);
 		elements.bindAndDraw(gl, GL_TRIANGLES);
+	}
+
+	void drawForPicker(GL2GL3 gl, Program program) {
+		program.uniform(gl, "Position", position);
+		program.uniform(gl, "Heading", heading);
+		program.uniform1f(gl, "PassThorugh", (float) (index + 1) / 1024);
+		elements.draw(GL_TRIANGLES);
 	}
 }

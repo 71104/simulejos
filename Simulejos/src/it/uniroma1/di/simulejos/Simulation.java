@@ -46,6 +46,8 @@ public final class Simulation implements Serializable {
 
 	private transient volatile Program robotProgram;
 
+	public transient final Picker picker = new Picker(robots);
+
 	private static GL2GL3 getGL(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
 		if (debugMode) {
@@ -98,7 +100,7 @@ public final class Simulation implements Serializable {
 
 		@Override
 		public void dispose(GLAutoDrawable drawable) {
-			// TODO Auto-generated method stub
+			robotProgram.delete();
 		}
 	};
 
