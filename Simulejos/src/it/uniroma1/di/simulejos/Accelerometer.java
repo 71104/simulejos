@@ -9,6 +9,7 @@ final class Accelerometer implements
 	private volatile Vector3 acceleration = Vector3.NULL;
 
 	void move(long dt, double dx, double dy, double dz) {
+		// TODO tilt
 		final Vector3 newVelocity = new Vector3(dx / dt, dy / dt, dz / dt);
 		acceleration = newVelocity.minus(velocity).div(dt);
 		velocity = newVelocity;

@@ -187,12 +187,28 @@ public final class Robot implements Serializable {
 		}
 	}
 
+	/**
+	 * Exposes APIs to robot scripts.
+	 * 
+	 * @author Alberto La Rocca
+	 */
 	public final class RobotInterface {
+		/**
+		 * Describes the bounding box of this robot.
+		 */
 		public final BoundingBox boundingBox = Robot.this.boundingBox;
 
 		private RobotInterface() {
 		}
 
+		/**
+		 * Provides access to a sensor port. This class cannot be instantiated
+		 * by scripts; instead, a script must use the {@link RobotInterface#S1},
+		 * {@link RobotInterface#S2}, {@link RobotInterface#S3} and
+		 * {@link RobotInterface#S4} singleton objects.
+		 * 
+		 * @author Alberto La Rocca
+		 */
 		public final class SensorPort {
 			private volatile SimulatorInterface.Sensor sensor;
 
@@ -207,47 +223,142 @@ public final class Robot implements Serializable {
 				}
 			}
 
+			/**
+			 * Initializes a touch sensor on this port. This method may be
+			 * invoked only in the script's global scope.
+			 * 
+			 * @param position
+			 *            The sensor's position, relative to the center of the
+			 *            robot's bounding box.
+			 * @param heading
+			 *            A 3x3 matrix that orients the sensor correctly
+			 *            relative to the robot.
+			 * @param size
+			 *            A floating point parameter indicating the width and
+			 *            height of the pushable square area of the sensor.
+			 */
 			public void touchSensor(Vector3 position, Matrix3 heading,
 					float size) {
 				initializeSensor(new TouchSensor(Robot.this, position, heading,
 						size));
 			}
 
+			/**
+			 * Initializes a color sensor on this port. This method may be
+			 * invoked only in the script's global scope.
+			 * 
+			 * @param position
+			 *            TODO
+			 * @param heading
+			 *            TODO
+			 */
 			public void colorSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new ColorSensor(Robot.this, position, heading));
 			}
 
+			/**
+			 * Initializes a light sensor on this port. This method may be
+			 * invoked only in the script's global scope.
+			 * 
+			 * @param position
+			 *            TODO
+			 * @param heading
+			 *            TODO
+			 */
 			public void lightSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new LightSensor(Robot.this, position, heading));
 			}
 
+			/**
+			 * Initializes a compass sensor on this port. This method may be
+			 * invoked only in the script's global scope. TODO
+			 */
 			public void compassSensor(Matrix3 heading) {
 				initializeSensor(new CompassSensor(Robot.this, heading));
 			}
 
+			/**
+			 * Initializes a ultrasonic sensor on this port. This method may be
+			 * invoked only in the script's global scope. TODO
+			 */
 			public void ultrasonicSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new UltrasonicSensor(Robot.this, position,
 						heading));
 			}
 
+			/**
+			 * Initializes an accelerometer sensor on this port. This method may
+			 * be invoked only in the script's global scope. TODO
+			 */
 			public void accelerometer() {
 				initializeSensor(new Accelerometer());
 			}
 
+			/**
+			 * TODO
+			 * 
+			 * @return TODO
+			 */
 			public SimulatorInterface.Sensor getSensor() {
 				return sensor;
 			}
 		}
 
+		/**
+		 * A {@link SensorPort} object representing NXT sensor port 1.
+		 */
 		public final SensorPort S1 = new SensorPort();
+
+		/**
+		 * A {@link SensorPort} object representing NXT sensor port 2.
+		 */
 		public final SensorPort S2 = new SensorPort();
+
+		/**
+		 * A {@link SensorPort} object representing NXT sensor port 3.
+		 */
 		public final SensorPort S3 = new SensorPort();
+
+		/**
+		 * A {@link SensorPort} object representing NXT sensor port 4.
+		 */
 		public final SensorPort S4 = new SensorPort();
 
+		/**
+		 * Translates the robot in the three-dimensional space by the specified
+		 * offsets along the X, Y and Z axes.
+		 * 
+		 * @param dx
+		 *            The offset along the X axis.
+		 * @param dy
+		 *            The offset along the Y axis.
+		 * @param dz
+		 *            The offset along the Z axis.
+		 */
 		public void moveBy(double dx, double dy, double dz) {
 			position = position.plus(heading.by(new Vector3(dx, dy, dz)));
 		}
 
+		/**
+		 * Rotates the robot in the three-dimensional space about the specified
+		 * axis and by the specified angle offset.
+		 * 
+		 * The rotation axis is specified by three X, Y and Z coordinates which
+		 * are used internally to create a rotation matrix that transforms the
+		 * robot. The specified (x, y, z) vector must be a unit-length vector.
+		 * 
+		 * @param x
+		 *            The X component of a unit-length vector representing the
+		 *            rotation axis.
+		 * @param y
+		 *            The Y component of a unit-length vector representing the
+		 *            rotation axis.
+		 * @param z
+		 *            The Z component of a unit-length vector representing the
+		 *            rotation axis.
+		 * @param da
+		 *            The angular offset.
+		 */
 		public void rotateBy(double x, double y, double z, double da) {
 			heading = Matrix3.createRotation(x, y, z, da).by(heading);
 			inverseHeading = heading.invert();
