@@ -11,7 +11,6 @@ import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -35,9 +34,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.swing.JOptionPane;
 
-public final class Robot implements Serializable {
-	private static final long serialVersionUID = 1961674308786529328L;
-
+public final class Robot {
 	private static volatile int nextIndex = 1;
 
 	public static String getNextName() {
@@ -55,18 +52,18 @@ public final class Robot implements Serializable {
 	private volatile Matrix3 heading;
 	private volatile Matrix3 inverseHeading;
 
-	private transient volatile Frame parentWindow;
-	private transient volatile PrintWriter logWriter;
-	private transient volatile Invocable invocable;
-	private transient volatile boolean initializing;
-	private transient volatile boolean running;
-	private transient volatile boolean suspended;
-	private transient volatile ThreadGroup threads;
+	private volatile Frame parentWindow;
+	private volatile PrintWriter logWriter;
+	private volatile Invocable invocable;
+	private volatile boolean initializing;
+	private volatile boolean running;
+	private volatile boolean suspended;
+	private volatile ThreadGroup threads;
 
-	private transient volatile Elements elements;
+	private volatile Elements elements;
 
-	private transient final Floor floor;
-	private transient final Iterable<Robot> robots;
+	private final Floor floor;
+	private final Iterable<Robot> robots;
 
 	static {
 		/* XXX workaround a bug in ImageIO when used with Java Web Start */
@@ -106,9 +103,9 @@ public final class Robot implements Serializable {
 				logWriter));
 	}
 
-	private transient final Motor motorA = new Motor();
-	private transient final Motor motorB = new Motor();
-	private transient final Motor motorC = new Motor();
+	private final Motor motorA = new Motor();
+	private final Motor motorB = new Motor();
+	private final Motor motorC = new Motor();
 
 	abstract class Sensor implements SimulatorInterface.Sensor {
 		protected final Floor floor = Robot.this.floor;
@@ -365,8 +362,8 @@ public final class Robot implements Serializable {
 		}
 	}
 
-	private transient final RobotInterface robotInterface;
-	private transient final List<GPUSensor> gpuSensors = new LinkedList<GPUSensor>();
+	private final RobotInterface robotInterface;
+	private final List<GPUSensor> gpuSensors = new LinkedList<GPUSensor>();
 
 	private class Simulator implements SimulatorInterface {
 		private final List<Runnable> suspendHandlers = new Vector<Runnable>();
@@ -455,7 +452,7 @@ public final class Robot implements Serializable {
 		}
 	}
 
-	private transient final Simulator simulator = new Simulator();
+	private final Simulator simulator = new Simulator();
 
 	void play() throws ScriptException {
 		if (running) {

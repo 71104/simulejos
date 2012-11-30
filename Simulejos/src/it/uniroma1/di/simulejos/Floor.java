@@ -5,19 +5,11 @@ import it.uniroma1.di.simulejos.opengl.Program;
 import it.uniroma1.di.simulejos.opengl.Texture2D;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
-import javax.imageio.ImageIO;
 import javax.media.opengl.GL2GL3;
 
 import static javax.media.opengl.GL2GL3.*;
 
-public final class Floor implements Externalizable {
+public final class Floor {
 	private volatile BufferedImage textureImage;
 	private volatile float width;
 	private volatile float depth;
@@ -28,32 +20,6 @@ public final class Floor implements Externalizable {
 	private transient volatile Program program;
 	private transient volatile Arrays arrays;
 	private transient volatile Texture2D texture;
-
-	@Override
-	public void readExternal(ObjectInput in) throws IOException,
-			ClassNotFoundException {
-		final byte[] textureBytes = (byte[]) in.readObject();
-		if (textureBytes != null) {
-			textureImage = ImageIO.read(new ByteArrayInputStream(textureBytes));
-		} else {
-			textureImage = null;
-		}
-		repeatX = in.readBoolean();
-		repeatY = in.readBoolean();
-	}
-
-	@Override
-	public void writeExternal(ObjectOutput out) throws IOException {
-		if (textureImage != null) {
-			final ByteArrayOutputStream byteSink = new ByteArrayOutputStream();
-			ImageIO.write(textureImage, "PNG", byteSink);
-			out.writeObject(byteSink.toByteArray());
-		} else {
-			out.writeObject(null);
-		}
-		out.writeBoolean(repeatX);
-		out.writeBoolean(repeatY);
-	}
 
 	public boolean isRepeatX() {
 		return repeatX;

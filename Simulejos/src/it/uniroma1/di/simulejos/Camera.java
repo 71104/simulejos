@@ -4,16 +4,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serializable;
 
 import javax.media.opengl.awt.GLJPanel;
 
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Program;
 
-public class Camera implements Serializable {
-	private static final long serialVersionUID = -1189555495876080971L;
-
+public class Camera {
 	private volatile Vector3 position = new Vector3(0, 0, -5);
 	private volatile double angleX;
 	private volatile double angleY;
@@ -21,9 +18,9 @@ public class Camera implements Serializable {
 	private static final double ROTATION_DELTA = 0.1;
 	private static final double MOVING_DELTA = 0.3;
 
-	private transient volatile GLJPanel canvas;
+	private volatile GLJPanel canvas;
 
-	private transient final KeyAdapter keyListener = new KeyAdapter() {
+	private final KeyAdapter keyListener = new KeyAdapter() {
 		@Override
 		public void keyPressed(KeyEvent event) {
 			switch (event.getKeyCode()) {
@@ -70,7 +67,7 @@ public class Camera implements Serializable {
 		}
 	};
 
-	private transient final MouseAdapter mouseListener = new MouseAdapter() {
+	private final MouseAdapter mouseListener = new MouseAdapter() {
 		private volatile int x0;
 		private volatile int y0;
 

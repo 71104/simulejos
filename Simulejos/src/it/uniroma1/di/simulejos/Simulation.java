@@ -7,7 +7,6 @@ import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,9 +23,7 @@ import javax.swing.SwingUtilities;
 
 import static javax.media.opengl.GL2GL3.*;
 
-public final class Simulation implements Serializable {
-	private static final long serialVersionUID = -290517947218502549L;
-
+public final class Simulation {
 	private static volatile boolean debugMode;
 
 	public static void setDebugMode(boolean debug) {
@@ -36,18 +33,18 @@ public final class Simulation implements Serializable {
 	public final Camera camera;
 	public final Floor floor = new Floor();
 	private final List<Robot> robotList = new LinkedList<>();
-	public transient final Iterable<Robot> robots = robotList;
-	private transient volatile boolean dirty;
+	public final Iterable<Robot> robots = robotList;
+	private volatile boolean dirty;
 
-	private transient final Frame parentWindow;
-	private transient final GLAutoDrawable canvas;
-	private transient final Writer logWriter;
-	private transient volatile Thread thread;
-	private transient volatile PrintWriter simulationLogWriter;
+	private final Frame parentWindow;
+	private final GLAutoDrawable canvas;
+	private final Writer logWriter;
+	private volatile Thread thread;
+	private volatile PrintWriter simulationLogWriter;
 
-	private transient volatile Program robotProgram;
+	private volatile Program robotProgram;
 
-	public transient final Picker picker = new Picker(robots);
+	public final Picker picker = new Picker(robots);
 
 	private static GL2GL3 getGL(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
@@ -132,7 +129,7 @@ public final class Simulation implements Serializable {
 		return robot;
 	}
 
-	interface State {
+	private interface State {
 		State play() throws ScriptException;
 
 		State suspend();
@@ -140,7 +137,7 @@ public final class Simulation implements Serializable {
 		State stop();
 	};
 
-	private transient final State runningState = new State() {
+	private final State runningState = new State() {
 		@Override
 		public State play() {
 			return this;
@@ -169,7 +166,7 @@ public final class Simulation implements Serializable {
 		}
 	};
 
-	private transient final State suspendedState = new State() {
+	private final State suspendedState = new State() {
 		@SuppressWarnings("deprecation")
 		@Override
 		public State play() {
@@ -198,7 +195,7 @@ public final class Simulation implements Serializable {
 		}
 	};
 
-	private transient final State stoppedState = new State() {
+	private final State stoppedState = new State() {
 		@Override
 		public State play() throws ScriptException {
 			simulationLogWriter.println("started");
@@ -280,7 +277,7 @@ public final class Simulation implements Serializable {
 		}
 	};
 
-	private transient volatile State state = stoppedState;
+	private volatile State state = stoppedState;
 
 	public void play() throws ScriptException {
 		state = state.play();
