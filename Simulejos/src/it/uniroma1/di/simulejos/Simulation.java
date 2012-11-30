@@ -138,7 +138,7 @@ public final class Simulation implements Serializable {
 		}
 	}
 
-	public void addRobot(File classPath, String mainClassName, String script,
+	public Robot addRobot(File classPath, String mainClassName, String script,
 			File modelFile, boolean swapYAndZ) throws IOException,
 			ParseException, ScriptException {
 		dirty = true;
@@ -146,6 +146,7 @@ public final class Simulation implements Serializable {
 				ModelData.parseWavefront(modelFile, swapYAndZ), floor, robots);
 		robot.setUI(parentWindow, logWriter);
 		robotList.add(robot);
+		return robot;
 	}
 
 	interface State {

@@ -70,6 +70,12 @@ public final class Picker {
 			@Override
 			public void reshape(GLAutoDrawable drawable, int x, int y,
 					int width, int height) {
+				final GL2GL3 gl = drawable.getGL().getGL2GL3();
+				if (height > width) {
+					gl.glViewport((width - height) / 2, 0, height, height);
+				} else {
+					gl.glViewport(0, (height - width) / 2, width, width);
+				}
 			}
 
 			@Override

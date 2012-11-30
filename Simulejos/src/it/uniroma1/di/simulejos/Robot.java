@@ -50,6 +50,7 @@ public final class Robot implements Serializable {
 	public final String script;
 	public final ModelData modelData;
 	public final BoundingBox boundingBox;
+	public volatile boolean hilited;
 	private volatile Vector3 position;
 	private volatile Matrix3 heading;
 	private volatile Matrix3 inverseHeading;
@@ -534,7 +535,11 @@ public final class Robot implements Serializable {
 		program.uniform3f("Color", 0, 0, 0);
 		elements.bindAndDraw(GL_TRIANGLES);
 		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		program.uniform3f("Color", 1, 1, 1);
+		if (hilited) {
+			program.uniform3f("Color", 1, 0, 0);
+		} else {
+			program.uniform3f("Color", 1, 1, 1);
+		}
 		elements.draw(GL_TRIANGLES);
 	}
 
