@@ -101,16 +101,19 @@ public final class Simulejos extends JFrame {
 	};
 
 	public final CursorState deleteRobotCursorState = new CursorState() {
-		private volatile int hilitedIndex = -1;
+		private volatile Robot selectedRobot;
+		private volatile int selectedIndex;
 
 		@Override
 		public void mouseMoved(int x, int y) {
 			simulation.picker.new PickRequest(x, y) {
 				@Override
-				public void handle(int index2, Vector3 position2) {
-					hilitedIndex = index2;
+				public void handle(int index, Vector3 position) {
+					selectedIndex = index;
 					for (Robot robot : simulation.robots) {
-						robot.hilited = (robot.index == hilitedIndex);
+						robot.hilited = (robot.index == selectedIndex);
+						selectedRobot = robot;
+						break;
 					}
 					canvas.repaint();
 				}
@@ -119,13 +122,14 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void mouseReleased(int x, int y) {
-			if ((hilitedIndex > 0)
+			if ((selectedRobot != null)
 					&& (JOptionPane.showConfirmDialog(Simulejos.this,
-							"Do you actually want to delete NXT" + hilitedIndex
-									+ "?", "Simulejos",
+							"Do you actually want to delete NXT"
+									+ selectedIndex + "?", "Simulejos",
 							JOptionPane.OK_CANCEL_OPTION,
 							JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION)) {
-				// TODO
+				simulation.removeRobot(selectedRobot);
+				selectedRobot = null;
 			}
 		}
 	};
@@ -237,7 +241,6 @@ public final class Simulejos extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			new NewRobotDialog(Simulejos.this, simulation);
-			canvas.repaint();
 		}
 	};
 	public final Action NAVIGATE_ACTION = new MyAction("Navigate world",

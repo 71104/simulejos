@@ -42,6 +42,10 @@ public final class Robot {
 	}
 
 	public final int index;
+
+	private final Frame parentWindow;
+	private final PrintWriter logWriter;
+
 	public final File classPath;
 	public final String mainClassName;
 	public final String script;
@@ -51,16 +55,16 @@ public final class Robot {
 	private volatile Vector3 position;
 	private volatile Matrix3 heading;
 	private volatile Matrix3 inverseHeading;
+	private volatile Elements elements;
 
-	private volatile Frame parentWindow;
-	private volatile PrintWriter logWriter;
+	private final Motor motorA = new Motor();
+	private final Motor motorB = new Motor();
+	private final Motor motorC = new Motor();
 	private volatile Invocable invocable;
 	private volatile boolean initializing;
 	private volatile boolean running;
 	private volatile boolean suspended;
 	private volatile ThreadGroup threads;
-
-	private volatile Elements elements;
 
 	private final Floor floor;
 	private final Iterable<Robot> robots;
@@ -70,10 +74,15 @@ public final class Robot {
 		ImageIO.setUseCache(false);
 	}
 
-	Robot(File classPath, String mainClassName, String script,
-			ModelData modelData, Floor floor, Iterable<Robot> robots)
-			throws ScriptException {
+	Robot(Frame parentWindow, Writer logWriter, File classPath,
+			String mainClassName, String script, ModelData modelData,
+			Floor floor, Iterable<Robot> robots) throws ScriptException {
 		this.index = nextIndex++;
+
+		this.parentWindow = parentWindow;
+		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
+				logWriter));
+
 		this.classPath = classPath;
 		this.mainClassName = mainClassName;
 		this.script = script;
@@ -96,16 +105,6 @@ public final class Robot {
 
 		this.robotInterface = new RobotInterface();
 	}
-
-	void setUI(Frame parentWindow, Writer logWriter) {
-		this.parentWindow = parentWindow;
-		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
-				logWriter));
-	}
-
-	private final Motor motorA = new Motor();
-	private final Motor motorB = new Motor();
-	private final Motor motorC = new Motor();
 
 	abstract class Sensor implements SimulatorInterface.Sensor {
 		protected final Floor floor = Robot.this.floor;

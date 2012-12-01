@@ -123,11 +123,17 @@ public final class Simulation {
 			File modelFile, boolean swapYAndZ) throws IOException,
 			ParseException, ScriptException {
 		dirty = true;
-		final Robot robot = new Robot(classPath, mainClassName, script,
-				ModelData.parseWavefront(modelFile, swapYAndZ), floor, robots);
-		robot.setUI(parentWindow, logWriter);
+		final Robot robot = new Robot(parentWindow, logWriter, classPath,
+				mainClassName, script, ModelData.parseWavefront(modelFile,
+						swapYAndZ), floor, robots);
 		robotList.add(robot);
+		canvas.display();
 		return robot;
+	}
+
+	public void removeRobot(Robot robot) {
+		robotList.remove(robot);
+		canvas.display();
 	}
 
 	private interface State {
