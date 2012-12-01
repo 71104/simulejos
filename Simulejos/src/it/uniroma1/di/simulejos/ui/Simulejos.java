@@ -57,9 +57,9 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void mousePressed(int x, int y) {
-			pressed = true;
 			x0 = x;
 			y0 = y;
+			pressed = true;
 		}
 
 		@Override
@@ -100,9 +100,49 @@ public final class Simulejos extends JFrame {
 		}
 	};
 
+	public final CursorState rotateRobotCursorState = new CursorState() {
+		private volatile Robot selectedRobot;
+		private volatile boolean pressed;
+		private volatile int x0;
+
+		@Override
+		public void mousePressed(int x, int y) {
+			x0 = x;
+			pressed = true;
+		}
+
+		@Override
+		public void mouseMoved(int x, int y) {
+			if (pressed) {
+				if (selectedRobot != null) {
+					selectedRobot.rotate(Math.toRadians(x - x0));
+				}
+				x0 = x;
+			} else {
+				simulation.picker.new PickRequest(x, y) {
+					@Override
+					public void handle(int index, Vector3 position) {
+						selectedRobot = null;
+						for (Robot robot : simulation.robots) {
+							if (robot.hilited = (robot.index == index)) {
+								selectedRobot = robot;
+								break;
+							}
+						}
+						canvas.repaint();
+					}
+				};
+			}
+		}
+
+		@Override
+		public void mouseReleased(int x, int y) {
+			pressed = false;
+		}
+	};
+
 	public final CursorState deleteRobotCursorState = new CursorState() {
 		private volatile Robot selectedRobot;
-		private volatile int selectedIndex;
 
 		@Override
 		public void mouseMoved(int x, int y) {
@@ -110,9 +150,8 @@ public final class Simulejos extends JFrame {
 				@Override
 				public void handle(int index, Vector3 position) {
 					selectedRobot = null;
-					selectedIndex = index;
 					for (Robot robot : simulation.robots) {
-						if (robot.hilited = (robot.index == selectedIndex)) {
+						if (robot.hilited = (robot.index == index)) {
 							selectedRobot = robot;
 							break;
 						}
@@ -127,7 +166,7 @@ public final class Simulejos extends JFrame {
 			if ((selectedRobot != null)
 					&& (JOptionPane.showConfirmDialog(Simulejos.this,
 							"Do you actually want to delete NXT"
-									+ selectedIndex + "?", "Simulejos",
+									+ selectedRobot.index + "?", "Simulejos",
 							JOptionPane.OK_CANCEL_OPTION,
 							JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION)) {
 				simulation.removeRobot(selectedRobot);
@@ -266,6 +305,14 @@ public final class Simulejos extends JFrame {
 			cursorState = moveRobotCursorState;
 		}
 	};
+	public final Action ROTATE_ACTION = new MyAction("Rotate robot", "rotate") {
+		private static final long serialVersionUID = 2357493963267102486L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			cursorState = rotateRobotCursorState;
+		}
+	};
 	public final Action DELETE_ACTION = new MyAction("Delete robot...",
 			"delete") {
 		private static final long serialVersionUID = 2357493963267102486L;
@@ -282,8 +329,10 @@ public final class Simulejos extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			NAVIGATE_ACTION.setEnabled(false);
 			MOVE_ACTION.setEnabled(false);
+			ROTATE_ACTION.setEnabled(false);
 			DELETE_ACTION.setEnabled(false);
 			NAVIGATE_ACTION.putValue(SELECTED_KEY, true);
+			cursorState = navigateCursorState;
 			try {
 				simulation.play();
 			} catch (ScriptException e) {
@@ -308,6 +357,7 @@ public final class Simulejos extends JFrame {
 			simulation.stop();
 			NAVIGATE_ACTION.setEnabled(true);
 			MOVE_ACTION.setEnabled(true);
+			ROTATE_ACTION.setEnabled(true);
 			DELETE_ACTION.setEnabled(true);
 		}
 	};
@@ -326,6 +376,8 @@ public final class Simulejos extends JFrame {
 		final JMenu simulationMenu = new JMenu("Simulation");
 		simulationMenu.add(SETTINGS_ACTION);
 		simulationMenu.add(ADD_ROBOT_ACTION);
+		simulationMenu.addSeparator();
+		// TODO cursor modes
 		simulationMenu.addSeparator();
 		simulationMenu.add(PLAY_ACTION);
 		simulationMenu.add(SUSPEND_ACTION);
@@ -348,11 +400,15 @@ public final class Simulejos extends JFrame {
 		final JToggleButton moveButton = new JToggleButton(MOVE_ACTION);
 		moveButton.setHideActionText(true);
 		cursorModeButtons.add(moveButton);
+		final JToggleButton rotateButton = new JToggleButton(ROTATE_ACTION);
+		rotateButton.setHideActionText(true);
+		cursorModeButtons.add(rotateButton);
 		final JToggleButton deleteButton = new JToggleButton(DELETE_ACTION);
 		deleteButton.setHideActionText(true);
 		cursorModeButtons.add(deleteButton);
 		toolbar.add(navigateButton);
 		toolbar.add(moveButton);
+		toolbar.add(rotateButton);
 		toolbar.add(deleteButton);
 		toolbar.addSeparator();
 		toolbar.add(PLAY_ACTION);

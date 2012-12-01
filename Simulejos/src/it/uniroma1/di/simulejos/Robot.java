@@ -26,6 +26,7 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLDrawableFactory;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLJPanel;
 
 import static javax.media.opengl.GL2GL3.*;
 import javax.script.Invocable;
@@ -44,6 +45,7 @@ public final class Robot {
 	public final int index;
 
 	private final Frame parentWindow;
+	private final GLJPanel canvas;
 	private final PrintWriter logWriter;
 
 	public final File classPath;
@@ -74,12 +76,14 @@ public final class Robot {
 		ImageIO.setUseCache(false);
 	}
 
-	Robot(Frame parentWindow, Writer logWriter, File classPath,
-			String mainClassName, String script, ModelData modelData,
-			Floor floor, Iterable<Robot> robots) throws ScriptException {
+	Robot(Frame parentWindow, GLJPanel canvas, Writer logWriter,
+			File classPath, String mainClassName, String script,
+			ModelData modelData, Floor floor, Iterable<Robot> robots)
+			throws ScriptException {
 		this.index = nextIndex++;
 
 		this.parentWindow = parentWindow;
+		this.canvas = canvas;
 		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
 				logWriter));
 
@@ -605,6 +609,12 @@ public final class Robot {
 				|| robot.vertexCollides(this, box.max.x, box.min.y, box.max.z)
 				|| robot.vertexCollides(this, box.max.x, box.max.y, box.min.z)
 				|| robot.vertexCollides(this, box.max.x, box.max.y, box.max.z);
+	}
+
+	public void rotate(double a) {
+		heading = Matrix3.createRotation(0, 1, 0, a).by(heading);
+		inverseHeading = heading.invert();
+		canvas.repaint();
 	}
 
 	void tick() throws NoSuchMethodException, ScriptException {
