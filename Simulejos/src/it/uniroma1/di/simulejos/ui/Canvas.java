@@ -20,5 +20,6 @@ final class Canvas extends GLJPanel {
 		});
 		addMouseListener(mouseHandler);
 		addMouseMotionListener(mouseHandler);
+		addMouseWheelListener(mouseHandler);
 	}
 }

@@ -35,7 +35,7 @@ public final class Picker {
 			}
 		}
 
-		public abstract void handle(int passThrough, Vector3 position);
+		public abstract void handle(int index, Vector3 position);
 	}
 
 	Picker(Camera camera, Iterable<Robot> robots) {
@@ -47,10 +47,12 @@ public final class Picker {
 		if (buffer != null) {
 			buffer.destroy();
 		}
+		final GLCapabilities capabilities = new GLCapabilities(
+				GLProfile.getDefault());
+		capabilities.setAlphaBits(8);
 		buffer = GLDrawableFactory.getFactory(GLProfile.getDefault())
-				.createOffscreenAutoDrawable(null,
-						new GLCapabilities(GLProfile.get(GLProfile.GL2GL3)),
-						null, source.getWidth(), source.getHeight(),
+				.createOffscreenAutoDrawable(null, capabilities, null,
+						source.getWidth(), source.getHeight(),
 						source.getContext());
 		buffer.addGLEventListener(new GLEventListener() {
 			private volatile Program program;
@@ -86,15 +88,15 @@ public final class Picker {
 					gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 					camera.uniform(gl, program);
 					for (Robot robot : robots) {
-						robot.share(gl);
 						robot.drawForPicker(gl, program);
 					}
 					gl.glFinish();
 					final float[] values = new float[4];
-					gl.glReadPixels(request.x, request.y, 1, 1, GL_RGBA,
+					gl.glReadPixels(request.x,
+							drawable.getHeight() - request.y, 1, 1, GL_RGBA,
 							GL_FLOAT, FloatBuffer.wrap(values));
-					request.handle(Math.round(values[3] * 1024) - 1,
-							new Vector3(values[0], values[1], values[2]));
+					request.handle(Math.round(values[3] * 128), new Vector3(
+							values[0], values[1], values[2]));
 				}
 			}
 

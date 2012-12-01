@@ -36,26 +36,16 @@ public class Camera {
 				angleY -= ROTATION_DELTA;
 				break;
 			case KeyEvent.VK_W:
-				position = position.plus(new Vector3(MOVING_DELTA
-						* Math.cos(angleX + Math.PI / 2), MOVING_DELTA
-						* Math.sin(angleY), MOVING_DELTA
-						* Math.sin(angleX + Math.PI / 2)));
+				move(0, 1);
 				break;
 			case KeyEvent.VK_S:
-				position = position.minus(new Vector3(MOVING_DELTA
-						* Math.cos(angleX + Math.PI / 2), MOVING_DELTA
-						* Math.sin(angleY), MOVING_DELTA
-						* Math.sin(angleX + Math.PI / 2)));
+				move(0, -1);
 				break;
 			case KeyEvent.VK_A:
-				position = position
-						.minus(new Vector3(MOVING_DELTA * Math.cos(angleX), 0,
-								MOVING_DELTA * Math.sin(angleX)));
+				move(-1, 0);
 				break;
 			case KeyEvent.VK_D:
-				position = position
-						.plus(new Vector3(MOVING_DELTA * Math.cos(angleX), 0,
-								MOVING_DELTA * Math.sin(angleX)));
+				move(1, 0);
 				break;
 			default:
 				return;
@@ -77,6 +67,14 @@ public class Camera {
 	public void uniform(GL2GL3 gl, Program program) {
 		program.uniform(gl, "Camera.Position", position);
 		program.uniform2f(gl, "Camera.Angle", (float) angleX, (float) angleY);
+	}
+
+	public void move(double dx, double dz) {
+		position = position.plus(new Vector3(dx * Math.cos(angleX) + dz
+				* Math.cos(angleX + Math.PI / 2), dz * Math.sin(angleY), dx
+				* Math.sin(angleX) + dz * Math.sin(angleX + Math.PI / 2))
+				.by(MOVING_DELTA));
+		canvas.display();
 	}
 
 	public void rotate(double dx, double dy) {

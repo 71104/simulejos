@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.io.IOException;
@@ -42,6 +43,9 @@ public final class Simulejos extends JFrame {
 
 		public void mouseReleased(int x, int y) {
 		}
+
+		public void mouseWheel(double count) {
+		}
 	}
 
 	public final CursorState navigateCursorState = new CursorState() {
@@ -70,6 +74,11 @@ public final class Simulejos extends JFrame {
 		public void mouseReleased(int x, int y) {
 			pressed = false;
 		}
+
+		@Override
+		public void mouseWheel(double count) {
+			simulation.camera.move(0, -count);
+		}
 	};
 
 	public final CursorState moveRobotCursorState = new CursorState() {
@@ -96,8 +105,8 @@ public final class Simulejos extends JFrame {
 		public void mouseMoved(int x, int y) {
 			simulation.picker.new PickRequest(x, y) {
 				@Override
-				public void handle(int passThrough, Vector3 position) {
-					hilitedIndex = passThrough;
+				public void handle(int index2, Vector3 position2) {
+					hilitedIndex = index2;
 					for (Robot robot : simulation.robots) {
 						robot.hilited = (robot.index == hilitedIndex);
 					}
@@ -108,7 +117,7 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void mouseReleased(int x, int y) {
-			if ((hilitedIndex != -1)
+			if ((hilitedIndex > 0)
 					&& (JOptionPane.showConfirmDialog(Simulejos.this,
 							"Do you actually want to delete NXT" + hilitedIndex
 									+ "?", "Simulejos",
@@ -128,6 +137,11 @@ public final class Simulejos extends JFrame {
 		}
 
 		@Override
+		public void mouseDragged(MouseEvent event) {
+			cursorState.mouseMoved(event.getX(), event.getY());
+		}
+
+		@Override
 		public void mousePressed(MouseEvent event) {
 			cursorState.mousePressed(event.getX(), event.getY());
 		}
@@ -135,6 +149,11 @@ public final class Simulejos extends JFrame {
 		@Override
 		public void mouseReleased(MouseEvent event) {
 			cursorState.mouseReleased(event.getX(), event.getY());
+		}
+
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent event) {
+			cursorState.mouseWheel(event.getPreciseWheelRotation());
 		}
 	};
 

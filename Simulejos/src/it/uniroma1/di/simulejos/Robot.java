@@ -596,7 +596,7 @@ public final class Robot {
 				.transform(new Vector3(x, y, z)).minus(position)));
 	}
 
-	boolean collidesWith(Robot robot) {
+	public boolean collidesWith(Robot robot) {
 		final BoundingBox box = modelData.boundingBox;
 		return robot.vertexCollides(this, box.min.x, box.min.y, box.min.z)
 				|| robot.vertexCollides(this, box.min.x, box.min.y, box.max.z)
@@ -626,10 +626,6 @@ public final class Robot {
 		}
 	}
 
-	void share(GL2GL3 gl) {
-		elements.share(gl);
-	}
-
 	void draw(GL2GL3 gl, Program program) {
 		if (elements == null) {
 			init(gl);
@@ -652,15 +648,21 @@ public final class Robot {
 	}
 
 	void drawForSensor(GL2GL3 gl, Program program) {
-		program.uniform(gl, "TargetRobotPosition", position);
-		program.uniform(gl, "TargetRobotHeading", heading);
-		elements.bindAndDraw(gl, GL_TRIANGLES);
+		if (elements != null) {
+			program.uniform(gl, "TargetRobotPosition", position);
+			program.uniform(gl, "TargetRobotHeading", heading);
+			elements.share(gl);
+			elements.bindAndDraw(gl, GL_TRIANGLES);
+		}
 	}
 
 	void drawForPicker(GL2GL3 gl, Program program) {
-		program.uniform(gl, "Position", position);
-		program.uniform(gl, "Heading", heading);
-		program.uniform1f(gl, "PassThrough", (float) (index + 1) / 1024);
-		elements.bindAndDraw(gl, GL_TRIANGLES);
+		if (elements != null) {
+			program.uniform(gl, "Position", position);
+			program.uniform(gl, "Heading", heading);
+			program.uniform1f(gl, "PassThrough", (float) index / 128);
+			elements.share(gl);
+			elements.bindAndDraw(gl, GL_TRIANGLES);
+		}
 	}
 }

@@ -73,7 +73,6 @@ final class LightSensor extends GPUSensor implements
 		robotProgram.uniform("InverseSensorHeading", inverseHeading);
 		uniform(robotProgram);
 		for (Robot robot : robots) {
-			robot.share(gl);
 			robot.drawForSensor(gl, robotProgram);
 		}
 		gl.glFinish();
