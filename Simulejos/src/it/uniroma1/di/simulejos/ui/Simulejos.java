@@ -112,9 +112,10 @@ public final class Simulejos extends JFrame {
 					selectedRobot = null;
 					selectedIndex = index;
 					for (Robot robot : simulation.robots) {
-						robot.hilited = (robot.index == selectedIndex);
-						selectedRobot = robot;
-						break;
+						if (robot.hilited = (robot.index == selectedIndex)) {
+							selectedRobot = robot;
+							break;
+						}
 					}
 					canvas.repaint();
 				}
@@ -130,6 +131,7 @@ public final class Simulejos extends JFrame {
 							JOptionPane.OK_CANCEL_OPTION,
 							JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION)) {
 				simulation.removeRobot(selectedRobot);
+				selectedRobot = null;
 			}
 		}
 	};
