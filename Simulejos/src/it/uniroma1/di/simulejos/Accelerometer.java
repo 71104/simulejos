@@ -1,5 +1,6 @@
 package it.uniroma1.di.simulejos;
 
+import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector3;
 
 final class Accelerometer implements
@@ -7,6 +8,9 @@ final class Accelerometer implements
 	private volatile Vector3 tilt = new Vector3(0, -1, 0);
 	private volatile Vector3 velocity = Vector3.NULL;
 	private volatile Vector3 acceleration = Vector3.NULL;
+
+	public Accelerometer(Matrix3 heading) {
+	}
 
 	void move(long dt, double dx, double dy, double dz) {
 		// TODO tilt

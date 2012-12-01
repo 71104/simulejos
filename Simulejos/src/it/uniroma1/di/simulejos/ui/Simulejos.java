@@ -27,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
@@ -377,7 +378,23 @@ public final class Simulejos extends JFrame {
 		simulationMenu.add(SETTINGS_ACTION);
 		simulationMenu.add(ADD_ROBOT_ACTION);
 		simulationMenu.addSeparator();
-		// TODO cursor modes
+		final ButtonGroup cursorModeItems = new ButtonGroup();
+		final JRadioButtonMenuItem navigateItem = new JRadioButtonMenuItem(
+				NAVIGATE_ACTION);
+		cursorModeItems.add(navigateItem);
+		simulationMenu.add(navigateItem);
+		final JRadioButtonMenuItem moveItem = new JRadioButtonMenuItem(
+				MOVE_ACTION);
+		cursorModeItems.add(moveItem);
+		simulationMenu.add(moveItem);
+		final JRadioButtonMenuItem rotateItem = new JRadioButtonMenuItem(
+				ROTATE_ACTION);
+		cursorModeItems.add(rotateItem);
+		simulationMenu.add(rotateItem);
+		final JRadioButtonMenuItem deleteItem = new JRadioButtonMenuItem(
+				DELETE_ACTION);
+		cursorModeItems.add(deleteItem);
+		simulationMenu.add(deleteItem);
 		simulationMenu.addSeparator();
 		simulationMenu.add(PLAY_ACTION);
 		simulationMenu.add(SUSPEND_ACTION);

@@ -248,9 +248,14 @@ public final class Robot {
 			 * invoked only in the script's global scope.
 			 * 
 			 * @param position
-			 *            TODO
+			 *            A {@link Vector3} object indicating the position of
+			 *            the sensor relative to the center of the robot.
 			 * @param heading
-			 *            TODO
+			 *            A {@link Matrix3} used to orient or otherwise
+			 *            transform the sensor relative to the robot. Usually a
+			 *            rotation matrix (see
+			 *            {@link Matrix3#createRotation(double, double, double, double)}
+			 *            ).
 			 */
 			public void colorSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new ColorSensor(Robot.this, position, heading));
@@ -261,9 +266,14 @@ public final class Robot {
 			 * invoked only in the script's global scope.
 			 * 
 			 * @param position
-			 *            TODO
+			 *            A {@link Vector3} object indicating the position of
+			 *            the sensor relative to the center of the robot.
 			 * @param heading
-			 *            TODO
+			 *            A {@link Matrix3} used to orient or otherwise
+			 *            transform the sensor relative to the robot. Usually a
+			 *            rotation matrix (see
+			 *            {@link Matrix3#createRotation(double, double, double, double)}
+			 *            ).
 			 */
 			public void lightSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new LightSensor(Robot.this, position, heading));
@@ -271,7 +281,14 @@ public final class Robot {
 
 			/**
 			 * Initializes a compass sensor on this port. This method may be
-			 * invoked only in the script's global scope. TODO
+			 * invoked only in the script's global scope.
+			 * 
+			 * @param heading
+			 *            A {@link Matrix3} used to orient or otherwise
+			 *            transform the sensor relative to the robot. Usually a
+			 *            rotation matrix (see
+			 *            {@link Matrix3#createRotation(double, double, double, double)}
+			 *            ).
 			 */
 			public void compassSensor(Matrix3 heading) {
 				initializeSensor(new CompassSensor(Robot.this, heading));
@@ -279,7 +296,17 @@ public final class Robot {
 
 			/**
 			 * Initializes a ultrasonic sensor on this port. This method may be
-			 * invoked only in the script's global scope. TODO
+			 * invoked only in the script's global scope.
+			 * 
+			 * @param position
+			 *            A {@link Vector3} object indicating the position of
+			 *            the sensor relative to the center of the robot.
+			 * @param heading
+			 *            A {@link Matrix3} used to orient or otherwise
+			 *            transform the sensor relative to the robot. Usually a
+			 *            rotation matrix (see
+			 *            {@link Matrix3#createRotation(double, double, double, double)}
+			 *            ).
 			 */
 			public void ultrasonicSensor(Vector3 position, Matrix3 heading) {
 				initializeSensor(new UltrasonicSensor(Robot.this, position,
@@ -288,16 +315,27 @@ public final class Robot {
 
 			/**
 			 * Initializes an accelerometer sensor on this port. This method may
-			 * be invoked only in the script's global scope. TODO
+			 * be invoked only in the script's global scope.
+			 * 
+			 * @param heading
+			 *            A {@link Matrix3} used to orient or otherwise
+			 *            transform the sensor relative to the robot. Usually a
+			 *            rotation matrix (see
+			 *            {@link Matrix3#createRotation(double, double, double, double)}
+			 *            ).
 			 */
-			public void accelerometer() {
-				initializeSensor(new Accelerometer());
+			public void accelerometer(Matrix3 heading) {
+				initializeSensor(new Accelerometer(heading));
 			}
 
 			/**
-			 * TODO
+			 * Returns a {@link Sensor} object representing the sensor connected
+			 * to this port, or <code>null</code> if no sensor is connected to
+			 * this port.
 			 * 
-			 * @return TODO
+			 * @return A {@link Sensor} object representing the sensor connected
+			 *         to this port or <code>null</code> if no sensor is
+			 *         connected to this port.
 			 */
 			public SimulatorInterface.Sensor getSensor() {
 				return sensor;

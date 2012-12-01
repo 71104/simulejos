@@ -2,16 +2,49 @@ package it.uniroma1.di.simulejos.math;
 
 import java.io.Serializable;
 
+/**
+ * Represents a pair of real values, or a point in the two-dimensional plane.
+ * 
+ * Object of the {@link Vector2} class are immutable.
+ * 
+ * @author Alberto La Rocca
+ */
 public class Vector2 implements Cloneable, Serializable {
 	private static final long serialVersionUID = 4822298356837119742L;
 
+	/**
+	 * The X component of this vector.
+	 */
 	public final double x;
+
+	/**
+	 * The Y component of this vector.
+	 */
 	public final double y;
 
+	/**
+	 * The (0, 0) vector.
+	 */
 	public static final Vector2 NULL = new Vector2(0, 0);
+
+	/**
+	 * The (1, 0) vector.
+	 */
 	public static final Vector2 I = new Vector2(1, 0);
+
+	/**
+	 * The (0, 1) vector.
+	 */
 	public static final Vector2 J = new Vector2(0, 1);
 
+	/**
+	 * Constructs a {@link Vector2} with the specified X and Y components.
+	 * 
+	 * @param x
+	 *            The X component.
+	 * @param y
+	 *            The Y component.
+	 */
 	public Vector2(double x, double y) {
 		this.x = x;
 		this.y = y;
@@ -55,14 +88,43 @@ public class Vector2 implements Cloneable, Serializable {
 		return "(" + x + ", " + y + ")";
 	}
 
+	/**
+	 * Returns a new array containing two <code>double</code> values, the two
+	 * components of this vector. Modification to the array will not have any
+	 * effect on this vector.
+	 * 
+	 * @return A new array of <code>double</code> containing the two components
+	 *         of this vector.
+	 */
 	public double[] toArray() {
 		return new double[] { x, y };
 	}
 
+	/**
+	 * Converts this 2D standard vector into a 2D homogeneous vector represented
+	 * by a {@link Vector3} object with three components: X, Y and the W
+	 * homogeneous coordinate.
+	 * 
+	 * This {@link Vector2} object is not modified, a new {@link Vector3} is
+	 * created.
+	 * 
+	 * @return A new {@link Vector3} object representing a 2D vector in
+	 *         homogeneous coordinates.
+	 */
 	public Vector3 toHomogeneous() {
 		return new Vector3(x, y, 1);
 	}
 
+	/**
+	 * Floors the X component of this vector to the specified value.
+	 * 
+	 * This vector is not modified, a new {@link Vector2} is created and
+	 * returned instead.
+	 * 
+	 * @param min
+	 *            TODO
+	 * @return TODO
+	 */
 	public Vector2 floorX(double min) {
 		return new Vector2(Math.max(x, min), y);
 	}
