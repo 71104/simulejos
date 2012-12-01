@@ -109,6 +109,7 @@ public final class Simulejos extends JFrame {
 			simulation.picker.new PickRequest(x, y) {
 				@Override
 				public void handle(int index, Vector3 position) {
+					selectedRobot = null;
 					selectedIndex = index;
 					for (Robot robot : simulation.robots) {
 						robot.hilited = (robot.index == selectedIndex);
@@ -129,7 +130,6 @@ public final class Simulejos extends JFrame {
 							JOptionPane.OK_CANCEL_OPTION,
 							JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION)) {
 				simulation.removeRobot(selectedRobot);
-				selectedRobot = null;
 			}
 		}
 	};

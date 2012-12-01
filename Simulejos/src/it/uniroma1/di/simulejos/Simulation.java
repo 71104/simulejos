@@ -38,7 +38,7 @@ public final class Simulation {
 	private volatile boolean dirty;
 
 	private final Frame parentWindow;
-	private final GLAutoDrawable canvas;
+	private final GLJPanel canvas;
 	private final Writer logWriter;
 	private volatile Thread thread;
 	private volatile PrintWriter simulationLogWriter;
@@ -127,13 +127,13 @@ public final class Simulation {
 				mainClassName, script, ModelData.parseWavefront(modelFile,
 						swapYAndZ), floor, robots);
 		robotList.add(robot);
-		canvas.display();
+		canvas.repaint();
 		return robot;
 	}
 
 	public void removeRobot(Robot robot) {
 		robotList.remove(robot);
-		canvas.display();
+		canvas.repaint();
 	}
 
 	private interface State {
@@ -262,7 +262,7 @@ public final class Simulation {
 								}
 							});
 						}
-						canvas.display();
+						canvas.repaint();
 					}
 				}
 			};

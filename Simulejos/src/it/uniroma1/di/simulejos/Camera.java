@@ -50,7 +50,7 @@ public class Camera {
 			default:
 				return;
 			}
-			canvas.display();
+			canvas.repaint();
 		}
 	};
 
@@ -74,12 +74,12 @@ public class Camera {
 				* Math.cos(angleX + Math.PI / 2), dz * Math.sin(angleY), dx
 				* Math.sin(angleX) + dz * Math.sin(angleX + Math.PI / 2))
 				.by(MOVING_DELTA));
-		canvas.display();
+		canvas.repaint();
 	}
 
 	public void rotate(double dx, double dy) {
 		angleX += dx;
 		angleY += dy;
-		canvas.display();
+		canvas.repaint();
 	}
 }
