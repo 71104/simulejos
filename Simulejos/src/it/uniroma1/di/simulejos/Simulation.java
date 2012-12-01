@@ -291,4 +291,12 @@ public final class Simulation {
 	public void stop() {
 		state = state.stop();
 	}
+
+	public boolean isRunning() {
+		return state != stoppedState;
+	}
+
+	public boolean isSuspended() {
+		return state == suspendedState;
+	}
 }

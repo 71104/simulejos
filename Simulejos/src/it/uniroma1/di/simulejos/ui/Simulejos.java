@@ -20,6 +20,7 @@ import javax.media.opengl.awt.GLJPanel;
 import javax.script.ScriptException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -28,6 +29,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
@@ -242,6 +244,10 @@ public final class Simulejos extends JFrame {
 			"navigate") {
 		private static final long serialVersionUID = 2357493963267102486L;
 
+		{
+			putValue(SELECTED_KEY, true);
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			cursorState = navigateCursorState;
@@ -269,6 +275,10 @@ public final class Simulejos extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			NAVIGATE_ACTION.setEnabled(false);
+			MOVE_ACTION.setEnabled(false);
+			DELETE_ACTION.setEnabled(false);
+			NAVIGATE_ACTION.putValue(SELECTED_KEY, true);
 			try {
 				simulation.play();
 			} catch (ScriptException e) {
@@ -291,6 +301,9 @@ public final class Simulejos extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			simulation.stop();
+			NAVIGATE_ACTION.setEnabled(true);
+			MOVE_ACTION.setEnabled(true);
+			DELETE_ACTION.setEnabled(true);
 		}
 	};
 
@@ -323,9 +336,19 @@ public final class Simulejos extends JFrame {
 		toolbar.addSeparator();
 		toolbar.add(ADD_ROBOT_ACTION);
 		toolbar.addSeparator();
-		toolbar.add(NAVIGATE_ACTION);
-		toolbar.add(MOVE_ACTION);
-		toolbar.add(DELETE_ACTION);
+		final ButtonGroup cursorModeButtons = new ButtonGroup();
+		final JToggleButton navigateButton = new JToggleButton(NAVIGATE_ACTION);
+		navigateButton.setHideActionText(true);
+		cursorModeButtons.add(navigateButton);
+		final JToggleButton moveButton = new JToggleButton(MOVE_ACTION);
+		moveButton.setHideActionText(true);
+		cursorModeButtons.add(moveButton);
+		final JToggleButton deleteButton = new JToggleButton(DELETE_ACTION);
+		deleteButton.setHideActionText(true);
+		cursorModeButtons.add(deleteButton);
+		toolbar.add(navigateButton);
+		toolbar.add(moveButton);
+		toolbar.add(deleteButton);
 		toolbar.addSeparator();
 		toolbar.add(PLAY_ACTION);
 		toolbar.add(SUSPEND_ACTION);

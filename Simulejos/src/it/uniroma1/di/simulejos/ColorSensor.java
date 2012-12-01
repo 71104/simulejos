@@ -11,8 +11,6 @@ import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Program;
 
-import static javax.media.opengl.GL.GL_FLOAT;
-import static javax.media.opengl.GL.GL_LUMINANCE;
 import static javax.media.opengl.GL2GL3.*;
 
 final class ColorSensor extends GPUSensor implements

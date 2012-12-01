@@ -1,6 +1,6 @@
 #version 120
 
-uniform Size;
+uniform float Size;
 uniform vec3 RobotPosition;
 uniform mat3 InverseRobotHeading;
 uniform vec3 SensorPosition;
@@ -9,7 +9,6 @@ uniform vec3 TargetRobotPosition;
 uniform mat3 TargetRobotHeading;
 
 attribute vec3 in_Vertex;
-varying vec4 ex_Position;
 
 void main() {
 	ex_Vertex = mat4(
@@ -33,5 +32,5 @@ void main() {
 		0, 0, 1, 0,
 		TargetRobotPosition, 1
 	) * mat4(TargetRobotHeading) * vec4(in_Vertex, 1);
-	gl_Position = ex_Position;
+	gl_Position = ex_Vertex;
 }

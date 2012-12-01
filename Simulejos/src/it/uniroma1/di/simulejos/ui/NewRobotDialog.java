@@ -33,6 +33,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 final class NewRobotDialog extends JDialog {
@@ -277,7 +279,16 @@ final class NewRobotDialog extends JDialog {
 			}
 		}), constraints);
 
-		final JCheckBox swapYAndZField = new JCheckBox("Swap Y and Z", true);
+		final JCheckBox swapYAndZField = new JCheckBox("Swap Y and Z",
+				Preferences.userNodeForPackage(NewRobotDialog.class)
+						.getBoolean("swapYAndZ", false));
+		swapYAndZField.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent event) {
+				Preferences.userNodeForPackage(NewRobotDialog.class)
+						.putBoolean("swapYAndZ", swapYAndZField.isSelected());
+			}
+		});
 		constraints.gridx = 1;
 		constraints.gridy = 5;
 		constraints.anchor = GridBagConstraints.LINE_START;
