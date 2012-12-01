@@ -316,7 +316,7 @@ public final class Simulejos extends JFrame {
 		setLayout(new BorderLayout());
 		final JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		final JMenu fileMenu = new JMenu("File");
+		final JMenu fileMenu = new JMenu("Simulejos");
 		fileMenu.add(RESET_ACTION);
 		fileMenu.addSeparator();
 		fileMenu.add(EXIT_ACTION);

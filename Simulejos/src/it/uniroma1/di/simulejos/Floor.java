@@ -5,21 +5,41 @@ import it.uniroma1.di.simulejos.opengl.Program;
 import it.uniroma1.di.simulejos.opengl.Texture2D;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+
 import javax.media.opengl.GL2GL3;
 
 import static javax.media.opengl.GL2GL3.*;
 
 public final class Floor {
-	private volatile BufferedImage textureImage;
-	private volatile float width;
-	private volatile float depth;
+	private volatile File textureImageFile;
+	private transient volatile BufferedImage textureImage;
+	private volatile float width = 2;
+	private volatile float depth = 2;
+	private volatile boolean smooth;
 	private volatile boolean repeatX;
 	private volatile boolean repeatY;
-	private volatile boolean updateTexture;
+	private transient volatile boolean updateTexture;
 
 	private volatile Program program;
 	private volatile Arrays arrays;
 	private volatile Texture2D texture;
+
+	public File getTextureImageFile() {
+		return textureImageFile;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public float getDepth() {
+		return depth;
+	}
+
+	public boolean isSmooth() {
+		return smooth;
+	}
 
 	public boolean isRepeatX() {
 		return repeatX;
@@ -29,11 +49,14 @@ public final class Floor {
 		return repeatY;
 	}
 
-	public void configure(BufferedImage textureImage, float width, float depth,
-			boolean repeatX, boolean repeatY) {
+	public void configure(File textureImageFile, BufferedImage textureImage,
+			float width, float depth, boolean smooth, boolean repeatX,
+			boolean repeatY) {
+		this.textureImageFile = textureImageFile;
 		this.textureImage = textureImage;
 		this.width = width;
 		this.depth = depth;
+		this.smooth = smooth;
 		this.repeatX = repeatX;
 		this.repeatY = repeatY;
 		this.updateTexture = true;
@@ -42,7 +65,9 @@ public final class Floor {
 	private void updateTexture(GL2GL3 gl) {
 		if (textureImage != null) {
 			texture = new Texture2D(gl, textureImage);
-			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			if (!smooth) {
+				texture.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			}
 			if (!repeatX) {
 				texture.parameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 			}

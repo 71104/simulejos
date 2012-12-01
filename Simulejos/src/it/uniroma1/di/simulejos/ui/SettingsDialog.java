@@ -8,7 +8,7 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,6 +26,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.BevelBorder;
 
 final class SettingsDialog extends JDialog {
@@ -52,11 +54,8 @@ final class SettingsDialog extends JDialog {
 				floorTextureChooser.getCurrentDirectory().getAbsolutePath());
 	}
 
-	private volatile BufferedImage floorTexture;
-
-	public Image getFloorTexture() {
-		return floorTexture;
-	}
+	private volatile File textureFile;
+	private volatile BufferedImage texture;
 
 	public SettingsDialog(final Frame owner, final Simulation simulation) {
 		super(owner, "Simulejos - Settings", true);
@@ -64,13 +63,23 @@ final class SettingsDialog extends JDialog {
 		setResizable(false);
 		setLayout(new BorderLayout());
 
+		this.textureFile = simulation.floor.getTextureImageFile();
+		if (textureFile != null) {
+			try {
+				this.texture = ImageIO.read(textureFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		final JPanel mainPanel = new JPanel(new GridBagLayout());
 		final GridBagConstraints constraints = new GridBagConstraints();
+		constraints.insets = new Insets(3, 3, 3, 3);
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		constraints.anchor = GridBagConstraints.NORTHEAST;
-		mainPanel.add(new JLabel("Floor texture:"), constraints);
+		mainPanel.add(new JLabel("Texture:"), constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
 
 		final JPanel overviewPanel = new JPanel() {
@@ -84,8 +93,8 @@ final class SettingsDialog extends JDialog {
 			public void paint(Graphics g) {
 				g.setColor(Color.LIGHT_GRAY);
 				g.fillRect(0, 0, 200, 200);
-				if (floorTexture != null) {
-					g.drawImage(floorTexture, 0, 0, 200, 200, null);
+				if (texture != null) {
+					g.drawImage(texture, 0, 0, 200, 200, null);
 				}
 			}
 		};
@@ -106,9 +115,9 @@ final class SettingsDialog extends JDialog {
 			public void actionPerformed(ActionEvent event) {
 				if (floorTextureChooser.showOpenDialog(owner) == JFileChooser.APPROVE_OPTION) {
 					storeLastImageDirectory();
+					textureFile = floorTextureChooser.getSelectedFile();
 					try {
-						floorTexture = ImageIO.read(floorTextureChooser
-								.getSelectedFile());
+						texture = ImageIO.read(textureFile);
 						overviewPanel.repaint();
 					} catch (IOException e) {
 						JOptionPane.showMessageDialog(owner, e.getMessage(),
@@ -119,12 +128,50 @@ final class SettingsDialog extends JDialog {
 		}), constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
 
-		// TODO relative size spin controls
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.anchor = GridBagConstraints.EAST;
+		mainPanel.add(new JLabel("Relative width:"), constraints);
+		constraints.anchor = GridBagConstraints.CENTER;
+
+		final SpinnerNumberModel widthField = new SpinnerNumberModel(
+				(double) simulation.floor.getWidth(), 0.0, null, 0.1);
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(new JSpinner(widthField), constraints);
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.anchor = GridBagConstraints.EAST;
+		mainPanel.add(new JLabel("Relative depth:"), constraints);
+		constraints.anchor = GridBagConstraints.CENTER;
+
+		final SpinnerNumberModel depthField = new SpinnerNumberModel(
+				(double) simulation.floor.getDepth(), 0.0, null, 0.1);
+		constraints.gridx = 1;
+		constraints.gridy = 2;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(new JSpinner(depthField), constraints);
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+
+		final JCheckBox smoothField = new JCheckBox("Smooth",
+				simulation.floor.isSmooth());
+		constraints.gridx = 1;
+		constraints.gridy = 3;
+		constraints.anchor = GridBagConstraints.WEST;
+		mainPanel.add(smoothField, constraints);
+		constraints.anchor = GridBagConstraints.CENTER;
 
 		final JCheckBox repeatXField = new JCheckBox("Repeat X",
 				simulation.floor.isRepeatX());
 		constraints.gridx = 1;
-		constraints.gridy = 1;
+		constraints.gridy = 4;
 		constraints.anchor = GridBagConstraints.WEST;
 		mainPanel.add(repeatXField, constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
@@ -132,7 +179,7 @@ final class SettingsDialog extends JDialog {
 		final JCheckBox repeatYField = new JCheckBox("Repeat Y",
 				simulation.floor.isRepeatY());
 		constraints.gridx = 1;
-		constraints.gridy = 2;
+		constraints.gridy = 5;
 		constraints.anchor = GridBagConstraints.WEST;
 		mainPanel.add(repeatYField, constraints);
 		constraints.anchor = GridBagConstraints.CENTER;
@@ -145,8 +192,10 @@ final class SettingsDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				simulation.floor.configure(floorTexture, 2, 2,
-						repeatXField.isSelected(), repeatYField.isSelected());
+				simulation.floor.configure(textureFile, texture, widthField
+						.getNumber().floatValue(), depthField.getNumber()
+						.floatValue(), smoothField.isSelected(), repeatXField
+						.isSelected(), repeatYField.isSelected());
 				dispose();
 			}
 		}));
