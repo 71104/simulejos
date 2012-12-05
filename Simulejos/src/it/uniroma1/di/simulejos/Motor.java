@@ -6,44 +6,13 @@ final class Motor implements SimulatorInterface.Motor {
 	private static final int RPM = 160;
 	private static final long ONE_MINUTE_IN_NANOSECONDS = 60000000000l;
 
-	public static final class Timer {
-		private volatile long offset;
-		private volatile boolean suspended;
-		private volatile long suspendTimestamp;
-
-		private Timer() {
-		}
-
-		public synchronized long getTimestamp() {
-			if (suspended) {
-				return suspendTimestamp - offset;
-			} else {
-				return System.nanoTime() - offset;
-			}
-		}
-
-		public synchronized void suspend() {
-			if (!suspended) {
-				suspended = true;
-				suspendTimestamp = System.nanoTime();
-			}
-		}
-
-		public synchronized void resume() {
-			if (suspended) {
-				suspended = false;
-				offset += System.nanoTime() - suspendTimestamp;
-			}
-		}
-	}
-
-	public final Timer timer = new Timer();
+	public final Clock clock = new Clock();
 
 	private volatile Mode mode = Mode.FLOAT;
 	private volatile int power;
 	private volatile double count;
 	private volatile double offset;
-	private volatile long lastTimestamp = timer.getTimestamp();
+	private volatile long lastTimestamp = clock.getTimestamp();
 
 	private volatile double lastSample;
 
@@ -80,12 +49,12 @@ final class Motor implements SimulatorInterface.Motor {
 	}
 
 	private double delta() {
-		return delta(timer.getTimestamp());
+		return delta(clock.getTimestamp());
 	}
 
 	@Override
 	public synchronized void control(int power, Mode mode) {
-		final long timestamp = timer.getTimestamp();
+		final long timestamp = clock.getTimestamp();
 		count += delta(timestamp);
 		lastTimestamp = timestamp;
 		this.power = Math.max(Math.min(power, 100), 0);

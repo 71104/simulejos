@@ -122,17 +122,42 @@ public class Vector2 implements Cloneable, Serializable {
 	 * returned instead.
 	 * 
 	 * @param min
-	 *            TODO
-	 * @return TODO
+	 *            A lower bound for this vector's X component.
+	 * @return A new {@link Vector2} whose X component is greater than or equal
+	 *         to the specified minimum value.
 	 */
 	public Vector2 floorX(double min) {
 		return new Vector2(Math.max(x, min), y);
 	}
 
+	/**
+	 * Floors the Y component of this vector to the specified value.
+	 * 
+	 * This vector is not modified, a new {@link Vector2} is created and
+	 * returned instead.
+	 * 
+	 * @param min
+	 *            A lower bound for this vector's Y component.
+	 * @return A new {@link Vector2} whose Y component is greater than or equal
+	 *         to the specified minimum value.
+	 */
 	public Vector2 floorY(double min) {
 		return new Vector2(x, Math.max(y, min));
 	}
 
+	/**
+	 * Floors both the components of this vector to the corresponding components
+	 * of the specified vector.
+	 * 
+	 * This vector is not modified, a new {@link Vector2} is created and
+	 * returned instead.
+	 * 
+	 * @param min
+	 *            A {@link Vector2} object whose {@link #x} and {@link #y}
+	 *            components are used as lower bounds for this vector's ones.
+	 * @return A new {@link Vector2} whose X and Y components are greater than
+	 *         or equal to those of the specified vector.
+	 */
 	public Vector2 floor(Vector2 min) {
 		return new Vector2(Math.max(x, min.x), Math.max(y, min.y));
 	}

@@ -96,7 +96,9 @@ public final class Picker {
 							drawable.getHeight() - request.y, 1, 1, GL_RGBA,
 							GL_FLOAT, FloatBuffer.wrap(values));
 					request.handle(Math.round(values[3] * 128), new Vector3(
-							values[0], values[1], values[2]));
+							(double) values[0] * 2 - 1,
+							(double) values[1] * 2 - 1,
+							(double) values[2] * 2 - 1));
 				}
 			}
 

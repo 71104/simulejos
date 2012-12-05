@@ -1,11 +1,9 @@
 package it.uniroma1.di.simulejos;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.awt.GLJPanel;
 
+import it.uniroma1.di.simulejos.math.Matrix3;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Program;
 
@@ -19,44 +17,8 @@ public class Camera {
 
 	private volatile GLJPanel canvas;
 
-	private final KeyAdapter keyListener = new KeyAdapter() {
-		@Override
-		public void keyPressed(KeyEvent event) {
-			switch (event.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				angleX += ROTATION_DELTA;
-				break;
-			case KeyEvent.VK_RIGHT:
-				angleX -= ROTATION_DELTA;
-				break;
-			case KeyEvent.VK_UP:
-				angleY += ROTATION_DELTA;
-				break;
-			case KeyEvent.VK_DOWN:
-				angleY -= ROTATION_DELTA;
-				break;
-			case KeyEvent.VK_W:
-				move(0, 1);
-				break;
-			case KeyEvent.VK_S:
-				move(0, -1);
-				break;
-			case KeyEvent.VK_A:
-				move(-1, 0);
-				break;
-			case KeyEvent.VK_D:
-				move(1, 0);
-				break;
-			default:
-				return;
-			}
-			canvas.repaint();
-		}
-	};
-
 	Camera(GLJPanel canvas) {
 		this.canvas = canvas;
-		canvas.addKeyListener(keyListener);
 	}
 
 	public void uniform(Program program) {
@@ -78,8 +40,14 @@ public class Camera {
 	}
 
 	public void rotate(double dx, double dy) {
-		angleX += dx;
-		angleY += dy;
+		angleX += dx * ROTATION_DELTA;
+		angleY += dy * ROTATION_DELTA;
 		canvas.repaint();
+	}
+
+	public Vector3 unproject(Vector3 v) {
+		return Matrix3.createRotation(0, 1, 0, angleX)
+				.by(Matrix3.createRotation(1, 0, 0, angleY))
+				.by(new Vector3(v.x / v.z, v.y / v.z, 1 / v.z)).plus(position);
 	}
 }

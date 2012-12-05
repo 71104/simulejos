@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * Represents a 3x3 matrix. Objects of the {@link Matrix3} class are immutable.
+ * Represents an immutable 3x3 matrix.
  * 
  * @author Alberto La Rocca
  */
@@ -12,7 +12,7 @@ public class Matrix3 implements Cloneable, Serializable {
 	private static final long serialVersionUID = 4389630396481063939L;
 
 	/**
-	 * A null matrix filled with zeroes.
+	 * A null 3x3 matrix.
 	 */
 	public static final Matrix3 NULL = new Matrix3(new double[] { 0, 0, 0, 0,
 			0, 0, 0, 0, 0 });
@@ -156,7 +156,7 @@ public class Matrix3 implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the value in this matrix at the specified cell coordinates.
+	 * Returns the value at the specified cell coordinates in this matrix.
 	 * 
 	 * Both <code>i</code> and <code>j</code> must be within the range [0, 2],
 	 * otherwise an {@link IndexOutOfBoundsException} will be thrown.
@@ -283,13 +283,27 @@ public class Matrix3 implements Cloneable, Serializable {
 	}
 
 	/**
-	 * TODO
+	 * Left-multiplies this matrix by a rotation matrix constructed using
+	 * {@link #createRotation(double, double, double, double)}. The arguments of
+	 * this method have the same meaning as those of
+	 * {@link #createRotation(double, double, double, double)}.
+	 * 
+	 * The returned {@link Matrix3} object is the product matrix. This matrix is
+	 * left unchanged.
 	 * 
 	 * @param x
+	 *            The X component of a unit-length vector describing the
+	 *            rotation axis.
 	 * @param y
+	 *            The Y component of a unit-length vector describing the
+	 *            rotation axis.
 	 * @param z
+	 *            The Z component of a unit-length vector describing the
+	 *            rotation axis.
 	 * @param a
-	 * @return
+	 *            The rotation angle, in radians.
+	 * @return A new {@link Matrix3} representing the product matrix.
+	 * @see #createRotation(double, double, double, double)
 	 */
 	public Matrix3 rotate(double x, double y, double z, double a) {
 		return by(Matrix3.createRotation(x, y, z, a));

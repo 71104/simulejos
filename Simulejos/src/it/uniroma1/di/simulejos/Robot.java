@@ -196,7 +196,7 @@ public final class Robot {
 		/**
 		 * Describes the bounding box of this robot.
 		 */
-		public final BoundingBox boundingBox = Robot.this.boundingBox;
+		public final BoundingBox boundingBox = Robot.this.modelData.boundingBox;
 
 		private RobotInterface() {
 		}
@@ -592,18 +592,18 @@ public final class Robot {
 			threads.suspend();
 			running = true;
 			suspended = true;
-			motorA.timer.suspend();
-			motorB.timer.suspend();
-			motorC.timer.suspend();
+			motorA.clock.suspend();
+			motorB.clock.suspend();
+			motorC.clock.suspend();
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	void resume() {
 		if (running && suspended) {
-			motorA.timer.resume();
-			motorB.timer.resume();
-			motorC.timer.resume();
+			motorA.clock.resume();
+			motorB.clock.resume();
+			motorC.clock.resume();
 			running = true;
 			suspended = false;
 			threads.resume();
@@ -647,6 +647,11 @@ public final class Robot {
 				|| robot.vertexCollides(this, box.max.x, box.min.y, box.max.z)
 				|| robot.vertexCollides(this, box.max.x, box.max.y, box.min.z)
 				|| robot.vertexCollides(this, box.max.x, box.max.y, box.max.z);
+	}
+
+	public void moveTo(double x, double y, double z) {
+		position = new Vector3(x, y, z);
+		canvas.repaint();
 	}
 
 	public void rotate(double a) {

@@ -6,6 +6,8 @@ import it.uniroma1.di.simulejos.math.Vector3;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -37,6 +39,41 @@ import javax.swing.SwingUtilities;
 public final class Simulejos extends JFrame {
 	private static final long serialVersionUID = 1344391485057572344L;
 
+	private final KeyAdapter keyboardHandler = new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent event) {
+			switch (event.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+				simulation.camera.rotate(1, 0);
+				break;
+			case KeyEvent.VK_RIGHT:
+				simulation.camera.rotate(-1, 0);
+				break;
+			case KeyEvent.VK_UP:
+				simulation.camera.rotate(0, 1);
+				break;
+			case KeyEvent.VK_DOWN:
+				simulation.camera.rotate(0, -1);
+				break;
+			case KeyEvent.VK_W:
+				simulation.camera.move(0, 1);
+				break;
+			case KeyEvent.VK_S:
+				simulation.camera.move(0, -1);
+				break;
+			case KeyEvent.VK_A:
+				simulation.camera.move(-1, 0);
+				break;
+			case KeyEvent.VK_D:
+				simulation.camera.move(1, 0);
+				break;
+			default:
+				return;
+			}
+			canvas.repaint();
+		}
+	};
+
 	private static abstract class CursorState {
 		public void mousePressed(int x, int y) {
 		}
@@ -66,8 +103,8 @@ public final class Simulejos extends JFrame {
 		@Override
 		public void mouseMoved(int x, int y) {
 			if (pressed) {
-				simulation.camera.rotate(Math.toRadians(x - x0) / 4,
-						Math.toRadians(y - y0) / 4);
+				simulation.camera.rotate(Math.toRadians(x - x0) * 2,
+						Math.toRadians(y - y0) * 2);
 				x0 = x;
 				y0 = y;
 			}
@@ -85,19 +122,42 @@ public final class Simulejos extends JFrame {
 	};
 
 	public final CursorState moveRobotCursorState = new CursorState() {
+		private volatile boolean pressed;
+		private volatile Robot selectedRobot;
+		private volatile Vector3 grabPosition;
+
 		@Override
 		public void mousePressed(int x, int y) {
-			// TODO
+			pressed = true;
 		}
 
 		@Override
 		public void mouseMoved(int x, int y) {
-			// TODO
+			if (pressed) {
+				if (selectedRobot != null) {
+					// TODO
+				}
+			} else {
+				simulation.picker.new PickRequest(x, y) {
+					@Override
+					public void handle(int index, Vector3 position) {
+						selectedRobot = null;
+						for (Robot robot : simulation.robots) {
+							if (robot.hilited = (robot.index == index)) {
+								selectedRobot = robot;
+								grabPosition = simulation.camera
+										.unproject(position);
+							}
+						}
+						canvas.repaint();
+					}
+				};
+			}
 		}
 
 		@Override
 		public void mouseReleased(int x, int y) {
-			// TODO
+			pressed = false;
 		}
 	};
 
@@ -127,7 +187,6 @@ public final class Simulejos extends JFrame {
 						for (Robot robot : simulation.robots) {
 							if (robot.hilited = (robot.index == index)) {
 								selectedRobot = robot;
-								break;
 							}
 						}
 						canvas.repaint();
@@ -154,7 +213,6 @@ public final class Simulejos extends JFrame {
 					for (Robot robot : simulation.robots) {
 						if (robot.hilited = (robot.index == index)) {
 							selectedRobot = robot;
-							break;
 						}
 					}
 					canvas.repaint();
@@ -207,7 +265,7 @@ public final class Simulejos extends JFrame {
 
 	private final JSplitPane splitPane = new JSplitPane(
 			JSplitPane.VERTICAL_SPLIT);
-	private volatile GLJPanel canvas = new Canvas(mouseHandler);
+	private volatile GLJPanel canvas = new Canvas(keyboardHandler, mouseHandler);
 	private final LogWindow logWindow = new LogWindow();
 	private volatile Simulation simulation = new Simulation(this, canvas,
 			logWindow.getWriter());
@@ -245,7 +303,7 @@ public final class Simulejos extends JFrame {
 			if (canDiscard()) {
 				simulation.stop();
 				final GLAutoDrawable oldCanvas = canvas;
-				canvas = new Canvas(mouseHandler);
+				canvas = new Canvas(keyboardHandler, mouseHandler);
 				simulation = new Simulation(Simulejos.this, canvas,
 						logWindow.getWriter());
 				splitPane.setLeftComponent(canvas);

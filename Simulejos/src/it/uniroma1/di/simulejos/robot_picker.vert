@@ -8,14 +8,7 @@ uniform struct {
 uniform vec3 Position;
 uniform mat3 Heading;
 
-mat4 Model = mat4(
-	1, 0, 0, 0,
-	0, 1, 0, 0,
-	0, 0, 1, 0,
-	Position, 1
-) * mat4(Heading);
-
-mat4 ViewProjection = mat4(
+mat4 ModelViewProjection = mat4(
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 0, 1,
@@ -35,12 +28,17 @@ mat4 ViewProjection = mat4(
 	0, 1, 0, 0,
 	0, 0, 1, 0,
 	-Camera.Position, 1
-);
+) * mat4(
+	1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	Position, 1
+) * mat4(Heading);
 
 attribute vec4 in_Vertex;
 varying vec4 ex_Vertex;
 
 void main() {
-	gl_Position = ViewProjection * Model * in_Vertex;
-	ex_Vertex = Model * in_Vertex;
+	ex_Vertex = ModelViewProjection * in_Vertex;
+	gl_Position = ex_Vertex;
 }
