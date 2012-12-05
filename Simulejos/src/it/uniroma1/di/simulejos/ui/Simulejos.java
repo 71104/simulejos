@@ -2,6 +2,7 @@ package it.uniroma1.di.simulejos.ui;
 
 import it.uniroma1.di.simulejos.Robot;
 import it.uniroma1.di.simulejos.Simulation;
+import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
 
 import java.awt.BorderLayout;
@@ -135,7 +136,10 @@ public final class Simulejos extends JFrame {
 		public void mouseMoved(int x, int y) {
 			if (pressed) {
 				if (selectedRobot != null) {
-					// TODO
+					final Vector3 newPosition = simulation.camera.unproject(
+							new Vector2(x / canvas.getWidth(), y
+									/ canvas.getHeight()), grabPosition.y);
+					selectedRobot.moveBy(newPosition.minus(grabPosition));
 				}
 			} else {
 				simulation.picker.new PickRequest(x, y) {

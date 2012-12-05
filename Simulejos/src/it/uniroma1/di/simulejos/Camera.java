@@ -4,6 +4,7 @@ import javax.media.opengl.GL2GL3;
 import javax.media.opengl.awt.GLJPanel;
 
 import it.uniroma1.di.simulejos.math.Matrix3;
+import it.uniroma1.di.simulejos.math.Vector2;
 import it.uniroma1.di.simulejos.math.Vector3;
 import it.uniroma1.di.simulejos.opengl.Program;
 
@@ -49,5 +50,16 @@ public class Camera {
 		return Matrix3.createRotation(0, 1, 0, angleX)
 				.by(Matrix3.createRotation(1, 0, 0, angleY))
 				.by(new Vector3(v.x / v.z, v.y / v.z, 1 / v.z)).plus(position);
+	}
+
+	public Vector3 unproject(Vector2 v, double y) {
+		final Matrix3 m = Matrix3.createRotation(1, 0, 0, -angleY).by(
+				Matrix3.createRotation(0, 1, 0, -angleX));
+		final Vector3 w = Matrix3.create(
+				new double[] { -1, m.getAt(0, 2), 0, 0, m.getAt(1, 2), 0, 0,
+						m.getAt(2, 2), -1 }).by(
+				position.minus(m.by(new Vector3(v.x, v.y, 0))).plus(
+						new Vector3(0, y, 0)));
+		return new Vector3(w.x, y, w.z);
 	}
 }

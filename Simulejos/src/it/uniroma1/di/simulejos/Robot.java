@@ -654,6 +654,16 @@ public final class Robot {
 		canvas.repaint();
 	}
 
+	public void moveTo(Vector3 v) {
+		position = v;
+		canvas.repaint();
+	}
+
+	public void moveBy(Vector3 d) {
+		position = position.plus(d);
+		canvas.repaint();
+	}
+
 	public void rotate(double a) {
 		heading = Matrix3.createRotation(0, 1, 0, a).by(heading);
 		inverseHeading = heading.invert();
