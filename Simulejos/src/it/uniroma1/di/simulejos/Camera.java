@@ -53,13 +53,8 @@ public class Camera {
 	}
 
 	public Vector3 unproject(Vector2 v, double y) {
-		final Matrix3 m = Matrix3.createRotation(1, 0, 0, -angleY).by(
-				Matrix3.createRotation(0, 1, 0, -angleX));
-		final Vector3 w = Matrix3.create(
-				new double[] { -1, m.getAt(0, 2), 0, 0, m.getAt(1, 2), 0, 0,
-						m.getAt(2, 2), -1 }).by(
-				position.minus(m.by(new Vector3(v.x, v.y, 0))).plus(
-						new Vector3(0, y, 0)));
-		return new Vector3(w.x, y, w.z);
+		final Vector3 w = unproject(new Vector3(v.x, v.y, 1));
+		return position.plus(w.minus(position).by(
+				(y - position.y) / (w.y - position.y)));
 	}
 }

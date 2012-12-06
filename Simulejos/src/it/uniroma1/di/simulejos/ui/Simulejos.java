@@ -137,9 +137,11 @@ public final class Simulejos extends JFrame {
 			if (pressed) {
 				if (selectedRobot != null) {
 					final Vector3 newPosition = simulation.camera.unproject(
-							new Vector2(x / canvas.getWidth(), y
-									/ canvas.getHeight()), grabPosition.y);
+							new Vector2((double) x * 2 / canvas.getWidth() - 1,
+									1 - (double) y * 2 / canvas.getHeight()),
+							grabPosition.y);
 					selectedRobot.moveBy(newPosition.minus(grabPosition));
+					grabPosition = newPosition;
 				}
 			} else {
 				simulation.picker.new PickRequest(x, y) {
