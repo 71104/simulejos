@@ -32,6 +32,7 @@ public final class Simulation {
 
 	public final Camera camera;
 	public final Floor floor = new Floor();
+	private final Clock clock = new Clock();
 	private final List<Robot> robotList = new LinkedList<>();
 	public final Iterable<Robot> robots = robotList;
 	public final Picker picker;
@@ -126,7 +127,7 @@ public final class Simulation {
 			File modelFile, boolean swapYAndZ) throws IOException,
 			ParseException, ScriptException {
 		dirty = true;
-		final Robot robot = new Robot(parentWindow, canvas, logWriter,
+		final Robot robot = new Robot(parentWindow, canvas, logWriter, clock,
 				classPath, mainClassName, script, ModelData.parseWavefront(
 						modelFile, swapYAndZ), floor, robots);
 		robotList.add(robot);
@@ -167,6 +168,7 @@ public final class Simulation {
 		@Override
 		public State suspend() {
 			ticker.suspend();
+			clock.suspend();
 			for (Robot robot : robots) {
 				robot.suspend();
 			}
@@ -203,6 +205,7 @@ public final class Simulation {
 		@Override
 		public State suspend() {
 			ticker.suspend();
+			clock.suspend();
 			for (Robot robot : robots) {
 				robot.suspend();
 			}
@@ -234,6 +237,7 @@ public final class Simulation {
 			for (Robot robot : robots) {
 				robot.resume();
 			}
+			clock.resume();
 			ticker.resume();
 			return runningState;
 		}
@@ -246,6 +250,7 @@ public final class Simulation {
 			for (Robot robot : robots) {
 				robot.resume();
 			}
+			clock.resume();
 			ticker.resume();
 			return fastForwardState;
 		}
@@ -288,8 +293,9 @@ public final class Simulation {
 			}
 
 			private void step() throws Exception {
+				final long timestamp = clock.getTimestamp();
 				for (Robot robot : robots) {
-					robot.tick();
+					robot.tick(timestamp);
 					for (Robot robot2 : robots) {
 						if ((robot != robot2) && robot.collidesWith(robot2)) {
 							final String message = "NXT" + robot.index
@@ -355,7 +361,7 @@ public final class Simulation {
 			}
 			fastForward = true;
 			ticker.start();
-			return runningState;
+			return fastForwardState;
 		}
 
 		@Override

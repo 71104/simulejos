@@ -6,15 +6,18 @@ final class Motor implements SimulatorInterface.Motor {
 	private static final int RPM = 160;
 	private static final long ONE_MINUTE_IN_NANOSECONDS = 60000000000l;
 
-	public final Clock clock = new Clock();
-
+	private final Clock clock;
 	private volatile Mode mode = Mode.FLOAT;
 	private volatile int power;
 	private volatile double count;
 	private volatile double offset;
-	private volatile long lastTimestamp = clock.getTimestamp();
+	private volatile long lastTimestamp;
 
 	private volatile double lastSample;
+
+	public Motor(Clock clock) {
+		this.clock = clock;
+	}
 
 	@Override
 	public Mode getMode() {
@@ -48,10 +51,6 @@ final class Motor implements SimulatorInterface.Motor {
 		}
 	}
 
-	private double delta() {
-		return delta(clock.getTimestamp());
-	}
-
 	@Override
 	public synchronized void control(int power, Mode mode) {
 		final long timestamp = clock.getTimestamp();
@@ -61,24 +60,21 @@ final class Motor implements SimulatorInterface.Motor {
 		this.mode = mode;
 	}
 
-	private double getInternalCount() {
-		return count + delta();
-	}
-
 	@Override
 	public synchronized int getCount() {
-		return (int) Math.round((getInternalCount() + offset) * 360);
+		return (int) Math
+				.round((count + delta(clock.getTimestamp()) + offset) * 360);
 	}
 
 	@Override
 	public synchronized void resetCount() {
-		offset = -getInternalCount();
+		offset = -count - delta(clock.getTimestamp());
 	}
 
-	public synchronized double sample() {
-		final double count = getInternalCount();
-		final double result = count - lastSample;
-		lastSample = count;
+	public synchronized double sample(long timestamp) {
+		final double sample = count + delta(timestamp);
+		final double result = sample - lastSample;
+		lastSample = sample;
 		return result;
 	}
 }

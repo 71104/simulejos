@@ -59,9 +59,9 @@ public final class Robot {
 	private volatile Matrix3 inverseHeading;
 	private volatile Elements elements;
 
-	private final Motor motorA = new Motor();
-	private final Motor motorB = new Motor();
-	private final Motor motorC = new Motor();
+	private final Motor motorA;
+	private final Motor motorB;
+	private final Motor motorC;
 	private volatile Invocable invocable;
 	private volatile boolean initializing;
 	private volatile boolean running;
@@ -76,7 +76,7 @@ public final class Robot {
 		ImageIO.setUseCache(false);
 	}
 
-	Robot(Frame parentWindow, GLJPanel canvas, Writer logWriter,
+	Robot(Frame parentWindow, GLJPanel canvas, Writer logWriter, Clock clock,
 			File classPath, String mainClassName, String script,
 			ModelData modelData, Floor floor, Iterable<Robot> robots)
 			throws ScriptException {
@@ -86,6 +86,10 @@ public final class Robot {
 		this.canvas = canvas;
 		this.logWriter = new PrintWriter(new PartialWriter("NXT" + index,
 				logWriter));
+
+		this.motorA = new Motor(clock);
+		this.motorB = new Motor(clock);
+		this.motorC = new Motor(clock);
 
 		this.classPath = classPath;
 		this.mainClassName = mainClassName;
@@ -592,18 +596,12 @@ public final class Robot {
 			threads.suspend();
 			running = true;
 			suspended = true;
-			motorA.clock.suspend();
-			motorB.clock.suspend();
-			motorC.clock.suspend();
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	void resume() {
 		if (running && suspended) {
-			motorA.clock.resume();
-			motorB.clock.resume();
-			motorC.clock.resume();
 			running = true;
 			suspended = false;
 			threads.resume();
@@ -670,10 +668,10 @@ public final class Robot {
 		canvas.repaint();
 	}
 
-	void tick() throws NoSuchMethodException, ScriptException {
+	void tick(long timestamp) throws NoSuchMethodException, ScriptException {
 		if (running && !suspended) {
-			invocable.invokeFunction("tick", motorA.sample(), motorB.sample(),
-					motorC.sample());
+			invocable.invokeFunction("tick", motorA.sample(timestamp),
+					motorB.sample(timestamp), motorC.sample(timestamp));
 			for (GPUSensor sensor : gpuSensors) {
 				sensor.tick();
 			}
