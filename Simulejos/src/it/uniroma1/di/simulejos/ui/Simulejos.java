@@ -424,7 +424,12 @@ public final class Simulejos extends JFrame {
 			DELETE_ACTION.setEnabled(false);
 			NAVIGATE_ACTION.putValue(SELECTED_KEY, true);
 			cursorState = navigateCursorState;
-			simulation.fastForward();
+			try {
+				simulation.fastForward();
+			} catch (ScriptException e) {
+				JOptionPane.showMessageDialog(Simulejos.this, e.getMessage(),
+						"Simulejos", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	};
 	public final Action SUSPEND_ACTION = new MyAction("Suspend", "suspend") {

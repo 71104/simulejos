@@ -40,10 +40,13 @@ public final class Simulation {
 	private final Frame parentWindow;
 	private final GLJPanel canvas;
 	private final Writer logWriter;
-	private volatile Thread thread;
+
+	private volatile Thread ticker;
 	private volatile PrintWriter simulationLogWriter;
 
 	private volatile Program robotProgram;
+
+	private volatile boolean fastForward;
 
 	private static GL2GL3 getGL(GLAutoDrawable drawable) {
 		final GL2GL3 gl = drawable.getGL().getGL2GL3();
@@ -140,7 +143,7 @@ public final class Simulation {
 	private interface State {
 		State play() throws ScriptException;
 
-		State fastForward();
+		State fastForward() throws ScriptException;
 
 		State suspend();
 
@@ -155,14 +158,15 @@ public final class Simulation {
 
 		@Override
 		public State fastForward() {
-			// TODO Auto-generated method stub
-			return null;
+			fastForward = true;
+			simulationLogWriter.println("fast forward");
+			return fastForwardState;
 		}
 
 		@SuppressWarnings("deprecation")
 		@Override
 		public State suspend() {
-			thread.suspend();
+			ticker.suspend();
 			for (Robot robot : robots) {
 				robot.suspend();
 			}
@@ -173,7 +177,7 @@ public final class Simulation {
 		@SuppressWarnings("deprecation")
 		@Override
 		public State stop() {
-			thread.stop();
+			ticker.stop();
 			for (Robot robot : robots) {
 				robot.stop();
 			}
@@ -185,8 +189,9 @@ public final class Simulation {
 	private final State fastForwardState = new State() {
 		@Override
 		public State play() {
-			// TODO Auto-generated method stub
-			return null;
+			fastForward = false;
+			simulationLogWriter.println("normal speed");
+			return runningState;
 		}
 
 		@Override
@@ -197,21 +202,24 @@ public final class Simulation {
 		@SuppressWarnings("deprecation")
 		@Override
 		public State suspend() {
-			thread.suspend();
+			ticker.suspend();
 			for (Robot robot : robots) {
 				robot.suspend();
 			}
 			simulationLogWriter.println("suspended");
+			canvas.repaint();
 			return suspendedState;
 		}
 
 		@SuppressWarnings("deprecation")
 		@Override
 		public State stop() {
-			thread.stop();
+			ticker.stop();
 			for (Robot robot : robots) {
 				robot.stop();
 			}
+			fastForward = false;
+			canvas.repaint();
 			simulationLogWriter.println("stopped");
 			return stoppedState;
 		}
@@ -221,18 +229,25 @@ public final class Simulation {
 		@SuppressWarnings("deprecation")
 		@Override
 		public State play() {
+			fastForward = false;
 			simulationLogWriter.println("resumed");
 			for (Robot robot : robots) {
 				robot.resume();
 			}
-			thread.resume();
+			ticker.resume();
 			return runningState;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public State fastForward() {
-			// TODO Auto-generated method stub
-			return null;
+			fastForward = true;
+			simulationLogWriter.println("resumed in fast forward");
+			for (Robot robot : robots) {
+				robot.resume();
+			}
+			ticker.resume();
+			return fastForwardState;
 		}
 
 		@Override
@@ -243,7 +258,7 @@ public final class Simulation {
 		@SuppressWarnings("deprecation")
 		@Override
 		public State stop() {
-			thread.stop();
+			ticker.stop();
 			for (Robot robot : robots) {
 				robot.stop();
 			}
@@ -253,80 +268,94 @@ public final class Simulation {
 	};
 
 	private final State stoppedState = new State() {
-		@Override
-		public State play() throws ScriptException {
-			simulationLogWriter.println("started");
-			thread = new Thread("ticker") {
-				private final Object blocker = new Object();
-				private volatile long lastTimestamp;
+		final class Ticker extends Thread {
+			private final Object blocker = new Object();
+			private volatile long lastTimestamp;
 
-				private void waitTo(int period) throws InterruptedException {
-					long elapsed;
-					synchronized (blocker) {
-						while ((elapsed = System.currentTimeMillis()
-								- lastTimestamp) < period) {
-							blocker.wait(period - elapsed);
-						}
-						lastTimestamp = System.currentTimeMillis();
+			public Ticker() {
+				super("ticker");
+			}
+
+			private void waitTo(int period) throws InterruptedException {
+				long elapsed;
+				synchronized (blocker) {
+					while ((elapsed = System.currentTimeMillis()
+							- lastTimestamp) < period) {
+						blocker.wait(period - elapsed);
 					}
-				}
-
-				private void step() throws Exception {
-					for (Robot robot : robots) {
-						robot.tick();
-						for (Robot robot2 : robots) {
-							if ((robot != robot2) && robot.collidesWith(robot2)) {
-								final String message = "NXT" + robot.index
-										+ " collided with NXT" + robot2.index;
-								SwingUtilities.invokeLater(new Runnable() {
-									@Override
-									public void run() {
-										Simulation.this.stop();
-										JOptionPane.showMessageDialog(
-												parentWindow, message,
-												"Simulejos",
-												JOptionPane.ERROR_MESSAGE);
-									}
-								});
-							}
-						}
-					}
-				}
-
-				@Override
-				public void run() {
-					final int rate = Preferences.userNodeForPackage(
-							Simulation.class).getInt("rate", 60);
-					final int period = (int) Math.round(1000.0 / rate);
 					lastTimestamp = System.currentTimeMillis();
-					while (true) {
-						try {
-							waitTo(period);
-							step();
-						} catch (Exception e) {
-							e.printStackTrace();
+				}
+			}
+
+			private void step() throws Exception {
+				for (Robot robot : robots) {
+					robot.tick();
+					for (Robot robot2 : robots) {
+						if ((robot != robot2) && robot.collidesWith(robot2)) {
+							final String message = "NXT" + robot.index
+									+ " collided with NXT" + robot2.index;
 							SwingUtilities.invokeLater(new Runnable() {
 								@Override
 								public void run() {
 									Simulation.this.stop();
+									JOptionPane.showMessageDialog(parentWindow,
+											message, "Simulejos",
+											JOptionPane.ERROR_MESSAGE);
 								}
 							});
 						}
+					}
+				}
+			}
+
+			@Override
+			public void run() {
+				final int rate = Preferences.userNodeForPackage(
+						Simulation.class).getInt("rate", 60);
+				final int period = (int) Math.round(1000.0 / rate);
+				lastTimestamp = System.currentTimeMillis();
+				while (true) {
+					try {
+						waitTo(period);
+						step();
+					} catch (Exception e) {
+						e.printStackTrace();
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								Simulation.this.stop();
+							}
+						});
+					}
+					if (!fastForward) {
 						canvas.repaint();
 					}
 				}
-			};
+			}
+		}
+
+		@Override
+		public State play() throws ScriptException {
+			simulationLogWriter.println("started");
+			ticker = new Ticker();
 			for (Robot robot : robots) {
 				robot.play();
 			}
-			thread.start();
+			fastForward = false;
+			ticker.start();
 			return runningState;
 		}
 
 		@Override
-		public State fastForward() {
-			// TODO Auto-generated method stub
-			return null;
+		public State fastForward() throws ScriptException {
+			simulationLogWriter.println("fast forward");
+			ticker = new Ticker();
+			for (Robot robot : robots) {
+				robot.play();
+			}
+			fastForward = true;
+			ticker.start();
+			return runningState;
 		}
 
 		@Override
@@ -346,7 +375,7 @@ public final class Simulation {
 		state = state.play();
 	}
 
-	public void fastForward() {
+	public void fastForward() throws ScriptException {
 		state = state.fastForward();
 	}
 
