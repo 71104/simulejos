@@ -35,6 +35,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 public final class Simulejos extends JFrame {
@@ -355,11 +356,16 @@ public final class Simulejos extends JFrame {
 
 		{
 			putValue(SELECTED_KEY, true);
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("pressed ESCAPE"));
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			cursorState = navigateCursorState;
+			for (Robot robot : simulation.robots) {
+				robot.hilited = false;
+			}
+			canvas.repaint();
 		}
 	};
 	public final Action MOVE_ACTION = new MyAction("Move robot", "move") {
@@ -404,6 +410,21 @@ public final class Simulejos extends JFrame {
 				JOptionPane.showMessageDialog(Simulejos.this, e.getMessage(),
 						"Simulejos", JOptionPane.ERROR_MESSAGE);
 			}
+		}
+	};
+	public final Action FAST_FORWARD_ACTION = new MyAction("Fast forward",
+			"fast") {
+		private static final long serialVersionUID = -4087415254296442129L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			NAVIGATE_ACTION.setEnabled(false);
+			MOVE_ACTION.setEnabled(false);
+			ROTATE_ACTION.setEnabled(false);
+			DELETE_ACTION.setEnabled(false);
+			NAVIGATE_ACTION.putValue(SELECTED_KEY, true);
+			cursorState = navigateCursorState;
+			simulation.fastForward();
 		}
 	};
 	public final Action SUSPEND_ACTION = new MyAction("Suspend", "suspend") {
@@ -461,6 +482,7 @@ public final class Simulejos extends JFrame {
 		simulationMenu.add(deleteItem);
 		simulationMenu.addSeparator();
 		simulationMenu.add(PLAY_ACTION);
+		simulationMenu.add(FAST_FORWARD_ACTION);
 		simulationMenu.add(SUSPEND_ACTION);
 		simulationMenu.add(STOP_ACTION);
 		menuBar.add(simulationMenu);
@@ -493,6 +515,7 @@ public final class Simulejos extends JFrame {
 		toolbar.add(deleteButton);
 		toolbar.addSeparator();
 		toolbar.add(PLAY_ACTION);
+		toolbar.add(FAST_FORWARD_ACTION);
 		toolbar.add(SUSPEND_ACTION);
 		toolbar.add(STOP_ACTION);
 		add(toolbar, BorderLayout.NORTH);

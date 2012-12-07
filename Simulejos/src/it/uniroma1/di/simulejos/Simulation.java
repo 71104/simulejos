@@ -140,6 +140,8 @@ public final class Simulation {
 	private interface State {
 		State play() throws ScriptException;
 
+		State fastForward();
+
 		State suspend();
 
 		State stop();
@@ -148,6 +150,47 @@ public final class Simulation {
 	private final State runningState = new State() {
 		@Override
 		public State play() {
+			return this;
+		}
+
+		@Override
+		public State fastForward() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public State suspend() {
+			thread.suspend();
+			for (Robot robot : robots) {
+				robot.suspend();
+			}
+			simulationLogWriter.println("suspended");
+			return suspendedState;
+		}
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public State stop() {
+			thread.stop();
+			for (Robot robot : robots) {
+				robot.stop();
+			}
+			simulationLogWriter.println("stopped");
+			return stoppedState;
+		}
+	};
+
+	private final State fastForwardState = new State() {
+		@Override
+		public State play() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public State fastForward() {
 			return this;
 		}
 
@@ -184,6 +227,12 @@ public final class Simulation {
 			}
 			thread.resume();
 			return runningState;
+		}
+
+		@Override
+		public State fastForward() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 		@Override
@@ -275,6 +324,12 @@ public final class Simulation {
 		}
 
 		@Override
+		public State fastForward() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
 		public State suspend() {
 			return this;
 		}
@@ -289,6 +344,10 @@ public final class Simulation {
 
 	public void play() throws ScriptException {
 		state = state.play();
+	}
+
+	public void fastForward() {
+		state = state.fastForward();
 	}
 
 	public void suspend() {
