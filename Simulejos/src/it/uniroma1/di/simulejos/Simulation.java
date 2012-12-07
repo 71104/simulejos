@@ -281,6 +281,16 @@ public final class Simulation {
 				super("ticker");
 			}
 
+			private void advanceTo(int period) throws InterruptedException {
+				long elapsed;
+				synchronized (blocker) {
+					if ((elapsed = System.currentTimeMillis() - lastTimestamp) < period) {
+						clock.advance(period - (int) elapsed);
+					}
+					lastTimestamp = System.currentTimeMillis();
+				}
+			}
+
 			private void waitTo(int period) throws InterruptedException {
 				long elapsed;
 				synchronized (blocker) {
@@ -322,7 +332,11 @@ public final class Simulation {
 				lastTimestamp = System.currentTimeMillis();
 				while (true) {
 					try {
-						waitTo(period);
+						if (fastForward) {
+							advanceTo(period);
+						} else {
+							waitTo(period);
+						}
 						step();
 					} catch (Exception e) {
 						e.printStackTrace();

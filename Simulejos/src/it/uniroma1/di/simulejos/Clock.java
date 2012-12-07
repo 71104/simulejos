@@ -33,4 +33,10 @@ final class Clock {
 			}
 		}
 	}
+
+	public void advance(int milliseconds) {
+		synchronized (lock) {
+			offset -= (long) milliseconds * 1000000;
+		}
+	}
 }
